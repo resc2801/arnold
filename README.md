@@ -49,20 +49,20 @@ The orthogonality condition ensures that each polynomial basis function captures
 | [Al-Salam-Carlitz (1st kind)]()       | $`U^{(a)}_{n+1} (x;q) = (x - (1 + a) q^{n}) U^{(a)}_{n} (x;q) + a q^{n-1} (1 - q^{n}) U^{(a)}_{n-1} (x;q)`$ | $a, q$ | $\mathbb{R}$ | three-term recurence |
 | [Al-Salam-Carlitz (2nd kind)]()       | $`V^{a}_{n+1} (x; q) = U^{a}_{n+1} (x; \frac{1}{q})`$ | $a, q$ | $\mathbb{R}$ | three-term recurence |
 | [Askey-Wilson]()                      | $`p_{n}(x;a,b,c,d\mid q) = a^{-n}(ab,ac,ad;q)_{n} \; {}_{4}{\phi}_{3} \left[\begin{matrix}q^{-n}&abcdq^{n-1}&ae^{i\theta }&ae^{-i\theta }\\ab&ac&ad\end{matrix};q,q\right]`$ | $a, b, c, d$ | $\mathbb{R}$ | three-term recurence |
-| [Bannai-Ito]()                        | $y_{n}(x)=\sum_{k=0}^{n}{\frac {(n+k)!}{(n-k)!k!}}\,\left({\frac {x}{2}}\right)^{k}$ |- | $\mathbb{R}$ | 3-term recurrence |
-| [Bessel]()                            | $y_{n}(x)=\sum_{k=0}^{n}{\frac {(n+k)!}{(n-k)!k!}}\,\left({\frac {x}{2}}\right)^{k}$ |- | $\mathbb{R}$ | 3-term recurrence |
-| [Charlier]()                          | $y_{n}(x)=\sum_{k=0}^{n}{\frac {(n+k)!}{(n-k)!k!}}\,\left({\frac {x}{2}}\right)^{k}$ | - | $\mathbb{R}$ | 3-term recurrence |
-| [Chebyshev (1st kind)]()              | ${T_{n}(\cos \theta )=\cos(n\theta )}$ | - | $\mathbb{R}$ | trigonometric |
-| [Chebyshev (2nd kind)]()              | $U_{n}(\cos \theta )\sin \theta =\sin ((n+1)\theta), \; \cos(\theta) = \tfrac{2x - (a+b)}{b-a}, \; \theta \in [0, \pi]$ | $a, b$ | $[a, b]$ | trigonometric |
-| [Chebyshev (3rd kind)]()              | $V_{n}(x) = \tfrac{\cos(n+1/2) \theta}{\cos(\theta/2)}, \; \cos(\theta) = \tfrac{2x - (a+b)}{b-a}, \; \theta \in [0, \pi]$ | $a, b$ | $[a, b]$ | trigonometric |
-| [Chebyshev (4th kind)]()              | $W_{n}(x) = \tfrac{\sin(n+1/2)\theta}{\sin(\theta / 2)}, \; \cos(\theta) = \tfrac{2x - (a+b)}{b-a}, \; \theta \in [0, \pi]$ | $a, b$ | $[a, b]$ | trigonometric |
+| [Bannai-Ito]()                        | $`y_{n}(x)=\sum_{k=0}^{n}{\frac {(n+k)!}{(n-k)!k!}}\,\left({\frac {x}{2}}\right)^{k}`$ |- | $\mathbb{R}$ | 3-term recurrence |
+| [Bessel]()                            | $`y_{n}(x)=\sum_{k=0}^{n}{\frac {(n+k)!}{(n-k)!k!}}\,\left({\frac {x}{2}}\right)^{k}`$ |- | $\mathbb{R}$ | 3-term recurrence |
+| [Charlier]()                          | $`y_{n}(x)=\sum_{k=0}^{n}{\frac {(n+k)!}{(n-k)!k!}}\,\left({\frac {x}{2}}\right)^{k}`$ | - | $\mathbb{R}$ | 3-term recurrence |
+| [Chebyshev (1st kind)]()              | $`T_{n}(\cos \theta )=\cos(n\theta)`$ | - | $\mathbb{R}$ | trigonometric |
+| [Chebyshev (2nd kind)]()              | $`U_{n}(\cos \theta )\sin \theta =\sin ((n+1)\theta), \; \cos(\theta) = \tfrac{2x - (a+b)}{b-a}, \; \theta \in [0, \pi]`$ | $a, b$ | $[a, b]$ | trigonometric |
+| [Chebyshev (3rd kind)]()              | $`V_{n}(x) = \tfrac{\cos(n+1/2) \theta}{\cos(\theta/2)}, \; \cos(\theta) = \tfrac{2x - (a+b)}{b-a}, \; \theta \in [0, \pi]`$ | $a, b$ | $[a, b]$ | trigonometric |
+| [Chebyshev (4th kind)]()              | $`W_{n}(x) = \tfrac{\sin(n+1/2)\theta}{\sin(\theta / 2)}, \; \cos(\theta) = \tfrac{2x - (a+b)}{b-a}, \; \theta \in [0, \pi]`$ | $a, b$ | $[a, b]$ | trigonometric |
 | [Gegenbauer]()                        | $`C_{n}^{\alpha}(x)=\frac {(2\alpha +n-1)!}{(2\alpha -1)! \,n!}\, {}_{2}F_{1}\left(-n,2\alpha +n;\alpha +{\frac {1}{2}}; {\frac {1-x}{2}}\right)`$ | $\alpha > -\tfrac{1}{2}$  | $\mathbb{R}$ | 3-term recurence |
-| [Physicist's Hermite]()               | $H_{n}(x)=(-1)^{n}e^{x^{2}}{\frac {d^{n}}{dx^{n}}}e^{-x^{2}}$ | - | $\mathbb{R}$ | 3-term recurence |
-| [Jacobi]()                            | $P_{n}^{(\alpha ,\beta )}(x)={\frac {(\alpha +1)_{n}}{n!}} \, {}_{2}F_{1}\left(-n,1+\alpha +\beta +n;\alpha +1;{\tfrac {1}{2}}(1-x)\right)$ | $\alpha, \beta$ | $\mathbb{R}$ | 3-term recurence |
-| [Generalized Laguerre]()              | $L_{n}^{(\alpha )}(x)=\sum _{i=0}^{n}(-1)^{i}{n+\alpha  \choose n-i}{\frac {x^{i}}{i!}}$ | $\alpha$ | $\mathbb{R}$ | 3-term recurence |
-| [Legendre]()                          | $P_{n}(x)=\sum _{k=0}^{\lfloor n/2\rfloor }(-1)^{k}{\frac {(2n-2k)!\ }{(n-k)!\ (n-2k)!\ k!\ 2^{n}}}x^{n-2k}$ | - | $\mathbb{R}$ | 3-term recurence |
-| [Associated Meixner-Pollaczek]()      | $(n + c + 1) P^{\lambda}_{n+1}(x; \phi, c) = 2x \sin(\phi) + 2(n + c + \lambda) P^{\lambda}_{n}(x; \phi, c) - (n + c + 2\lambda - 1) P^{\lambda}_{n-1}(x; \phi, c)$ | $c, \lambda, \phi$ | $\mathbb{R}$ | 3-term recurence |
-| [Pollaczek]()                         | $n P_{n}(x;a,b) = ((2n-1+2a)x+2b)P_{n-1}(x;a,b)-(n-1)P_{n-2}(x;a,b)$ | $a, b$ | $\mathbb{R}$ | 3-term recurence |
+| [Physicist's Hermite]()               | $`H_{n}(x)=(-1)^{n}e^{x^{2}}{\frac {d^{n}}{dx^{n}}}e^{-x^{2}}`$ | - | $\mathbb{R}$ | 3-term recurence |
+| [Jacobi]()                            | $`P_{n}^{(\alpha ,\beta )}(x)={\frac {(\alpha +1)_{n}}{n!}} \, {}_{2}F_{1}\left(-n,1+\alpha +\beta +n;\alpha +1;{\tfrac {1}{2}}(1-x)\right`$ | $\alpha, \beta$ | $\mathbb{R}$ | 3-term recurence |
+| [Generalized Laguerre]()              | $`L_{n}^{(\alpha )}(x)=\sum _{i=0}^{n}(-1)^{i}{n+\alpha  \choose n-i}{\frac {x^{i}}{i!}}`$ | $\alpha$ | $\mathbb{R}$ | 3-term recurence |
+| [Legendre]()                          | $`P_{n}(x)=\sum _{k=0}^{\lfloor n/2\rfloor }(-1)^{k}{\frac {(2n-2k)!\ }{(n-k)!\ (n-2k)!\ k!\ 2^{n}}}x^{n-2k}`$ | - | $\mathbb{R}$ | 3-term recurence |
+| [Associated Meixner-Pollaczek]()      | $`(n + c + 1) P^{\lambda}_{n+1}(x; \phi, c) = 2x \sin(\phi) + 2(n + c + \lambda) P^{\lambda}_{n}(x; \phi, c) - (n + c + 2\lambda - 1) P^{\lambda}_{n-1}(x; \phi, c)`$ | $c, \lambda, \phi$ | $\mathbb{R}$ | 3-term recurence |
+| [Pollaczek]()                         | $`n P_{n}(x;a,b) = ((2n-1+2a)x+2b)P_{n-1}(x;a,b)-(n-1)P_{n-2}(x;a,b)`$ | $a, b$ | $\mathbb{R}$ | 3-term recurence |
 | Wilson | - | - | - | - | TBD |
 
 
