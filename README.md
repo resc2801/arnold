@@ -1,4 +1,6 @@
-# $\mathtt{ARNOLD}$ 
+# ![alt text](arnold.png) $\mathtt{ARNOLD}$ 
+
+
 $\mathtt{ARNOLD}$ offers `tf.keras` implementations of [Kolmogorov-Arnold Networks (KAN) layers](https://arxiv.org/pdf/2404.19756?trk=public_post_main-feed-card-text) using various basis functions.
 
 
@@ -32,6 +34,11 @@ fancy_kan =tfk.Sequential([
     name="fancy_kan" 
 )
 ```
+
+Check our examples for 
+* [MNIST multinomial classifcation](examples/mnist/README.md)
+* [binary classification of the "Two moons" dataset](examples/two_moons/README.md)
+* [multivariate function interpolation](examples/multivariate_interpolation/README.md)
 
 ## Available KAN Layers
 
@@ -151,110 +158,3 @@ Wavelets in Kolmogorov-Arnold Networks (KANs) offer a sophisticated approach to 
 
 
 ## Examples
-### Two Moons: Binary classification 
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()
-
-We compose a KAN of a polynomial `Chebyshev1st` layer, a polynomial `Legendre` layer and a `Bump` wavelet layer and compare against a standard MLP using the "Two Moons" dataset.
-
-
-```python
-all_models = {
-    # 2751 trainable parameters
-    'mlp': tfk.Sequential([
-            tfkl.Dense(50, activation="relu"),
-            tfkl.Dense(50, activation="relu"),
-            tfkl.Dense(1, activation="sigmoid")
-        ],
-        name='mlp'
-    ),
-    # 286 trainable parameters
-    'fancy_kan': tfk.Sequential([
-            Chebyshev1st(input_dim=2, output_dim=8, degree=2),
-            tfkl.LayerNormalization(),
-            Legendre(input_dim=8, output_dim=6, degree=3),
-            tfkl.LayerNormalization(),
-            Bump(input_dim=6, output_dim=1),
-            tfkl.Activation(tfk.activations.sigmoid)
-        ],
-        name="fancy_kan" 
-    )
-}
-
-for name, model in tqdm(all_models.items()):
-    model.build((None, 2))
-    model.compile(
-        optimizer=tf.keras.optimizers.legacy.Adam(),
-        loss='binary_crossentropy',
-        metrics=['binary_accuracy']
-    model.fit(
-        x_train,
-        np.reshape(y_train, (-1,1)),
-        epochs=EPOCHS, 
-        shuffle=True,
-        verbose=0,
-    )
-```
-Note that `fancy_kan` model (286 trainable parameters) is slightly more parameter-efficient than the `mlp` model (2751 trainable parameters).
-
-![alt text](examples/two_moons/two_moons_mlp.png)
-![alt text](examples/two_moons/two_moons_kan.png)
-
-### MNIST: Multinomial classification 
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()
-
-```python
-import tensorflow as tf
-tfk = tf.keras
-tfkl = tfk.layers
-
-from arnold.layers.polynomial.orthogonal import Hermite
-
-# Define a KAN using Hermite basis polynomials
-hermite_kan = tfkl.Sequential([
-        tfkl.Reshape(target_shape=(784, )),
-        tfkl.Rescaling(scale=1./127.5, offset=-1),
-        Hermite(input_dim=784, output_dim=32, degree=2),
-        tfkl.LayerNormalization(),
-        Hermite(input_dim=32, output_dim=16, degree=3),
-        tfkl.LayerNormalization(),
-        Hermite(input_dim=16, output_dim=10, degree=2),
-        tfkl.Softmax()
-    ],
-    name="hermite_kan" 
-)
-
-# Build, compile and train as usual
-hermite_kan.build((None, 28, 28, 1))
-hermite_kan.compile(
-    optimizer=tf.keras.optimizers.legacy.Adam(),
-    loss='sparse_categorical_crossentropy',
-    metrics=['accuracy']
-)
-hermite_kan.fit(
-    mnist_train,
-    epochs=EPOCHS, 
-    shuffle=True,
-    verbose=1
-)
-```
-
-## Multivariate Interpolation
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]()
-
-![alt text](examples/multivariate_interpolation/multivariate_interpolation.png)
-
-| Model                     | Trainable parameters | 
-| :-                        | :-                   | 
-| mlp                       | 528385               | 
-| askey_wilson              | 3796                 | 
-| chebyshev_1st             | 3776                 | 
-| gegenbauer                | 3780                 | 
-| bump                      | 2176                 | 
-| ricker                    | 2176                 | 
-| poisson                   | 2176                 | 
-| gaussian_rbf              | 5616                 | 
-| inverse_multiquadric_rbf  | 5616                 | 
-
