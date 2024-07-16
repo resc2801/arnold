@@ -47,7 +47,7 @@ The orthogonality condition ensures that each polynomial basis function captures
 | Layer | Definition | Parameters | Support | Implementation |
 | :- | :- | :- | :- | :- | 
 | [Al-Salam-Carlitz (1st kind)]()       | $U^{(a)}_{n+1} (x;q) = (x - (1 + a) q^{n}) U^{(a)}_{n} (x;q) + a q^{n-1} (1 - q^{n}) U^{(a)}_{n-1} (x;q)$ | $a, q$ | $\mathbb{R}$ | three-term recurence |
-| [Al-Salam-Carlitz (2nd kind)]()       | $V^{(a)}_{n+1} (x;q) = U^{(a)}_{n+1} (x; \tfrac{1}{q})$ | $a, q$ | $\mathbb{R}$ | three-term recurence |
+| [Al-Salam-Carlitz (2nd kind)]()       | $V^{a}_{n+1} (x; q) = U^{a}_{n+1} (x; \tfrac{1}{q})$ | $a, q$ | $\mathbb{R}$ | three-term recurence |
 | [Askey-Wilson]()                      | $p_{n}(x;a,b,c,d\mid q) = a^{-n}(ab,ac,ad;q)_{n} \; {}_{4}{\phi}_{3} \left[\begin{matrix}q^{-n}&abcdq^{n-1}&ae^{i\theta }&ae^{-i\theta }\\ab&ac&ad\end{matrix};q,q\right]$ | $a, b, c, d$ | $\mathbb{R}$ | three-term recurence |
 | [Bannai-Ito]()                        | $y_{n}(x)=\sum _{k=0}^{n}{\frac {(n+k)!}{(n-k)!k!}}\,\left({\frac {x}{2}}\right)^{k}$ |- | $\mathbb{R}$ | 3-term recurrence |
 | [Bessel]()                            | $y_{n}(x)=\sum _{k=0}^{n}{\frac {(n+k)!}{(n-k)!k!}}\,\left({\frac {x}{2}}\right)^{k}$ |- | $\mathbb{R}$ | 3-term recurrence |
