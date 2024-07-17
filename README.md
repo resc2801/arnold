@@ -35,10 +35,13 @@ fancy_kan =tfk.Sequential([
 )
 ```
 
-Check our examples for 
-* [MNIST multinomial classifcation](examples/mnist/README.md)
-* [binary classification of the "Two moons" dataset](examples/two_moons/README.md)
-* [multivariate function interpolation](examples/multivariate_interpolation/README.md)
+## Examples
+
+| Task | Dataset |  |
+| :- | :- | :-: |
+| Multinomial Classifcation             | MNIST         | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/resc2801/arnold/blob/main/examples/mnist/mnist.ipynb)   |
+| Binary classification                 | "Two moons"   | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/resc2801/arnold/blob/main/examples/two_moons/two_moons.ipynb)   |
+| Multivariate Function Interpolation   | 2D function   | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/resc2801/arnold/blob/main/examples/multivariate_interpolation/multivariate_interpolation.ipynb)   |
 
 ## Available KAN Layers
 
@@ -155,6 +158,3 @@ Wavelets in Kolmogorov-Arnold Networks (KANs) offer a sophisticated approach to 
 | [Ricker (Mexican Hat)](src/arnold/layers/wavelet/ricker.py)       | ${\psi (t)={\frac {2}{{\sqrt {3\sigma }}\pi ^{1/4}}}\left(1-\left({\frac {t}{\sigma }}\right)^{2}\right)e^{-{\frac {t^{2}}{2\sigma ^{2}}}}}$ | $\sigma$ | $\mathbb{R}$ |  - | 
 | [Shannon](src/arnold/layers/wavelet/shannon.py)                   | - | - | - | - | 
 
-
-
-## Examples
