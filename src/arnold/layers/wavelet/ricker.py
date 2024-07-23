@@ -12,10 +12,11 @@ class Ricker(WaveletBase):
     """
 
     def __init__(self, 
-                 input_dim, output_dim, 
-                 sigma=1.0, sigma_trainable=True):
+                 *args,
+                 sigma:float=1.0, sigma_trainable=True,
+                 **kwargs):
 
-        super().__init__(input_dim, output_dim)
+        super().__init__(*args, **kwargs)
 
         self.sigma = self.add_weight(
             initializer=tfk.initializers.Constant(

@@ -12,10 +12,11 @@ class Morelet(WaveletBase):
     """
 
     def __init__(self, 
-                 input_dim, output_dim, 
-                 omega0=5.0, omega_trainable=True):
+                 *args,
+                 omega0:float = 5.0, omega_trainable=True,
+                 **kwargs):
 
-        super().__init__(input_dim, output_dim)
+        super().__init__(*args, **kwargs)
 
         self.omega0 = self.add_weight(
             initializer=tfk.initializers.Constant(
