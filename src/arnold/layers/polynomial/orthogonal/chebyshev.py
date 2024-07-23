@@ -1,13 +1,8 @@
 from abc import ABC, abstractmethod
 import tensorflow as tf
-import numpy as np
-from sympy.polys.orthopolys import chebyshevt_poly
 
 from arnold.layers.polynomial.poly_base import PolynomialBase
 
-from sympy.polys.polytools import poly
-from sympy.polys.orthopolys import chebyshevt_poly
-from sympy import var
 
 tfk = tf.keras
 tfkl = tfk.layers
