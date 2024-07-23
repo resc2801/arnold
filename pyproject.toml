@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "Arnold"
+authors = [
+    {name = "René Schubotz", email = "r.schubotz@googlemail.com"},
+]
+description = "Keras implementations of Kolmogorov-Arnold Networks (KAN) layers using various basis functions."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "tensorflow",
+    "tensorflow-graphics"
+]
+dynamic = ["version"]
