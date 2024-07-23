@@ -36,18 +36,34 @@ class AlSalamCarlitz(PolynomialBase, ABC):
         """
         
         super().__init__(*args, **kwargs)
+
+        self.a_init = a_init
+        self.a_trainable = a_trainable
+        self.q_init = q_init
+        self.q_trainable = q_trainable
         
         self.a = self.add_weight(
-            initializer=tfk.initializers.Constant(value=a_init) if a_init else tfk.initializers.Zeros(),
+            initializer=tfk.initializers.Constant(value=self.a_init) if self.a_init else tfk.initializers.Zeros(),
             name='a',
-            trainable=a_trainable
+            trainable=self.a_trainable
         )
 
         self.q = self.add_weight(
-            initializer=tfk.initializers.Constant(value=q_init) if q_init else tfk.initializers.Ones(),
+            initializer=tfk.initializers.Constant(value=self.q_init) if self.q_init else tfk.initializers.Ones(),
             name='q',
-            trainable=q_trainable
+            trainable=self.q_trainable
         )
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "a_init": self.a_init,
+            "a_trainable": self.a_trainable,
+            "q_init": self.q_init,
+            "q_trainable": self.q_trainable,
+        })
+        return config
+
 
 
 class AlSalamCarlitz1st(AlSalamCarlitz):

@@ -32,22 +32,29 @@ class AssociatedMeixnerPollaczek(PolynomialBase):
         
         super().__init__(*args, **kwargs)
 
+        self.lambda_init = lambda_init
+        self.lambda_trainable = lambda_trainable
+        self.phi_init = phi_init
+        self.phi_trainable = phi_trainable
+        self.c_init = c_init
+        self.c_trainable = c_trainable
+
         self.lambda_ = self.add_weight(
-            initializer=tfk.initializers.Constant(value=lambda_init) if lambda_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0),
+            initializer=tfk.initializers.Constant(value=self.lambda_init) if self.lambda_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0),
             name='lambda',
-            trainable=lambda_trainable
+            trainable=self.lambda_trainable
         )
 
         self.phi = self.add_weight(
-            initializer=tfk.initializers.Constant(value=phi_init) if phi_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0),
+            initializer=tfk.initializers.Constant(value=self.phi_init) if self.phi_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0),
             name='phi',
-            trainable=phi_trainable
+            trainable=self.phi_trainable
         )
 
         self.c = self.add_weight(
-            initializer=tfk.initializers.Constant(value=c_init) if c_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0),
+            initializer=tfk.initializers.Constant(value=self.c_init) if self.c_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0),
             name='c',
-            trainable=c_trainable
+            trainable=self.c_trainable
         )
 
     @tf.function
@@ -75,3 +82,16 @@ class AssociatedMeixnerPollaczek(PolynomialBase):
             )
         
         return tf.stack(meixner_pollaczek_basis, axis=-1)
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "lambda_init": self.lambda_init,
+            "lambda_trainable": self.lambda_trainable,
+            "phi_init": self.phi_init,
+            "phi_trainable": self.phi_trainable,
+            "c_init": self.c_init,
+            "c_trainable": self.c_trainable,
+        })
+        return config
+

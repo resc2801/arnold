@@ -31,10 +31,13 @@ class GeneralizedLaguerre(PolynomialBase):
         
         super().__init__(*args, **kwargs)
 
+        self.alpha_init = alpha_init
+        self.alpha_trainable = alpha_trainable
+
         self.alpha = self.add_weight(
-            initializer=tfk.initializers.Constant(value=alpha_init) if alpha_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
+            initializer=tfk.initializers.Constant(value=self.alpha_init) if self.alpha_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
             name='alpha',
-            trainable=alpha_trainable
+            trainable=self.alpha_trainable
         )
 
     @tf.function
@@ -59,3 +62,11 @@ class GeneralizedLaguerre(PolynomialBase):
             )
 
         return tf.stack(laguerre_basis, axis=-1)
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "alpha_init": self.alpha_init,
+            "alpha_trainable": self.alpha_trainable,
+        })
+        return config

@@ -43,16 +43,21 @@ class Jacobi(PolynomialBase):
         
         super().__init__(*args, **kwargs)
 
+        self.alpha_init = alpha_init
+        self.alpha_trainable = alpha_trainable
+        self.beta_init = beta_init
+        self.beta_trainable = beta_trainable
+
         self.alpha = self.add_weight(
-            initializer=tfk.initializers.Constant(value=alpha_init) if alpha_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
+            initializer=tfk.initializers.Constant(value=self.alpha_init) if self.alpha_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
             name='alpha',
-            trainable=alpha_trainable
+            trainable=self.alpha_trainable
         )
 
         self.beta = self.add_weight(
-            initializer=tfk.initializers.Constant(value=beta_init) if beta_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
+            initializer=tfk.initializers.Constant(value=self.beta_init) if self.beta_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
             name='beta',
-            trainable=beta_trainable
+            trainable=self.beta_trainable
         )
 
     @tf.function
@@ -95,3 +100,13 @@ class Jacobi(PolynomialBase):
             )
 
         return tf.stack(jacobi_basis, axis=-1)
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "alpha_init": self.alpha_init,
+            "alpha_trainable": self.alpha_trainable,
+            "beta_init": self.beta_init,
+            "beta_trainable": self.beta_trainable,
+        })
+        return config

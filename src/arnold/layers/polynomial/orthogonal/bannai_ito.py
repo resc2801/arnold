@@ -22,22 +22,28 @@ class BannaiIto(PolynomialBase):
         
         super().__init__(*args, **kwargs)
 
+        self.a_init = a_init
+        self.a_trainable = a_trainable
+        self.b_init = b_init
+        self.b_trainable = b_trainable
+        self.c_init = c_init
+
         self.a = self.add_weight(
-            initializer=tfk.initializers.Constant(value=a_init) if a_init else tfk.initializers.Zeros(),
+            initializer=tfk.initializers.Constant(value=self.a_init) if self.a_init else tfk.initializers.Zeros(),
             name='a',
-            trainable=a_trainable
+            trainable=self.a_trainable
         )
 
         self.b = self.add_weight(
-            initializer=tfk.initializers.Constant(value=b_init)  if b_init else tfk.initializers.Zeros(),
+            initializer=tfk.initializers.Constant(value=self.b_init)  if self.b_init else tfk.initializers.Zeros(),
             name='b',
-            trainable=b_trainable
+            trainable=self.b_trainable
         )
 
         self.c = self.add_weight(
-            initializer=tfk.initializers.Constant(value=c_init) if c_init else tfk.initializers.Zeros(),
+            initializer=tfk.initializers.Constant(value=self.c_init) if self.c_init else tfk.initializers.Zeros(),
             name='c',
-            trainable=c_trainable
+            trainable=self.c_trainable
         )
 
     @tf.function 
@@ -62,3 +68,15 @@ class BannaiIto(PolynomialBase):
             )
 
         return tf.stack(bannai_ito_basis, axis=-1)
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "a_init": self.a_init,
+            "a_trainable": self.a_trainable,
+            "b_init": self.b_init,
+            "b_trainable": self.b_trainable,
+            "c_init": self.c_init,
+            "c_trainable": self.c_trainable,
+        })
+        return config

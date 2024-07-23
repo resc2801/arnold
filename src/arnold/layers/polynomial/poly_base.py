@@ -57,3 +57,13 @@ class PolynomialBase(tfkl.Layer, ABC):
     @abstractmethod
     def poly_basis(self, x):
         pass
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "input_dim": self.input_dim,
+            "output_dim": self.output_dim,
+            "degree": self.degree,
+            "dtype": self.dtype_,
+        })
+        return config

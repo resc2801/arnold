@@ -30,10 +30,13 @@ class Charlier(PolynomialBase):
         
         super().__init__(*args, **kwargs)
 
+        self.a_init = a_init
+        self.a_trainable = a_trainable
+
         self.a = self.add_weight(
-            initializer=tfk.initializers.Constant(value=a_init) if a_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
+            initializer=tfk.initializers.Constant(value=self.a_init) if self.a_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
             name='a',
-            trainable=a_trainable,
+            trainable=self.a_trainable,
             regularizer=None,
             constraint=None,
         )
@@ -63,3 +66,11 @@ class Charlier(PolynomialBase):
             )
 
         return tf.stack(charlier_basis, axis=-1)
+    
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "a_init": self.a_init,
+            "a_trainable": self.a_trainable,
+        })
+        return config

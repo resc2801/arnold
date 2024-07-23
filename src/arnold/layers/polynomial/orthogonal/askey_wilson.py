@@ -24,34 +24,45 @@ class AskeyWilson(PolynomialBase):
         
         super().__init__(*args, **kwargs)
 
+        self.a_init = a_init
+        self.a_trainable = a_trainable
+        self.b_init = b_init
+        self.b_trainable = b_trainable
+        self.c_init = c_init
+        self.c_trainable = c_trainable
+        self.d_init = d_init
+        self.d_trainable = d_trainable
+        self.q_init = q_init
+        self.q_trainable = q_trainable
+
         self.a = self.add_weight(
-            initializer=tfk.initializers.Constant(value=a_init) if a_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
+            initializer=tfk.initializers.Constant(value=self.a_init) if self.a_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
             name='a',
-            trainable=a_trainable
+            trainable=self.a_trainable
         )
 
         self.b = self.add_weight(
-            initializer=tfk.initializers.Constant(value=b_init) if b_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
+            initializer=tfk.initializers.Constant(value=self.b_init) if self.b_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
             name='b',
-            trainable=b_trainable
+            trainable=self.b_trainable
         )
 
         self.c = self.add_weight(
-            initializer=tfk.initializers.Constant(value=c_init) if c_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
+            initializer=tfk.initializers.Constant(value=self.c_init) if self.c_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
             name='c',
-            trainable=c_trainable
+            trainable=self.c_trainable
         )
 
         self.d = self.add_weight(
-            initializer=tfk.initializers.Constant(value=d_init) if d_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
+            initializer=tfk.initializers.Constant(value=self.d_init) if self.d_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
             name='d',
-            trainable=d_trainable
+            trainable=self.d_trainable
         )
 
         self.q = self.add_weight(
-            initializer=tfk.initializers.Constant(value=q_init) if q_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
+            initializer=tfk.initializers.Constant(value=self.q_init) if self.q_init else tfk.initializers.RandomNormal(mean=0.0, stddev=1.0, seed=None),
             name='q',
-            trainable=q_trainable
+            trainable=self.q_trainable
         )
 
     @tf.function
@@ -74,3 +85,19 @@ class AskeyWilson(PolynomialBase):
             )
 
         return tf.stack(askey_wilson_basis, axis=-1) 
+    
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "a_init": self.a_init,
+            "a_trainable": self.a_trainable,
+            "b_init": self.b_init,
+            "b_trainable": self.b_trainable,
+            "c_init": self.c_init,
+            "c_trainable": self.c_trainable,
+            "d_init": self.d_init,
+            "d_trainable": self.d_trainable,
+            "q_init": self.q_init,
+            "q_trainable": self.q_trainable,
+        })
+        return config
