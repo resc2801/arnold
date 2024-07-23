@@ -41,7 +41,38 @@ class WaveletBase(tfkl.Layer, ABC):
             trainable=True
         )
 
-    @abstractmethod
+    
     def call(self, inputs):
-        pass
+        
+        x = tf.tanh(x)
 
+        x = tf.math.divide(
+            tf.math.subtract(
+                # (batch_size, 1, self.input_dim),
+                tf.expand_dims(inputs, axis=1),
+                # (batch_size, output_dim, input_dim)
+                tf.tile(
+                    tf.expand_dims(self.translation, axis=0), 
+                    [tf.shape(inputs)[0], 1, 1]
+                )   
+            ),
+            # (batch_size, output_dim, input_dim)
+            tf.tile(
+                tf.expand_dims(self.scale, axis=0), 
+                [tf.shape(inputs)[0], 1, 1]
+            )             
+        )
+
+        wavelets = self.get_wavelets(x)
+
+        wavelets_weighted = wavelets * tf.tile(
+            tf.expand_dims(self.wavelet_weights, axis=0),
+            [tf.shape(wavelets)[0], 1, 1]
+        )
+        
+        return tf.reduce_sum(wavelets_weighted, axis=-1)
+
+
+    @abstractmethod
+    def get_wavelets(self, x):
+        pass
