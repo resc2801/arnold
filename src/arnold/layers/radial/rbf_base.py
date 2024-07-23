@@ -58,3 +58,16 @@ class RBFBase(tfkl.Layer, ABC):
     @abstractmethod
     def get_basis(self, x):
         pass
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "input_dim": self.input_dim,
+            "output_dim": self.output_dim,
+            "grid_min": self.grid_min,
+            "grid_max": self.grid_max,
+            "num_grids": self.num_grids,
+            "spline_weight_init_scale": self.spline_weight_init_scale,
+            "tanh_x": self.tanh_x
+        })
+        return config
