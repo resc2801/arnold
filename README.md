@@ -39,10 +39,10 @@ fancy_kan =tfk.Sequential([
 
 | Task | Dataset |  |
 | :- | :- | :-: |
-| Multinomial Classifcation             | MNIST                   | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](examples/mnist/mnist.ipynb)   |
-| Binary classification                 | "Two moons"             | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](examples/two_moons/two_moons.ipynb)   |
-| Multivariate Function Interpolation   | 2D function             | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](examples/multivariate_interpolation/fractal.ipynb)   |
-| Multivariate Function Interpolation   | 2D Helmholtz equation   | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](examples/multivariate_interpolation/helmholtz.ipynb)   |
+| Multinomial Classifcation             | MNIST                   | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/resc2801/arnold/blob/main/examples/mnist/mnist.ipynb)   |
+| Binary classification                 | "Two moons"             | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/resc2801/arnold/blob/main/examples/two_moons/two_moons.ipynb)   |
+| Multivariate Function Interpolation   | 2D function             | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/resc2801/arnold/blob/main/examples/multivariate_interpolation/fractal.ipynb)   |
+| Multivariate Function Interpolation   | 2D Helmholtz equation   | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/resc2801/arnold/blob/main/examples/multivariate_interpolation/helmholtz.ipynb)   |
 
 ## Available KAN Layers
 
