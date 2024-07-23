@@ -158,5 +158,5 @@ Wavelets in Kolmogorov-Arnold Networks (KANs) offer a sophisticated approach to 
 | [Morelet (Gabor)](src/arnold/layers/wavelet/morelet.py)           | - | - | - | - |  
 | [Poisson](src/arnold/layers/wavelet/poisson.py)                   | ${\psi (t)={\frac {1}{\pi }}{\frac {1-t^{2}}{(1+t^{2})^{2}}}}$ | - | $\mathbb{R}$ | - |  
 | [Ricker (Mexican Hat)](src/arnold/layers/wavelet/ricker.py)       | ${\psi (t)={\frac {2}{{\sqrt {3\sigma }}\pi ^{1/4}}}\left(1-\left({\frac {t}{\sigma }}\right)^{2}\right)e^{-{\frac {t^{2}}{2\sigma ^{2}}}}}$ | $\sigma$ | $\mathbb{R}$ | - | 
-| [Shannon](src/arnold/layers/wavelet/shannon.py)                   | ${\psi^{(\operatorname {Sha})}(t)=\operatorname{sinc} \left({\frac {t}{2}}\right)\cdot \cos \left({\frac {3\pi t}{2}}\right)}$               | -        | $\mathbb{R}$ | - | 
+| [Shannon](src/arnold/layers/wavelet/shannon.py)                   | $\psi^{(Sha)}(t)=\mathop{\mathrm{sinc}} \left({\frac {t}{2}}\right)\cdot \cos \left({\frac {3\pi t}{2}}\right)$               | -        | $\mathbb{R}$ | - | 
 
