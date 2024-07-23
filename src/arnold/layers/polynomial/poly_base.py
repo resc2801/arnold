@@ -15,10 +15,12 @@ class PolynomialBase(tfkl.Layer, ABC):
             self, 
             input_dim, output_dim, 
             degree,
+            *args,
             tanh_x=True,
-            dtype=tf.float64):
+            dtype=tf.float64,
+            **kwargs):
         
-        super().__init__()
+        super().__init__(*args, **kwargs)
 
         self.input_dim = input_dim 
         self.output_dim = output_dim

@@ -11,12 +11,17 @@ class WaveletBase(tfkl.Layer, ABC):
     Abstract base class for Kolmogorov-Arnold Network layer using wavelets.
     """
 
-    def __init__(self, input_dim, output_dim):
+    def __init__(self, 
+                 input_dim, output_dim,
+                 *args,
+                 tanh_x=True,
+                 **kwargs):
 
-        super().__init__()
+        super().__init__(*args, **kwargs)
         
         self.input_dim = input_dim
         self.output_dim = output_dim
+        self.tanh_x = tanh_x
 
         # Parameters for wavelet transformation
         self.scale = self.add_weight(
@@ -44,7 +49,8 @@ class WaveletBase(tfkl.Layer, ABC):
     
     def call(self, inputs):
         
-        x = tf.tanh(x)
+        # Normalize x to [-1, 1] using tanh
+        x = tf.tanh(inputs) if self.tanh_x else inputs
 
         x = tf.math.divide(
             tf.math.subtract(
