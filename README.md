@@ -56,23 +56,23 @@ The orthogonality condition ensures that each polynomial basis function captures
 
 | Layer                                                                                             | Definition | Parameters | Support | Implementation |
 | :-                                                                                                | :- | :- | :- | :- | 
-| [Al-Salam-Carlitz (1st kind)](src/arnold/layers/polynomial/orthogonal/al_salam_carlitz.py)        | $`U^{(a)}_{n+1} (x;q) = (x - (1 + a) q^{n}) U^{(a)}_{n} (x;q) + a q^{n-1} (1 - q^{n}) U^{(a)}_{n-1} (x;q)`$ | $a, q$ | $\mathbb{R}$ | three-term recurence |
-| [Al-Salam-Carlitz (2nd kind)](src/arnold/layers/polynomial/orthogonal/al_salam_carlitz.py)        | $`V^{a}_{n+1} (x; q) = U^{a}_{n+1} (x; \frac{1}{q})`$ | $a, q$ | $\mathbb{R}$ | three-term recurence |
-| [Askey-Wilson](src/arnold/layers/polynomial/orthogonal/askey_wilson.py)                           | $`p_{n}(x;a,b,c,d\mid q) = a^{-n}(ab,ac,ad;q)_{n} \; {}_{4}{\phi}_{3} \left[\begin{matrix}q^{-n}&abcdq^{n-1}&ae^{i\theta }&ae^{-i\theta }\\ab&ac&ad\end{matrix};q,q\right]`$ | $a, b, c, d$ | $\mathbb{R}$ | three-term recurence |
-| [Bannai-Ito](src/arnold/layers/polynomial/orthogonal/bannai_ito.py)                               | $`y_{n}(x)=\sum_{k=0}^{n}{\frac {(n+k)!}{(n-k)!k!}}\,\left({\frac {x}{2}}\right)^{k}`$ |- | $\mathbb{R}$ | 3-term recurrence |
-| [Bessel](src/arnold/layers/polynomial/orthogonal/bessel.py)                                       | $`y_{n}(x)=\sum_{k=0}^{n}{\frac {(n+k)!}{(n-k)!k!}}\,\left({\frac {x}{2}}\right)^{k}`$ |- | $\mathbb{R}$ | 3-term recurrence |
-| [Chebyshev (1st kind)](src/arnold/layers/polynomial/orthogonal/chebyshev.py)                      | $`T_{n}(\cos \theta )=\cos(n\theta)`$ | - | $\mathbb{R}$ | trigonometric |
-| [Chebyshev (2nd kind)](src/arnold/layers/polynomial/orthogonal/chebyshev.py)                      | $`U_{n}(\cos \theta )\sin \theta =\sin ((n+1)\theta), \; \cos(\theta) = \tfrac{2x - (a+b)}{b-a}, \; \theta \in [0, \pi]`$ | $a, b$ | $[a, b]$ | trigonometric |
-| [Chebyshev (3rd kind)](src/arnold/layers/polynomial/orthogonal/chebyshev.py)                      | $`V_{n}(x) = \tfrac{\cos(n+1/2) \theta}{\cos(\theta/2)}, \; \cos(\theta) = \tfrac{2x - (a+b)}{b-a}, \; \theta \in [0, \pi]`$ | $a, b$ | $[a, b]$ | trigonometric |
-| [Chebyshev (4th kind)](src/arnold/layers/polynomial/orthogonal/chebyshev.py)                      | $`W_{n}(x) = \tfrac{\sin(n+1/2)\theta}{\sin(\theta / 2)}, \; \cos(\theta) = \tfrac{2x - (a+b)}{b-a}, \; \theta \in [0, \pi]`$ | $a, b$ | $[a, b]$ | trigonometric |
-| [Gegenbauer](src/arnold/layers/polynomial/orthogonal/gegenbauer.py)                               | $`C_{n}^{\alpha}(x)=\frac {(2\alpha +n-1)!}{(2\alpha -1)! \,n!}\, {}_{2}F_{1}\left(-n,2\alpha +n;\alpha +{\frac {1}{2}}; {\frac {1-x}{2}}\right)`$ | $\alpha > -\tfrac{1}{2}$  | $\mathbb{R}$ | 3-term recurence |
-| [Physicist's Hermite](src/arnold/layers/polynomial/orthogonal/hermite.py)                         | $`H_{n}(x)=(-1)^{n}e^{x^{2}}{\frac {d^{n}}{dx^{n}}}e^{-x^{2}}`$ | - | $\mathbb{R}$ | 3-term recurence |
-| [Jacobi](src/arnold/layers/polynomial/orthogonal/jacobi.py)                                       | $`P_{n}^{(\alpha ,\beta )}(x)={\frac {(\alpha +1)_{n}}{n!}} \, {}_{2}F_{1}\left(-n,1+\alpha +\beta +n;\alpha +1;{\tfrac {1}{2}}(1-x)\right)`$ | $\alpha, \beta$ | $\mathbb{R}$ | 3-term recurence |
-| [Generalized Laguerre](src/arnold/layers/polynomial/orthogonal/laguerre.py)                       | $`L_{n}^{(\alpha )}(x)=\sum _{i=0}^{n}(-1)^{i}{n+\alpha  \choose n-i}{\frac {x^{i}}{i!}}`$ | $\alpha$ | $\mathbb{R}$ | 3-term recurence |
-| [Legendre](src/arnold/layers/polynomial/orthogonal/legendre.py)                                   | $`P_{n}(x)=\sum _{k=0}^{\lfloor n/2\rfloor }(-1)^{k}{\frac {(2n-2k)!\ }{(n-k)!\ (n-2k)!\ k!\ 2^{n}}}x^{n-2k}`$ | - | $\mathbb{R}$ | 3-term recurence |
-| [Associated Meixner-Pollaczek](src/arnold/layers/polynomial/orthogonal/meixner_pollaczek.py)      | $`(n + c + 1) P^{\lambda}_{n+1}(x; \phi, c) = 2x \sin(\phi) + 2(n + c + \lambda) P^{\lambda}_{n}(x; \phi, c) - (n + c + 2\lambda - 1) P^{\lambda}_{n-1}(x; \phi, c)`$ | $c, \lambda, \phi$ | $\mathbb{R}$ | 3-term recurence |
-| [Pollaczek](src/arnold/layers/polynomial/orthogonal/pollaczek.py)                                 | $`n P_{n}(x;a,b) = ((2n-1+2a)x+2b)P_{n-1}(x;a,b)-(n-1)P_{n-2}(x;a,b)`$ | $a, b$ | $\mathbb{R}$ | 3-term recurence |
-| Wilson | - | - | - | - | TBD |
+| [Al-Salam-Carlitz (1st kind)](src/arnold/layers/polynomial/orthogonal/al_salam_carlitz.py)        | $U^{(a)}_{n+1} (x;q) = (x - (1 + a) q^{n}) U^{(a)}_{n} (x;q) + a q^{n-1} (1 - q^{n}) U^{(a)}_{n-1} (x;q)$ | $a, q$ | $\mathbb{R}$ | three-term recurence |
+| [Al-Salam-Carlitz (2nd kind)](src/arnold/layers/polynomial/orthogonal/al_salam_carlitz.py)        | $V^{a}_{n+1} (x; q) = U^{a}_{n+1} (x; \frac{1}{q})$ | $a, q$ | $\mathbb{R}$ | three-term recurence |
+| [Askey-Wilson](src/arnold/layers/polynomial/orthogonal/askey_wilson.py)                           | $p_{n}(x;a,b,c,d\mid q) = a^{-n}(ab,ac,ad;q)_{n} \; {}_{4}{\phi}_{3} \left[\begin{matrix}q^{-n}&abcdq^{n-1}&ae^{i\theta }&ae^{-i\theta }\\ab&ac&ad\end{matrix};q,q\right]$ | $a, b, c, d$ | $\mathbb{R}$ | three-term recurence |
+| [Bannai-Ito](src/arnold/layers/polynomial/orthogonal/bannai_ito.py)                               | $y_{n}(x)=\sum_{k=0}^{n}{\frac {(n+k)!}{(n-k)!k!}}\,\left({\frac {x}{2}}\right)^{k}$ |- | $\mathbb{R}$ | 3-term recurrence |
+| [Bessel](src/arnold/layers/polynomial/orthogonal/bessel.py)                                       | $y_{n}(x)=\sum_{k=0}^{n}{\frac {(n+k)!}{(n-k)!k!}}\,\left({\frac {x}{2}}\right)^{k}$ |- | $\mathbb{R}$ | 3-term recurrence |
+| [Chebyshev (1st kind)](src/arnold/layers/polynomial/orthogonal/chebyshev.py)                      | $T_{n}(\cos \theta )=\cos(n\theta)$ | - | $\mathbb{R}$ | trigonometric |
+| [Chebyshev (2nd kind)](src/arnold/layers/polynomial/orthogonal/chebyshev.py)                      | $U_{n}(\cos \theta )\sin \theta =\sin ((n+1)\theta), \; \cos(\theta) = \tfrac{2x - (a+b)}{b-a}, \; \theta \in [0, \pi]$ | $a, b$ | $[a, b]$ | trigonometric |
+| [Chebyshev (3rd kind)](src/arnold/layers/polynomial/orthogonal/chebyshev.py)                      | $V_{n}(x) = \tfrac{\cos(n+1/2) \theta}{\cos(\theta/2)}, \; \cos(\theta) = \tfrac{2x - (a+b)}{b-a}, \; \theta \in [0, \pi]$ | $a, b$ | $[a, b]$ | trigonometric |
+| [Chebyshev (4th kind)](src/arnold/layers/polynomial/orthogonal/chebyshev.py)                      | $W_{n}(x) = \tfrac{\sin(n+1/2)\theta}{\sin(\theta / 2)}, \; \cos(\theta) = \tfrac{2x - (a+b)}{b-a}, \; \theta \in [0, \pi]$ | $a, b$ | $[a, b]$ | trigonometric |
+| [Gegenbauer](src/arnold/layers/polynomial/orthogonal/gegenbauer.py)                               | $C_{n}^{\alpha}(x)=\frac {(2\alpha +n-1)!}{(2\alpha -1)! \,n!}\, {}_{2}F_{1}\left(-n,2\alpha +n;\alpha +{\frac {1}{2}}; {\frac {1-x}{2}}\right)$ | $\alpha > -\tfrac{1}{2}$  | $\mathbb{R}$ | 3-term recurence |
+| [Physicist's Hermite](src/arnold/layers/polynomial/orthogonal/hermite.py)                         | $H_{n}(x)=(-1)^{n}e^{x^{2}}{\frac {d^{n}}{dx^{n}}}e^{-x^{2}}$ | - | $\mathbb{R}$ | 3-term recurence |
+| [Jacobi](src/arnold/layers/polynomial/orthogonal/jacobi.py)                                       | $P_{n}^{(\alpha ,\beta )}(x)={\frac {(\alpha +1)_{n}}{n!}} \, {}_{2}F_{1}\left(-n,1+\alpha +\beta +n;\alpha +1;{\tfrac {1}{2}}(1-x)\right)$ | $\alpha, \beta$ | $\mathbb{R}$ | 3-term recurence |
+| [Generalized Laguerre](src/arnold/layers/polynomial/orthogonal/laguerre.py)                       | $L_{n}^{(\alpha )}(x)=\sum _{i=0}^{n}(-1)^{i}{n+\alpha  \choose n-i}{\frac {x^{i}}{i!}}$ | $\alpha$ | $\mathbb{R}$ | 3-term recurence |
+| [Legendre](src/arnold/layers/polynomial/orthogonal/legendre.py)                                   | $P_{n}(x)=\sum _{k=0}^{\lfloor n/2\rfloor }(-1)^{k}{\frac {(2n-2k)!\ }{(n-k)!\ (n-2k)!\ k!\ 2^{n}}}x^{n-2k}$ | - | $\mathbb{R}$ | 3-term recurence |
+| [Associated Meixner-Pollaczek](src/arnold/layers/polynomial/orthogonal/meixner_pollaczek.py)      | $(n + c + 1) P^{\lambda}_{n+1}(x; \phi, c) = 2x \sin(\phi) + 2(n + c + \lambda) P^{\lambda}_{n}(x; \phi, c) - (n + c + 2\lambda - 1) P^{\lambda}_{n-1}(x; \phi, c)$ | $c, \lambda, \phi$ | $\mathbb{R}$ | 3-term recurence |
+| [Pollaczek](src/arnold/layers/polynomial/orthogonal/pollaczek.py)                                 | $n P_{n}(x;a,b) = ((2n-1+2a)x+2b)P_{n-1}(x;a,b)-(n-1)P_{n-2}(x;a,b)$ | $a, b$ | $\mathbb{R}$ | 3-term recurence |
+| Wilson | - | - | - | TBD |
 
 
 #### Discrete orthogonal polynomials
@@ -81,7 +81,7 @@ Discrete orthogonal polynomial bases are sequences of polynomials that are pairw
 
 | Layer                                                                                             | Definition | Parameters | Support | Implementation |
 | :-                                                                                                | :- | :- | :- | :- | 
-| [Charlier](src/arnold/layers/polynomial/orthogonal/charlier.py)                                   | $`y_{n}(x)=\sum_{k=0}^{n}{\frac {(n+k)!}{(n-k)!k!}}\,\left({\frac {x}{2}}\right)^{k}`$ | - | $\mathbb{R}$ | 3-term recurrence |
+| [Charlier](src/arnold/layers/polynomial/orthogonal/charlier.py)                                   | $y_{n}(x)=\sum_{k=0}^{n}{\frac {(n+k)!}{(n-k)!k!}}\,\left({\frac {x}{2}}\right)^{k}$ | - | $\mathbb{R}$ | 3-term recurrence |
 | Discrete Chebyshev    | - | - | - | - |
 | Dual Hahn             | - | - | - | - |
 | Hahn                  | - | - | - | - |
@@ -94,20 +94,22 @@ Discrete orthogonal polynomial bases are sequences of polynomials that are pairw
 Non-orthogonal polynomials do not satisfy the condition of orthogonality, meaning their inner product is not necessarily zero for distinct polynomials. 
 This may allow for a broader selection of basis functions, which can be tailored to fit particular types of data or specific functional forms that might be more challenging to capture with orthogonal polynomials.
 
-| Layer | Parameters | Support | Examples | Implementation |
-| :- | :-: | :-: | :-:   | :- |
-| [Lucas](src/arnold/layers/polynomial/w_polynomials/lucas.py)  | - | $\mathbb{R}$ | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/resc2801/arnold/blob/main/examples/notebooks/lucas.ipynb) |  3-term recurrence |
-| [Laurent](src/arnold/layers/polynomial/laurent.py)            | - | $\mathbb{R}$ | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/resc2801/arnold/blob/main/examples/notebooks/lucas.ipynb) |  3-term recurrence |
-| Bernstein | - | - | - | - | TBD |
+| Layer | Definition | Parameters | Support | Implementation |
+| :- | :- | :- | :- | :- |
+| [Boubaker](src/arnold/layers/polynomial/boubaker.py)          | $B_{n}(x)=\sum_{p=0}^{\lfloor n/2 \rfloor} \frac{n-4p}{n-p} \binom{n-p}{p} (-1)^{p} x^{n-2p}$     | - | $\mathbb{R}$ | 3-term recurrence |                     
+| [Lucas](src/arnold/layers/polynomial/w_polynomials/lucas.py)  | $L_{n}(x)=2^{-n}[(x - \sqrt{x^2+4})^n + (x + \sqrt{x^2+4})^n]$                                    | - | $\mathbb{R}$ | 3-term recurrence |
+| [Laurent](src/arnold/layers/polynomial/laurent.py)            | ${p(X)=\sum_{k \in \mathbb{Z}} a_{k} X^{k},\quad a_{k} \in \mathbb{R}}$                                    | - | $\mathbb{R}$ | 3-term recurrence |
+| Bernstein                                                     | $B_{n}(x) = \sum_{\nu =0}^{n} \beta_{\nu} {\binom{n}{\nu }}x^{\nu}\left(1-x\right)^{n-\nu}$       | - | $[0, 1]$     | TBD |
 
+ 
 #### Lucas polynomial sequences
 
 A Lucas polynomial sequence is a pair of generalized polynomials which generalize the Lucas sequence to polynomials. We offer a number of special cases.
 
 | Layer                                                                                 | Definition | Parameters | Support | Implementation |
 | :-                                                                                    | :- | :- | :- | :- |
-| [Chebyshev (1st kind)](src/arnold/layers/polynomial/orthogonal/chebyshev.py)          | $`T_{n}(\cos \theta )=\cos(n\theta)`$ | - | $\mathbb{R}$ | trigonometric |
-| [Chebyshev (2nd kind)](src/arnold/layers/polynomial/orthogonal/chebyshev.py)          | $`U_{n}(\cos \theta )\sin \theta =\sin ((n+1)\theta), \; \cos(\theta) = \tfrac{2x - (a+b)}{b-a}, \; \theta \in [0, \pi]`$ | $a, b$ | $[a, b]$ | trigonometric |
+| [Chebyshev (1st kind)](src/arnold/layers/polynomial/orthogonal/chebyshev.py)          | $T_{n}(\cos \theta )=\cos(n\theta)$ | - | $\mathbb{R}$ | trigonometric |
+| [Chebyshev (2nd kind)](src/arnold/layers/polynomial/orthogonal/chebyshev.py)          | $U_{n}(\cos \theta )\sin \theta =\sin ((n+1)\theta), \; \cos(\theta) = \tfrac{2x - (a+b)}{b-a}, \; \theta \in [0, \pi]$ | $a, b$ | $[a, b]$ | trigonometric |
 | [Fermat](src/arnold/layers/polynomial/w_polynomials/fermat.py)                        | $F_{n+1}(x) = 3x F_{n}(x) - 2 F_{n-1}(x)$   | - | $\mathbb{R}$ | 3-term recurrence |
 | [Fermat-Lucas](src/arnold/layers/polynomial/w_polynomials/fermat_lucas.py)            | $f_{n+1}(x) = 3x f_{n}(x) - 2 f_{n-1}(x)$   | - | $\mathbb{R}$ | 3-term recurrence |
 | [Fibonacci](src/arnold/layers/polynomial/fibonacci/fibonacci.py)                      | $F_{n+2}(x) = x F_{n+1}(x) + F_{n}(x)$ | - | $\mathbb{R}$ | 3-term recurrence |
@@ -151,10 +153,10 @@ Wavelets in Kolmogorov-Arnold Networks (KANs) offer a sophisticated approach to 
 | Layer                                                             | Definition | Parameters | Support | Implementation |
 | :-                                                                | :- | :- | :- | :- |
 | [Bump](src/arnold/layers/wavelet/bump.py)                         | - | - | - | - | 
-| [Difference of Gaussians]()                                       | - | - | - | - | TBD |
+| Difference of Gaussians                                           | - | - | - | - | TBD |
 | [Meyer](src/arnold/layers/wavelet/meyer.py)                       | - | - | - | - |  
 | [Morelet (Gabor)](src/arnold/layers/wavelet/morelet.py)           | - | - | - | - |  
 | [Poisson](src/arnold/layers/wavelet/poisson.py)                   | ${\psi (t)={\frac {1}{\pi }}{\frac {1-t^{2}}{(1+t^{2})^{2}}}}$ | - | $\mathbb{R}$ | - |  
-| [Ricker (Mexican Hat)](src/arnold/layers/wavelet/ricker.py)       | ${\psi (t)={\frac {2}{{\sqrt {3\sigma }}\pi ^{1/4}}}\left(1-\left({\frac {t}{\sigma }}\right)^{2}\right)e^{-{\frac {t^{2}}{2\sigma ^{2}}}}}$ | $\sigma$ | $\mathbb{R}$ |  - | 
-| [Shannon](src/arnold/layers/wavelet/shannon.py)                   | - | - | - | - | 
+| [Ricker (Mexican Hat)](src/arnold/layers/wavelet/ricker.py)       | ${\psi (t)={\frac {2}{{\sqrt {3\sigma }}\pi ^{1/4}}}\left(1-\left({\frac {t}{\sigma }}\right)^{2}\right)e^{-{\frac {t^{2}}{2\sigma ^{2}}}}}$ | $\sigma$ | $\mathbb{R}$ | - | 
+| [Shannon](src/arnold/layers/wavelet/shannon.py)                   | ${\psi^{(\operatorname {Sha})}(t)=\operatorname{sinc} \left({\frac {t}{2}}\right)\cdot \cos \left({\frac {3\pi t}{2}}\right)}$               | -        | $\mathbb{R}$ | - | 
 
