@@ -13,17 +13,20 @@ class Morelet(WaveletBase):
 
     def __init__(self, 
                  *args,
-                 omega0:float = 5.0, omega_trainable=True,
+                 omega:float = 5.0, omega_trainable=True,
                  **kwargs):
 
         super().__init__(*args, **kwargs)
 
+        self.omega_init = omega
+        self.omega_trainable = omega_trainable
+
         self.omega0 = self.add_weight(
             initializer=tfk.initializers.Constant(
-                value=omega0
+                value=self.omega_init
             ),
             name='central_frequency',
-            trainable=omega_trainable
+            trainable=self.omega_trainable
         )
 
     @tf.function
@@ -31,3 +34,11 @@ class Morelet(WaveletBase):
         real = tf.cos(self.omega0 * x)
         envelope = tf.exp(-0.5 * x ** 2)
         return (envelope * real)
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "omega": self.omega_init,
+            "omega_trainable": self.omega_trainable
+        })
+        return config

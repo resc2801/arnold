@@ -82,3 +82,12 @@ class WaveletBase(tfkl.Layer, ABC):
     @abstractmethod
     def get_wavelets(self, x):
         pass
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "input_dim": self.input_dim,
+            "output_dim": self.output_dim,
+            "tanh_x": self.tanh_x
+        })
+        return config

@@ -18,12 +18,15 @@ class Ricker(WaveletBase):
 
         super().__init__(*args, **kwargs)
 
+        self.sigma_init = sigma
+        self.sigma_trainable = sigma_trainable
+
         self.sigma = self.add_weight(
             initializer=tfk.initializers.Constant(
-                value=sigma
+                value=self.sigma_init
             ),
             name='standard_deviation',
-            trainable=sigma_trainable
+            trainable=self.sigma_trainable
         )
     
     @tf.function
@@ -31,3 +34,11 @@ class Ricker(WaveletBase):
         term1 = (1 - ((x / self.sigma) ** 2))
         term2 = tf.exp(-0.5 * (x / self.sigma) ** 2)
         return (2 / (tf.math.sqrt(3.0) * np.pi**0.25)) * term1 * term2
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "sigma": self.sigma_init,
+            "sigma_trainable": self.sigma_trainable
+        })
+        return config
