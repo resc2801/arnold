@@ -154,7 +154,7 @@ Wavelets in Kolmogorov-Arnold Networks (KANs) offer a sophisticated approach to 
 | Layer                                                             | Definition | Parameters | Support | Implementation |
 | :-                                                                | :- | :- | :- | :- |
 | [Bump](src/arnold/layers/wavelet/bump.py)                         | - | - | - | - | 
-| Difference of Gaussians                                           | - | - | - | - | TBD |
+| [Derivative of Gaussians](src/arnold/layers/wavelet/dog.py)       | - | - | - | - | 
 | [Meyer](src/arnold/layers/wavelet/meyer.py)                       | - | - | - | - |  
 | [Morelet (Gabor)](src/arnold/layers/wavelet/morelet.py)           | - | - | - | - |  
 | [Poisson](src/arnold/layers/wavelet/poisson.py)                   | ${\psi (t)={\frac {1}{\pi }}{\frac {1-t^{2}}{(1+t^{2})^{2}}}}$ | - | $\mathbb{R}$ | - |  

@@ -9,12 +9,13 @@ from .meyer import Meyer
 from .shannon import Shannon
 from .bump import Bump
 from .poisson import Poisson
-
+from .dog import DerivativeOfGaussian
 __all__ = [
     "Poisson",
     "Ricker",
     "Morelet",
     "Meyer",
     "Shannon",
-    "Bump"
+    "Bump",
+    "DerivativeOfGaussian"
 ]
