@@ -6,7 +6,7 @@ from arnold.layers.polynomial.poly_base import PolynomialBase
 tfk = tf.keras
 tfkl = tfk.layers
 
-
+@tfk.utils.register_keras_serializable(package="arnold", name="Fibonacci")
 class Fibonacci(PolynomialBase):
     """
     Kolmogorov-Arnold Network layer using Fibonacci polynomials.

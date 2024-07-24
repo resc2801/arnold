@@ -8,6 +8,7 @@ tfk = tf.keras
 tfkl = tfk.layers
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="AlSalamCarlitz")
 class AlSalamCarlitz(PolynomialBase, ABC):
     """
     Abstract base class for Kolmogorov-Arnold Network layer using Al-Salam-Carlitz polynomials.
@@ -65,7 +66,7 @@ class AlSalamCarlitz(PolynomialBase, ABC):
         return config
 
 
-
+@tfk.utils.register_keras_serializable(package="arnold", name="AlSalamCarlitz1st")
 class AlSalamCarlitz1st(AlSalamCarlitz):
     """
     Kolmogorov-Arnold Network layer using the Al-Salam-Carlitz polynomials $U^{(a)}_{n} (x;q)$.
@@ -100,6 +101,7 @@ class AlSalamCarlitz1st(AlSalamCarlitz):
         return tf.stack(al_salam_carlitz_basis, axis=-1) 
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="AlSalamCarlitz2nd")
 class AlSalamCarlitz2nd(AlSalamCarlitz):
     """
     Kolmogorov-Arnold Network layer using the Al-Salam-Carlitz polynomials $V^{(a)}_{n} (x;q)$.

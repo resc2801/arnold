@@ -7,6 +7,7 @@ tfk = tf.keras
 tfkl = tfk.layers
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="Jacobi")
 class Jacobi(PolynomialBase):
     """
     Kolmogorov-Arnold Network layer using Jacobi polynomials.

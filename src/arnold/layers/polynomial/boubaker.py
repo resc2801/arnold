@@ -7,6 +7,7 @@ tfk = tf.keras
 tfkl = tfk.layers
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="Boubaker")
 class Boubaker(PolynomialBase):
     """
     Kolmogorov-Arnold Network layer using the Boubaker polynomials.

@@ -7,6 +7,7 @@ tfk = tf.keras
 tfkl = tfk.layers
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="BannaiIto")
 class BannaiIto(PolynomialBase):
     """
     Kolmogorov-Arnold Network layer using the Bannai-Ito polynomials.

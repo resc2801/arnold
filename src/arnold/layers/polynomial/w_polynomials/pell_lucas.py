@@ -7,6 +7,7 @@ tfk = tf.keras
 tfkl = tfk.layers
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="PellLucas")
 class PellLucas(PolynomialBase):
     """
     Kolmogorov-Arnold Network layer using Pell-Lucas polynomials.

@@ -7,6 +7,7 @@ tfk = tf.keras
 tfkl = tfk.layers
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="Hermite")
 class Hermite(PolynomialBase):
     """
     Kolmogorov-Arnold Network layer using (physicist's) Hermite polynomials.
@@ -22,6 +23,7 @@ class Hermite(PolynomialBase):
     See also: https://en.wikipedia.org/wiki/Hermite_polynomials#Recurrence_relation
     """
 
+    @tf.function
     def poly_basis(self, x):
         """
         Evaluate the Hermite basis polynomials for given `x`.

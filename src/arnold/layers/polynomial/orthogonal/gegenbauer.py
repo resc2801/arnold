@@ -7,6 +7,7 @@ tfk = tf.keras
 tfkl = tfk.layers
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="Gegenbauer")
 class Gegenbauer(PolynomialBase):
     """
     Kolmogorov-Arnold Network layer using Gegenbauer polynomials.
@@ -39,6 +40,7 @@ class Gegenbauer(PolynomialBase):
             trainable=self.alpha_trainable
         )
 
+    @tf.function
     def poly_basis(self, x):
         """
         Evaluate Gegenbauer basis polynomials for given `x`.

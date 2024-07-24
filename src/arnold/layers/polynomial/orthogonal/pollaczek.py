@@ -7,6 +7,7 @@ tfk = tf.keras
 tfkl = tfk.layers
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="Pollaczek")
 class Pollaczek(PolynomialBase):
     """
     Kolmogorov-Arnold Network layer using Pollaczek polynomials.
@@ -46,6 +47,7 @@ class Pollaczek(PolynomialBase):
             trainable=self.b_trainable
         )
 
+    @tf.function
     def poly_basis(self, x):
         """
         Evaluate Pollaczek basis polynomials for given `x`.

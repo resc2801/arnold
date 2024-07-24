@@ -5,7 +5,7 @@ import numpy as np
 tfk = tf.keras
 tfkl = tfk.layers
 
-
+@tfk.utils.register_keras_serializable(package="arnold", name="PolynomialBase")
 class PolynomialBase(tfkl.Layer, ABC):
     """
     Abstract base class for Kolmogorov-Arnold Network layer using polynomial basis.
@@ -17,7 +17,6 @@ class PolynomialBase(tfkl.Layer, ABC):
             degree,
             *args,
             tanh_x=True,
-            dtype=tf.float64,
             **kwargs):
         
         super().__init__(*args, **kwargs)
@@ -26,7 +25,6 @@ class PolynomialBase(tfkl.Layer, ABC):
         self.output_dim = output_dim
         self.degree = degree
         self.tanh_x = tanh_x
-        self.dtype_ = dtype
 
         self.poly_coeffs = self.add_weight(
             shape=(self.input_dim, self.output_dim, self.degree + 1),
@@ -64,6 +62,11 @@ class PolynomialBase(tfkl.Layer, ABC):
             "input_dim": self.input_dim,
             "output_dim": self.output_dim,
             "degree": self.degree,
-            "dtype": self.dtype_,
+            "tanh_x": self.tanh_x
         })
         return config
+    
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
+ 

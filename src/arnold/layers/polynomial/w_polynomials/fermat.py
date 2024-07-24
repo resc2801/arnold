@@ -7,6 +7,7 @@ tfk = tf.keras
 tfkl = tfk.layers
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="Fermat")
 class Fermat(PolynomialBase):
     """
     Kolmogorov-Arnold Network layer using Fermat polynomials.

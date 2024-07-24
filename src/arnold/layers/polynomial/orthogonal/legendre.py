@@ -1,5 +1,7 @@
 import tensorflow as tf
 import numpy as np
+from tensorflow.python.ops import array_ops
+
 
 from arnold.layers.polynomial.poly_base import PolynomialBase
 
@@ -7,6 +9,7 @@ tfk = tf.keras
 tfkl = tfk.layers
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="Legendre")
 class Legendre(PolynomialBase):
     """
     Kolmogorov-Arnold Network layer using Legendre polynomials.
@@ -20,6 +23,7 @@ class Legendre(PolynomialBase):
     See also: https://en.wikipedia.org/wiki/Legendre_polynomials#Definition_via_generating_function
     """
 
+    @tf.function
     def poly_basis(self, x):
         """
         Evaluate Legendre basis polynomials for given `x`."""

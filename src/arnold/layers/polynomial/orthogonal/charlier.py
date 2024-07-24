@@ -7,6 +7,7 @@ tfk = tf.keras
 tfkl = tfk.layers
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="Charlier")
 class Charlier(PolynomialBase):
     """
     Kolmogorov-Arnold Network layer using the Charlier polynomials.

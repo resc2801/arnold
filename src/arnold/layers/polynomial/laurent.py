@@ -6,6 +6,7 @@ tfk = tf.keras
 tfkl = tfk.layers
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="Laurent")
 class Laurent(PolynomialBase):
     """
     Kolmogorov-Arnold Network layer using Laurent polynomials.

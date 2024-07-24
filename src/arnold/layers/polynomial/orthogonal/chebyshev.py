@@ -8,6 +8,7 @@ tfk = tf.keras
 tfkl = tfk.layers
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="Chebyshev")
 class Chebyshev(PolynomialBase, ABC):
     """
     Abstract base class for Kolmogorov-Arnold Network layer using Chebyshev polynomial basis.
@@ -23,6 +24,7 @@ class Chebyshev(PolynomialBase, ABC):
         self.arange = tf.constant(tf.range(0, self.degree + 1, 1, dtype=float))
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="Chebyshev1st")
 class Chebyshev1st(Chebyshev):
     """
     Kolmogorov-Arnold Network layer using 1st kind Chebyshev polynomials 
@@ -47,6 +49,7 @@ class Chebyshev1st(Chebyshev):
         return x
         
 
+@tfk.utils.register_keras_serializable(package="arnold", name="Chebyshev2nd")
 class Chebyshev2nd(Chebyshev):
     """
     Kolmogorov-Arnold Network layer using 2nd kind Chebyshev polynomials 
@@ -73,6 +76,7 @@ class Chebyshev2nd(Chebyshev):
         return x
 
 
+@tfk.utils.register_keras_serializable(package="arnold", name="Chebyshev3rd")
 class Chebyshev3rd(Chebyshev):
     """
     Kolmogorov-Arnold Network layer using 3rd kind Chebyshev polynomials 
@@ -101,6 +105,7 @@ class Chebyshev3rd(Chebyshev):
         return x
     
 
+@tfk.utils.register_keras_serializable(package="arnold", name="Chebyshev4th")
 class Chebyshev4th(Chebyshev):
     """
     Kolmogorov-Arnold Network layer using 4th kind Chebyshev polynomials 
