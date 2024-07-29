@@ -6,8 +6,8 @@ from .wavelet_base import WaveletBase
 from .ricker import Ricker
 from .morelet import Morelet
 from .meyer import Meyer
-# from .shannon import Shannon
-# from .bump import Bump
+from .shannon import Shannon
+from .bump import Bump
 from .poisson import Poisson
 from .dog import DerivativeOfGaussian
 __all__ = [
@@ -15,7 +15,7 @@ __all__ = [
     "Ricker",
     "Morelet",
     "Meyer",
-    # "Shannon",
-    # "Bump",
+    "Shannon",
+    "Bump",
     "DerivativeOfGaussian"
 ]

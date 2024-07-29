@@ -12,5 +12,6 @@ class Bump(WaveletBase):
 
     @tf.function        
     def get_wavelets(self, x):
-        inside_interval = (x > -1.0) & (x < 1.0)
-        return (tf.exp(-1.0 / (1 - x**2)) *  inside_interval)
+        eps = 1e-07
+        x = tf.clip_by_value(x, -1.0+eps, 1.0-eps)
+        return tf.exp(-1.0 / (1 - x**2)) #*  inside_interval)
