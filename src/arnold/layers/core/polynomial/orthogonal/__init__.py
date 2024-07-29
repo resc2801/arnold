@@ -15,6 +15,7 @@ from .laguerre import GeneralizedLaguerre
 from .legendre import Legendre
 from .meixner_pollaczek import AssociatedMeixnerPollaczek
 from .pollaczek import Pollaczek
+from .wilson import Wilson
 
 
 __all__ = [
@@ -34,5 +35,6 @@ __all__ = [
     "GeneralizedLaguerre",
     "Legendre",
     "AssociatedMeixnerPollaczek",
-    "Pollaczek"
+    "Pollaczek",
+    "Wilson"
 ]
