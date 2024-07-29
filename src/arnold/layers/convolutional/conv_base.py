@@ -26,7 +26,7 @@ class ConvBase(tfkl.Layer):
                  kernel_type:str,
                  kernel_args = None,
                  **kwargs):
-        super().__init__(*args, name='kan_conv_{}'.format(kernel_type), **kwargs)
+        super().__init__(*args, **kwargs)
 
         
         self.filters = filters
@@ -50,20 +50,6 @@ class ConvBase(tfkl.Layer):
         else:
             channel_axis = 1
             input_channel = input_shape[1]
-        # self.input_spec = tfkl.InputSpec(
-        #     min_ndim=self.rank + 2, axes={channel_axis: input_channel}
-        # )
-        # if input_channel % self.groups != 0:
-        #     raise ValueError(
-        #         "The number of input channels must be evenly divisible by "
-        #         f"the number of groups. Received groups={self.groups}, but the "
-        #         f"input has {input_channel} channels (full input shape is "
-        #         f"{input_shape})."
-        #     )
-        # self.kernel_shape = self.kernel_size + (
-        #     input_channel // self.groups,
-        #     self.filters,
-        # )
 
         module = importlib.import_module('arnold.layers')
 
@@ -75,7 +61,6 @@ class ConvBase(tfkl.Layer):
             output_dim=(self.filters // self.groups),
             **self.kernel_args
         )
-
 
         self.built = True
 
@@ -102,39 +87,3 @@ class ConvBase(tfkl.Layer):
             ),
             [-1, tf.shape(patches)[1], tf.shape(patches)[2], self.filters]
         )
-
-
-
-
-        
-        # filters = tf.reshape(self._kernel(inputs), (-1, ) + self.kernel_shape)
-
-        # # Given an input tensor of shape batch_shape + [in_height, in_width, in_channels] and 
-        # # a filter / kernel tensor of shape [filter_height, filter_width, in_channels, out_channels], 
-        # # this op performs the following:
-        # # 1. Flattens the filter to a 2-D matrix with shape [filter_height * filter_width * in_channels, output_channels].
-        # # 2. Extracts image patches from the input tensor to form a virtual tensor of shape [batch, out_height, out_width, filter_height * filter_width * in_channels].
-        # # 3. For each patch, right-multiplies the filter matrix and the image patch vector.
-        # return tf.nn.conv2d(
-        #     # A Tensor of rank at least 4. The dimension order is interpreted according to the value of data_format; 
-        #     # with the all-but-inner-3 dimensions acting as batch dimensions. See below for details.
-        #     inputs,
-        #     # A 4-D tensor of shape [filter_height, filter_width, in_channels, out_channels]
-        #     filters,
-        #     # An int or list of ints that has length 1, 2 or 4. The stride of the sliding window for each dimension of input. 
-        #     # If a single value is given it is replicated in the H and W dimension. By default the N and C dimensions are set to 1. 
-        #     # The dimension order is determined by the value of data_format
-        #     self.strides,
-        #     # Either the string "SAME" or "VALID" indicating the type of padding algorithm to use, or 
-        #     # a list indicating the explicit paddings at the start and end of each dimension.
-        #     "SAME", #self.padding,
-        #     # With the default format "NHWC", the data is stored in the order of: batch_shape + [height, width, channels]. 
-        #     # Alternatively, the format could be "NCHW", the data storage order of: batch_shape + [channels, height, width].
-        #     "NHWC", #self.data_format,
-        #     # An int or list of ints that has length 1, 2 or 4, defaults to 1. The dilation factor for each dimension of input. 
-        #     # If a single value is given it is replicated in the H and W dimension. By default the N and C dimensions are set to 1. 
-        #     # If set to k > 1, there will be k-1 skipped cells between each filter element on that dimension. 
-        #     self.dilation_rate,
-        #     # A name for the operation (optional).
-        #     name=None
-        # )
