@@ -17,29 +17,30 @@ class PolynomialBase(KANBase):
             self, 
             degree:int,
             *args,
-            decompose_weights:bool=False,
             core_ranks:None | Tuple[int, int, int] = None,
             **kwargs):
         """
         :param input_dim: This layers input size
         :type input_dim: int
+
         :param output_dim: This layers output size
         :type output_dim: int
+
         :param degree: The maximum degree of the polynomial basis element (default is 3).
         :type degree: int
-        :param decompose_weights: Whether or not to represent the polynomial_coefficients weights tensor as a learnable Tucker decomposition. Default to False.
-        :type decompose_weights: bool
-        :param core_ranks: A 3-tuple of non-zero, positive integers giving the ranks of the Tucker decomposition core tensor. Ignored if `decompose_weights` is False; defaults to None.
+
+        :param core_ranks: A 3-tuple of non-zero, positive integers giving the ranks of the Tucker decomposition for the polynomial_coefficients weights tensor. Ignored if `decompose_weights` is False; defaults to None.
         :type core_ranks: None | Tuple[int, int, int]
+
         :param tanh_x: Flag indicating whether to normalize any input to [-1, 1] using tanh before further processing.
         :type tanh_x: bool
         """
         super().__init__(*args, **kwargs)
 
         self.degree = degree
-        self.decompose_weights = decompose_weights
+        self.core_ranks = core_ranks
 
-        if self.decompose_weights:
+        if self.core_ranks is not None:
             self.r1, self.r2, self.r3 = core_ranks
 
             self.poly_coeffs_core = self.add_weight(
@@ -116,7 +117,7 @@ class PolynomialBase(KANBase):
         x = tf.reshape(x, (-1, self.input_dim))
 
         # Compute the polynom interpolation with y.shape=(batch_size, output_dim)
-        if self.decompose_weights:
+        if self.core_ranks is not None:
             y = tf.einsum(
             'bid,xyz,ix,oy,dz->bo', 
                 self.poly_basis(x), self.poly_coeffs_core, self.poly_coeffs_A, self.poly_coeffs_B, self.poly_coeffs_C,
@@ -154,4 +155,3 @@ class PolynomialBase(KANBase):
             "degree": self.degree,
         })
         return config
-    
