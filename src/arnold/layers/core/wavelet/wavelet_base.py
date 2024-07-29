@@ -30,14 +30,14 @@ class WaveletBase(KANBase):
         
         # Parameters for wavelet transformation
         self.scale = self.add_weight(
-            shape=(self.output_dim, self.input_dim),
+            shape=(1, self.output_dim, self.input_dim),
             initializer=tfk.initializers.Ones(),
             name='scale',
             trainable=True
         )
 
         self.translation = self.add_weight(
-            shape=(self.output_dim, self.input_dim),
+            shape=(1, self.output_dim, self.input_dim),
             initializer=tfk.initializers.Zeros(),
             name='translation',
             trainable=True
@@ -61,18 +61,16 @@ class WaveletBase(KANBase):
                 # (batch_size, 1, self.input_dim),
                 tf.expand_dims(x, axis=1),
                 # (1, output_dim, input_dim)
-                tf.expand_dims(self.translation, axis=0)
+                self.translation
             ),
             # (1, output_dim, input_dim)
-            tf.expand_dims(self.scale, axis=0), 
+            self.scale
         )
-
-        # (batch_size, output_dim, input_dim)
-        wavelets = self.get_wavelets(x)
-
-        wavelets_weighted = wavelets * self.wavelet_weights
-        
-        return tf.reduce_sum(wavelets_weighted, axis=-1)
+       
+        return tf.reduce_sum(
+            self.get_wavelets(x) * self.wavelet_weights, 
+            axis=-1
+        )
 
     @abstractmethod
     def get_wavelets(self, x):
