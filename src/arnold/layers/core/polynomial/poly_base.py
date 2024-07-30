@@ -64,11 +64,11 @@ class PolynomialBase(KANBase):
                 constraint=None,
                 regularizer=None,
                 trainable=True,
-                name='polynomial_coefficients_A'     
+                name='polynomial_coefficients_input_dim'     
             )
 
             self.poly_coeffs_B = self.add_weight(
-                shape=(self.output_dim, self.r2),
+                shape=(self.degree + 1, self.r2),
                 initializer=tfk.initializers.RandomNormal(
                     mean=0.0, 
                     stddev=(1.0 / (self.input_dim * (self.degree + 1)))
@@ -76,11 +76,11 @@ class PolynomialBase(KANBase):
                 constraint=None,
                 regularizer=None,
                 trainable=True,
-                name='polynomial_coefficients_B'     
+                name='polynomial_coefficients_degree'     
             )
 
             self.poly_coeffs_C = self.add_weight(
-                shape=(self.degree + 1, self.r3),
+                shape=(elf.output_dim, self.r3),
                 initializer=tfk.initializers.RandomNormal(
                     mean=0.0, 
                     stddev=(1.0 / (self.input_dim * (self.degree + 1)))
@@ -88,12 +88,12 @@ class PolynomialBase(KANBase):
                 constraint=None,
                 regularizer=None,
                 trainable=True,
-                name='polynomial_coefficients_C'     
+                name='polynomial_coefficients_output_dim'     
             )
 
         else:
             self.poly_coeffs = self.add_weight(
-                shape=(self.input_dim, self.output_dim, self.degree + 1),
+                shape=(self.input_dim, self.degree + 1, self.output_dim),
                 initializer=tfk.initializers.RandomNormal(
                     mean=0.0, 
                     stddev=(1.0 / (self.input_dim * (self.degree + 1)))
@@ -125,7 +125,7 @@ class PolynomialBase(KANBase):
             )
         else:
             y = tf.einsum(
-                'bid,iod->bo', 
+                'bid,ido->bo', 
                 self.poly_basis(x), 
                 self.poly_coeffs,
                 optimize='auto'
