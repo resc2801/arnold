@@ -6,8 +6,8 @@ from .core.wavelet.wavelet_base import WaveletBase
 from .core.wavelet.ricker import Ricker
 from .core.wavelet.morelet import Morelet
 from .core.wavelet.meyer import Meyer
-# from .core.wavelet.shannon import Shannon
-# from .core.wavelet.bump import Bump
+from .core.wavelet.shannon import Shannon
+from .core.wavelet.bump import Bump
 from .core.wavelet.poisson import Poisson
 from .core.wavelet.dog import DerivativeOfGaussian
 
@@ -37,8 +37,8 @@ __all__ = [
     "Ricker",
     "Morelet",
     "Meyer",
-    # "Shannon",
-    # "Bump",
+    "Shannon",
+    "Bump",
     "DerivativeOfGaussian",
     "GaussianRBF", 
     "InverseQuadraticRBF",

@@ -80,7 +80,7 @@ class PolynomialBase(KANBase):
             )
 
             self.poly_coeffs_C = self.add_weight(
-                shape=(elf.output_dim, self.r3),
+                shape=(self.output_dim, self.r3),
                 initializer=tfk.initializers.RandomNormal(
                     mean=0.0, 
                     stddev=(1.0 / (self.input_dim * (self.degree + 1)))
@@ -104,7 +104,7 @@ class PolynomialBase(KANBase):
                 name='polynomial_coefficients'     
             )
 
-    @tf.function
+    @tf.function(jit_compile=True)
     def call(self, inputs):
         """
         Performs the forward computation
