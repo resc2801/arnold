@@ -114,7 +114,7 @@ class AskeyWilson(PolynomialBase):
             trainable=self.q_trainable
         )
 
-    @tf.function
+    @tf.function(jit_compile=True)
     def poly_basis(self, x):
         askey_wilson_basis = [
             tf.ones_like(x)
