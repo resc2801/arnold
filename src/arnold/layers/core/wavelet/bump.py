@@ -7,7 +7,7 @@ tfkl = tfk.layers
 
 class Bump(WaveletBase):
     """
-    NOTE: Defunct
+    Kolmogorov-Arnold Network layer using Bump wavelets.
     """
 
     @tf.function(autograph=True, jit_compile=True, reduce_retracing=True, experimental_autograph_options=tf.autograph.experimental.Feature.ALL)

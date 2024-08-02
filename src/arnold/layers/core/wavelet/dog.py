@@ -6,6 +6,9 @@ tfkl = tfk.layers
 
 
 class DerivativeOfGaussian(WaveletBase):
+    """
+    Kolmogorov-Arnold Network layer using DerivativeOfGaussian wavelets.
+    """
 
     @tf.function        
     def get_wavelets(self, x):

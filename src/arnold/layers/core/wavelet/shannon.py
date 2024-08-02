@@ -7,6 +7,9 @@ tfkl = tfk.layers
 
 
 class Shannon(WaveletBase):
+    """
+    Kolmogorov-Arnold Network layer using Shannon wavelets.
+    """
 
     @tf.function
     def get_wavelets(self, x):

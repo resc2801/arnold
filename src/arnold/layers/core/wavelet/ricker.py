@@ -23,6 +23,18 @@ class Ricker(WaveletBase):
         :param output_dim: This layers output size
         :type output_dim: int
 
+        :param scale_init: Initial non-zero, positive value for the wavelet scale parameter; defaults to None (log(scale) initialized to HeNormal).
+        :type scale_init: non-zero, positive float | None = None
+
+        :param scale_trainable: Flag indicating whether scale is a trainable parameter. Defaults to True
+        :type scale_trainable: bool
+
+        :param translation_init: Initial translation value for the wavelet scale parameter; defaults to None (initialized to HeNormal).
+        :type translation_init: float | None = None
+
+        :param translation_trainable: Flag indicating whether translation is a trainable parameter. Defaults to True
+        :type translation_trainable: bool
+
         :param sigma_init: Initial value for the sigma parameter of the Ricker wavelet. Defaults to 1.0.
         :type sigma_init: float
 
