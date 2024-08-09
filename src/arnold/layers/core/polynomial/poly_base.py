@@ -112,21 +112,23 @@ class PolynomialBase(KANBase):
         :param inputs: Data to perform the forward computation on.
         :type inputs: tf.Tensor
         """
-        # Normalize x to [-1, 1] using tanh
-        x = tf.tanh(inputs) if self.tanh_x else inputs
-        x = tf.reshape(x, (-1, self.input_dim))
+        # Always flatten any given input first!
+        x = tf.reshape(inputs, (-1, self.input_dim))
+
+        # Normalize x to [-1, 1] using tanh if requested 
+        x = tf.tanh(x) if self.tanh_x else x
 
         # Compute the polynom interpolation with y.shape=(batch_size, output_dim)
         if self.core_ranks is not None:
             y = tf.einsum(
             'bid,xyz,ix,oy,dz->bo', 
-                self.poly_basis(x), self.poly_coeffs_core, self.poly_coeffs_A, self.poly_coeffs_B, self.poly_coeffs_C,
+                self.pseudo_vandermonde(x), self.poly_coeffs_core, self.poly_coeffs_A, self.poly_coeffs_B, self.poly_coeffs_C,
                 optimize='auto'
             )
         else:
             y = tf.einsum(
                 'bid,ido->bo', 
-                self.poly_basis(x), 
+                self.pseudo_vandermonde(x), 
                 self.poly_coeffs,
                 optimize='auto'
             )
@@ -134,19 +136,19 @@ class PolynomialBase(KANBase):
         return y
 
     @abstractmethod
-    def poly_basis(self, x):
+    def pseudo_vandermonde(self, x):
         """
         Computes the pseudo-Vandermonde matrix for given `x`.
 
-        :param x: Data to compute the pseudo-Vandermonde matrix with.
+        :param x: Data to compute the pseudo-vandermonde tensor with.
         :type x: tf.Tensor
 
-        :returns: pseudo-Vandermonde matrix
+        :returns: pseudo-vandermonde tensor
         :rtype: tf.Tensor
         """
         raise NotImplementedError(
             f"Layer {self.__class__.__name__} does not have a "
-            "`poly_basis()` method implemented."
+            "`pseudo_vandermonde()` method implemented."
         )
 
     def get_config(self):

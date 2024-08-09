@@ -7,7 +7,7 @@ tfkl = tfk.layers
 
 @tfk.utils.register_keras_serializable(package="arnold", name="KANBase")
 class KANBase(tfkl.Layer, ABC):
-    """
+    r"""
     Abstract base class for Kolmogorov-Arnold Network layers.
     """
 
@@ -18,7 +18,7 @@ class KANBase(tfkl.Layer, ABC):
             *args,
             tanh_x:bool=True,
             **kwargs):
-        """
+        r"""
         :param input_dim: This layers input size
         :type input_dim: int
 
@@ -38,7 +38,7 @@ class KANBase(tfkl.Layer, ABC):
         return (input_shape[0], self.output_dim)
 
     def get_config(self):
-        """
+        r"""
         Returns the config of the object. 
         An object config is a Python dictionary (serializable) containing the information needed to re-instantiate it. 
 
@@ -55,7 +55,7 @@ class KANBase(tfkl.Layer, ABC):
     
     @classmethod
     def from_config(cls, config):
-        """
+        r"""
         Creates a layer from its config.
         This method is the reverse of get_config, capable of instantiating the same layer from the config dictionary. 
         It does not handle layer connectivity (handled by Network), nor weights (handled by set_weights).
