@@ -1,0 +1,3 @@
+Wavelet KAN layers
+****************************************
+kjasdkjasdkjhasdjkh

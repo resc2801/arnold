@@ -42,7 +42,6 @@ class ConvBase(tfkl.Layer):
         self._kernel = None
 
 
-
     def build(self, input_shape):
         if self.data_format == "channels_last":
             channel_axis = -1
@@ -52,7 +51,6 @@ class ConvBase(tfkl.Layer):
             input_channel = input_shape[1]
 
         module = importlib.import_module('arnold.layers')
-
         self._kernel = getattr(module, self.kernel_type)(
             input_dim=(input_channel // self.groups) * self.kernel_size[0] * self.kernel_size[1],
             output_dim=(self.filters // self.groups)
@@ -78,6 +76,7 @@ class ConvBase(tfkl.Layer):
             rates=(1,) + self.rates + (1,)
         )
 
+        # TODO: check if we are mixing up images here!
         return tf.reshape(
             self._kernel(
                 tf.reshape(
