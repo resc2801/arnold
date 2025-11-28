@@ -15,8 +15,8 @@ import numpy as np
 import pytest
 import tensorflow as tf
 
-# N-Bonacci polynomials (have tf.scan issues at degree >= 2)
-from arnold.layers.core.polynomial.n_bonacci import (
+# N-Bonacci polynomials (sequences/)
+from arnold.layers.core.polynomial.sequences import (
     Fibonacci,
     Heptanacci,
     Hexanacci,
@@ -25,8 +25,8 @@ from arnold.layers.core.polynomial.n_bonacci import (
     Tetranacci,
 )
 
-# W-Polynomials (Lucas sequences) - have tf.scan issues at degree >= 2
-from arnold.layers.core.polynomial.w_polynomials import (
+# W-Polynomials (Lucas sequences) - sequences/
+from arnold.layers.core.polynomial.sequences import (
     Lucas,
     FermatLucas,
     Fermat,
