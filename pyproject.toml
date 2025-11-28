@@ -26,7 +26,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "arnold-kan"
-version = "0.1.0"
+version = "0.8.0"
 description = "Production-ready Kolmogorov-Arnold Network (KAN) layers for Keras/TensorFlow with polynomial, RBF, and wavelet bases."
 readme = "README.md"
 license = {file = "LICENSE"}
