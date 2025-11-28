@@ -4,7 +4,7 @@ Lorentz's Simplification
 
 George Lorentz simplified the Kolmogorov-Arnold Representation Theorem by showing that it is possible to represent continuous multivariate functions with only a single outer function and multiple inner functions. 
 
-.. prf:theorem:: Lorentz's Simplification
+.. admonition:: Theorem — Lorentz's Simplification
 
     For any continuous function :math:`f: [0,1]^n \to \mathbb{R}`, there exist a continuous univariate function :math:`\Phi: \mathbb{R} \to \mathbb{R}` and continuous functions :math:`\psi_{q,p}: \mathbb{R} \to \mathbb{R}` such that:
 
@@ -20,7 +20,7 @@ Sprechers's Simplification
 David Sprecher refined the Kolmogorov-Arnold Representation Theorem by simplifying the construction of the inner functions. 
 Sprecher's approach replaces the need for multiple inner functions with a single, appropriately shifted, inner function. 
 
-.. prf:theorem:: Sprecher's Variant
+.. admonition:: Theorem — Sprecher's Variant
     
         For any continuous function :math:`f: [0,1]^n \to \mathbb{R}`, there exist 
         :math:`\eta \in \mathbb{R}`, :math:`\lambda_{1 \leq p \leq n}  \in \mathbb{R}`, 
@@ -34,8 +34,6 @@ Sprecher's approach replaces the need for multiple inner functions with a single
 
 Proof
 -----
-
-
 
 **Existence of Inner Function**:
 
@@ -101,16 +99,3 @@ References
 1. **Kolmogorov, A. N. (1957)**. "On the representation of continuous functions of several variables by superpositions of continuous functions of a smaller number of variables". *Doklady Akademii Nauk SSSR*, 114: 953–956.
 2. **Arnold, V. I. (1957)**. "On functions of three variables". *Doklady Akademii Nauk SSSR*, 114: 679–681.
 3. **Sprecher, D. A. (1966)**. "On the structure of continuous functions of several variables". *Mathematische Annalen*, 166: 41–60.
-
-
-
-
-
-
-References
-----------
-
-1. **Kolmogorov, A. N. (1957)**. "On the representation of continuous functions of several variables by superpositions of continuous functions of a smaller number of variables". *Doklady Akademii Nauk SSSR*, 114: 953–956.
-2. **Arnold, V. I. (1957)**. "On functions of three variables". *Doklady Akademii Nauk SSSR*, 114: 679–681.
-3. **Lorentz, G. G. (1966)**. "Approximation of Functions". *Holt, Rinehart and Winston*.
-4. **Lorentz, G. G. (1963)**. "On the representation of functions by superpositions". *Proc. of the American Mathematical Society*, 14: 248–254.

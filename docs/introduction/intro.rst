@@ -6,7 +6,7 @@ Kolmogorov–Arnold Representation Theorem
 The Kolmogorov-Arnold Representation Theorem is a fundamental result in the field of functional analysis and approximation theory. 
 It addresses the problem of representing multivariate continuous functions using compositions of univariate continuous functions. 
 
-.. prf:theorem:: Kolmogorov-Arnold Representation Theorem
+.. admonition:: Theorem — Kolmogorov-Arnold Representation Theorem
 
     For any continuous function :math:`f: [0,1]^n \to \mathbb{R}`, there exist continuous functions :math:`\phi_{q}: \mathbb{R} \to \mathbb{R}` and :math:`\psi_{q,p}: [0,1] \to \mathbb{R}` such that:
 
@@ -31,7 +31,7 @@ For now, let us assume we are equipped with a set of continous univariate functi
 
 Given a mode-2 tensor  :math:`\mathbf{x} \in \mathbb{R}^{B \times n}`, we can define the following:
 
-.. prf:definition:: Alternant tensor
+.. admonition:: Definition — Alternant tensor
 
     For a given set of univariate continous functions :math:`f_{i, j}: [0,1] \to \mathbb{R}` and a mode-2 tensor  :math:`\mathbf{x} \in \mathbb{R}^{B \times n}`, 
     the mode-3 alternant tensor :math:`A[f_{i, j}](\mathbf{x}) \in \mathbb{R}^{B \times m \times n}` is defined by
@@ -52,7 +52,7 @@ An alternant tensor is simply formed by applying the given list of functions :ma
 
 The notion of a Kolmogorov-Arnold Netork (KAN) layer can now easily be expressed as a contraction of an alternant tensor:
 
-.. prf:definition:: KAN layer
+.. admonition:: Definition — KAN layer
 
     A KAN layer with :math:`n`-dimensional input :math:`\mathbf{x} \in \mathbb{R}^{B \times n}` and 
     :math:`m`-dimensional output :math:`\mathbf{y} \in \mathbb{R}^{B \times m}` is defined as
@@ -73,7 +73,7 @@ The original Kolmogorov-Arnold representation can now be rewritten as network co
 :math:`n`-dimensional input and :math:`(2n +1)`-dimensional output, followed
 by a KAN layer with :math:`(2n + 1)`-dimensional input and :math:`1`-dimensional output.
 
-.. prf:observation::
+.. admonition:: Observation
 
     .. math::
         :nowrap:
@@ -108,14 +108,14 @@ Polynomial KAN Layers
 
 Recalling the 
 
-.. prf:theorem:: Weierstrass Approximation Theorem
+.. admonition:: Theorem — Weierstrass Approximation Theorem
 
     Let :math:`f: [a, b] \to \mathbb{R}` be a continuous function on a closed interval :math:`[a, b]`. For every :math:`\epsilon > 0`, there exists a polynomial :math:`P` such that :math:`\sup_{x \in [a, b]} |f(x) - P(x)| < \epsilon`.
 
 
 it comes natural to ask whether we can find functions :math:`f_{i, j}: [0,1] \to \mathbb{R}` within the
 
-.. prf:definition:: Vector space of polynomials 
+.. admonition:: Definition — Vector space of polynomials 
     
     Let :math:`k` be a non-negative integer, 
     :math:`B = \{b_{0 \leq i \leq k}(x) \mid deg(b_{i}(x)) = i\}` be a basis of linearly independent polynomials. 
@@ -130,7 +130,7 @@ it comes natural to ask whether we can find functions :math:`f_{i, j}: [0,1] \to
 
 To answer this question, we require the notation of a Pseudo-Vandermonde tensor:
 
-.. prf:definition:: Pseudo-Vandermonde tensor
+.. admonition:: Definition — Pseudo-Vandermonde tensor
 
     Given a basis of linearly independent polynomials :math:`B = \{b_{0 \leq d \leq k}(x) \mid deg(b_{d}(x)) = d\}` 
     and a mode-2 tensor :math:`\mathbf{x} \in \mathbb{R}^{B \times n}`, 
@@ -144,7 +144,7 @@ In essence, the Pseudo-Vandermonde evaluates each basis polynomial in :math:`B` 
 
 Using an additional, *trainable* mode-3 tensor, we can define the polynomial alternant tensor as follows.
 
-.. prf:definition:: Polynomial alternant tensor
+.. admonition:: Definition — Polynomial alternant tensor
 
     Given a basis of linearly independent polynomials :math:`B = \{b_{0 \leq d \leq k}(x) \mid deg(b_{d}(x)) = d\}` 
     a mode-2 tensor :math:`\mathbf{x} \in \mathbb{R}^{B \times n}`, 
@@ -160,7 +160,7 @@ Using an additional, *trainable* mode-3 tensor, we can define the polynomial alt
 
 The notion of a polynomial Kolmogorov-Arnold Netork (KAN) layer can now easily be expressed as a contraction of its alternant tensor.
 
-.. prf:definition:: Polynomial KAN layer
+.. admonition:: Definition — Polynomial KAN layer
 
     A polynomial KAN layer with :math:`n`-dimensional inputs, 
     :math:`m`-dimensional outputs and a polynomial basis :math:`B = \{b_{d}(x) \mid deg(b_{d}(x)) = d\}` is defined as
