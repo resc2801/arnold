@@ -156,7 +156,6 @@ This documentation is organized as a comprehensive reference:
    :maxdepth: 1
    :caption: Part V: Reference
 
-   introduction/intro
    generated/arnold
    simplifications
 

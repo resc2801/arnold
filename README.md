@@ -196,6 +196,62 @@ Wavelets in Kolmogorov-Arnold Networks (KANs) offer a sophisticated approach to 
 | [Ricker (Mexican Hat)](src/arnold/layers/wavelet/ricker.py)       | ${\psi (t)={\frac {2}{{\sqrt {3\sigma }}\pi ^{1/4}}}\left(1-\left({\frac {t}{\sigma }}\right)^{2}\right)e^{-{\frac {t^{2}}{2\sigma ^{2}}}}}$ | $\sigma$ | $\mathbb{R}$ | - | 
 | [Shannon](src/arnold/layers/wavelet/shannon.py)                   | $\psi^{(Sha)}(t)=\mathop{\mathrm{sinc}} \left({\frac {t}{2}}\right)\cdot \cos \left({\frac {3\pi t}{2}}\right)$               | -        | $\mathbb{R}$ | - | 
 
+
+### Spectral bases
+
+Trigonometric and random Fourier basis functions for periodic signals and kernel approximation.
+
+| Layer | Definition | Parameters | Support | Implementation |
+| :- | :- | :- | :- | :- |
+| [FourierKAN](src/arnold/layers/core/spectral/fourier_basis.py) | $\phi_k(x) = \{1, \cos(k\omega x), \sin(k\omega x)\}$ | $\omega$ | $\mathbb{R}$ | Vectorized trig |
+| [RandomFourierFeatures](src/arnold/layers/core/spectral/random_fourier_features.py) | $\phi(x) = \sqrt{2/D} \cos(\omega^T x + b)$ | $\sigma$ | $\mathbb{R}$ | Random sampling |
+
+
+### Geometric bases
+
+Basis functions for spherical and geometric domains.
+
+| Layer | Definition | Parameters | Support | Implementation |
+| :- | :- | :- | :- | :- |
+| [Zernike](src/arnold/layers/core/geometric/zernike.py) | $R_n^0(\rho) = P_n(2\rho^2 - 1)$ | - | $[0, 1]$ | Legendre recurrence |
+| [SphericalHarmonics](src/arnold/layers/core/geometric/spherical_harmonics.py) | $Y_l^0(\theta) = N_l^0 P_l(\cos\theta)$ | - | $S^2$ | Legendre recurrence |
+| [HypersphericalHarmonics](src/arnold/layers/core/geometric/hyperspherical_harmonics.py) | $H_l^{(n)}(\cos\theta) = C_l^{(n-2)/2}(\cos\theta)$ | $n$ | $S^{n-1}$ | Gegenbauer recurrence |
+
+
+### Special functions
+
+Classical special functions as basis for physics-informed networks.
+
+| Layer | Definition | Parameters | Support | Implementation |
+| :- | :- | :- | :- | :- |
+| [Airy](src/arnold/layers/core/special/airy.py) | $\text{Ai}(x), \text{Bi}(x)$ | - | $\mathbb{R}$ | Power series |
+| [BesselFunctions](src/arnold/layers/core/special/bessel_functions.py) | $J_\nu(x)$ | $\nu$ | $\mathbb{R}$ | Power series |
+
+
+### Symbolic tools (NEW!)
+
+Extract explicit mathematical formulas from trained KANs — a key advantage for interpretability:
+
+```python
+from arnold.layers import Legendre
+from arnold.layers.symbolic import kan_to_polynomial, kan_to_latex
+
+# Create and train a layer
+layer = Legendre(units=1, degree=3)
+layer.build((None, 2))
+# ... train the layer ...
+
+# Convert to symbolic expression
+expr = kan_to_polynomial(layer)
+print(expr)  # e.g., 0.5*x_0**2 - 0.3*x_1 + 1.2*x_0*x_1
+
+# Get LaTeX for papers
+latex = kan_to_latex(layer, mode='equation')
+```
+
+Requires: `pip install sympy`
+
+
 Developer notes
 ---------------
 - Numerical constants (``PARAM_EPS``, dtype-aware eps) live in ``arnold.utils.constants`` to keep domain clamps consistent.
