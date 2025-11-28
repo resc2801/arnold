@@ -1,5 +1,14 @@
 .DS_Store
 .vscode/ 
+planning/
+examples/
+logs/
+data/
+output/
+models/
+results/
+checkpoints/
+runs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
