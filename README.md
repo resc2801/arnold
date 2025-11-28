@@ -1,5 +1,4 @@
-<img src="arnold.png" alt="alt text" width="100"/>
-# $\mathtt{ARNOLD}$ 
+<img src="arnold.png" alt="alt text" width="100"/> $\mathtt{ARNOLD}$ 
 
 [![PyPI version](https://badge.fury.io/py/arnold-kan.svg)](https://badge.fury.io/py/arnold-kan)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
