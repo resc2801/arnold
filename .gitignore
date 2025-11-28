@@ -1,3 +1,5 @@
+.github/copilot-instructions.md
+
 .DS_Store
 .vscode/ 
 planning/
@@ -174,3 +176,4 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+.github/copilot-instructions.md
