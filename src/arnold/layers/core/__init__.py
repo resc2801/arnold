@@ -72,7 +72,6 @@ from arnold.layers.core.polynomial import (
     Tetranacci,
     Tribonacci,
     Wilson,
-    Zernike,
 )
 from arnold.layers.core.rbf import (
     CauchyRBF,
@@ -102,6 +101,12 @@ from arnold.layers.core.spectral import (
     SincBasis,
     SpectralBase,
     WindowedSinc,
+)
+from arnold.layers.core.geometric import (
+    GeometricBase,
+    HypersphericalHarmonics,
+    SphericalHarmonics,
+    Zernike,
 )
 from arnold.layers.core.wavelets import (
     Bump,
@@ -134,6 +139,7 @@ from arnold.layers.core.registry import (
 __all__ = [
     # Base classes and utilities
     "KANBase",
+    "GeometricBase",
     "PolynomialBase",
     "RBFBase",
     "SplineBase",
@@ -145,7 +151,7 @@ __all__ = [
     "BSpline",
     "Cardinal",
     "CatmullRom",
-    # Spectral (stubs - Phase 9a)
+    # Spectral (Phase 9b implemented)
     "CosineBasis",
     "DiracComb",
     "FourierKAN",
@@ -153,6 +159,11 @@ __all__ = [
     "RandomFourierFeatures",
     "SincBasis",
     "WindowedSinc",
+    # Geometric (Phase 10)
+    "GeometricBase",
+    "HypersphericalHarmonics",
+    "SphericalHarmonics",
+    "Zernike",
     # Wavelets
     "Bump",
     "Coiflet",

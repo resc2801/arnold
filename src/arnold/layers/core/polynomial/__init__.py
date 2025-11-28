@@ -77,7 +77,8 @@ from .q_orthogonal import (
     QRacah,
     QuantumQKrawtchouk,
 )
-from .zernike import Zernike
+
+# Note: Zernike moved to arnold.layers.core.geometric in Phase 10
 
 
 __all__ = [
@@ -149,5 +150,4 @@ __all__ = [
     "ContinuousQLaguerre",
     "ContinuousQLegendre",
     "Tribonacci",
-    "Zernike",
 ]

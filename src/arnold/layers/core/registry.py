@@ -132,11 +132,18 @@ from .polynomial.sequences import (
 # Non-Orthogonal (non_orthogonal.py)
 from .polynomial.non_orthogonal import Boubaker
 
-# Zernike (zernike.py)
-from .polynomial.zernike import Zernike
-
 # Rational Functions
 from .rational_functions import Laurent
+
+# =============================================================================
+# Geometric Basis Functions
+# =============================================================================
+
+from .geometric import (
+    Zernike,
+    SphericalHarmonics,
+    HypersphericalHarmonics,
+)
 
 # =============================================================================
 # Radial Basis Functions
@@ -300,8 +307,16 @@ LAYER_REGISTRY: dict[str, type[KANBase]] = {
     # Non-Orthogonal & Special
     # -------------------------------------------------------------------------
     "boubaker": Boubaker,
-    "zernike": Zernike,
     "laurent": Laurent,
+    # -------------------------------------------------------------------------
+    # Geometric Basis Functions
+    # -------------------------------------------------------------------------
+    "zernike": Zernike,
+    "spherical_harmonics": SphericalHarmonics,
+    "spherical": SphericalHarmonics,  # Short alias
+    "ylm": SphericalHarmonics,  # Mathematical notation Y_l^m
+    "hyperspherical_harmonics": HypersphericalHarmonics,
+    "hyperspherical": HypersphericalHarmonics,  # Short alias
     # -------------------------------------------------------------------------
     # Radial Basis Functions
     # -------------------------------------------------------------------------
@@ -381,7 +396,7 @@ LAYER_CATEGORIES: dict[str, list[str]] = {
         "chebyshev3", "chebyshev4", "laguerre", "hermite", "bessel",
         "meixner_pollaczek", "pollaczek", "wilson", "al_salam_carlitz_1",
         "al_salam_carlitz_2", "askey_wilson", "bannai_ito", "charlier",
-        "boubaker", "zernike", "laurent",
+        "boubaker", "laurent",
     ],
     "discrete_orthogonal": [
         "hahn", "krawtchouk", "meixner", "racah",
@@ -401,6 +416,9 @@ LAYER_CATEGORIES: dict[str, list[str]] = {
     "lucas_type": [
         "lucas", "pell", "pell_lucas", "fermat", "fermat_lucas",
         "jacobsthal", "jacobsthal_lucas",
+    ],
+    "geometric": [
+        "zernike", "spherical_harmonics", "hyperspherical_harmonics",
     ],
     "rbf": [
         "gaussian_rbf", "multiquadric", "inverse_multiquadric",
