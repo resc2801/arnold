@@ -142,7 +142,7 @@ from .rational_functions import Laurent
 # Radial Basis Functions
 # =============================================================================
 
-from .radial_basis_functions import (
+from .rbf import (
     RBFBase,
     GaussianRBF,
     MultiquadricRBF,

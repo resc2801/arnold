@@ -74,7 +74,7 @@ from arnold.layers.core.polynomial import (
     Wilson,
     Zernike,
 )
-from arnold.layers.core.radial_basis_functions import (
+from arnold.layers.core.rbf import (
     CauchyRBF,
     CubicRBF,
     ExponentialRBF,
