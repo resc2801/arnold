@@ -198,6 +198,22 @@ from .spectral import (
     RandomFourierFeatures,
 )
 
+# =============================================================================
+# Special Functions
+# =============================================================================
+
+from .special import (
+    SpecialBase,
+    Airy,
+    Bessel as BesselFunc,  # Avoid collision with Bessel polynomial
+    ParabolicCylinder,
+    Mathieu,
+    Whittaker,
+    Slepian,
+    LegendreFunctions,
+    EllipticFunctions,
+)
+
 
 # =============================================================================
 # Layer Registry
@@ -383,6 +399,24 @@ LAYER_REGISTRY: dict[str, type[KANBase]] = {
     "rff": RandomFourierFeatures,
     "random_fourier_features": RandomFourierFeatures,
     "random_fourier": RandomFourierFeatures,
+    # -------------------------------------------------------------------------
+    # Special Functions
+    # -------------------------------------------------------------------------
+    "airy": Airy,
+    "airy_functions": Airy,
+    "bessel_functions": BesselFunc,  # Note: "bessel" maps to Bessel polynomial
+    "bessel_j": BesselFunc,
+    "parabolic_cylinder": ParabolicCylinder,
+    "mathieu": Mathieu,
+    "mathieu_functions": Mathieu,
+    "whittaker": Whittaker,
+    "whittaker_functions": Whittaker,
+    "slepian": Slepian,
+    "dpss": Slepian,  # Discrete Prolate Spheroidal Sequences
+    "legendre_functions": LegendreFunctions,
+    "associated_legendre": LegendreFunctions,
+    "elliptic_functions": EllipticFunctions,
+    "jacobi_elliptic": EllipticFunctions,
 }
 
 
@@ -434,6 +468,10 @@ LAYER_CATEGORIES: dict[str, list[str]] = {
     ],
     "spectral": [
         "fourier", "rff",
+    ],
+    "special": [
+        "airy", "bessel_functions", "parabolic_cylinder", "mathieu",
+        "whittaker", "slepian", "legendre_functions", "elliptic_functions",
     ],
 }
 

@@ -108,6 +108,17 @@ from arnold.layers.core.geometric import (
     SphericalHarmonics,
     Zernike,
 )
+from arnold.layers.core.special import (
+    Airy,
+    Bessel as BesselFunc,  # Alias to avoid collision with Bessel polynomial
+    EllipticFunctions,
+    LegendreFunctions,
+    Mathieu,
+    ParabolicCylinder,
+    Slepian,
+    SpecialBase,
+    Whittaker,
+)
 from arnold.layers.core.wavelets import (
     Bump,
     Coiflet,
@@ -144,6 +155,7 @@ __all__ = [
     "RBFBase",
     "SplineBase",
     "SpectralBase",
+    "SpecialBase",
     "WaveletBase",
     "detect_hardware",
     "get_recommended_dtype",
@@ -164,6 +176,15 @@ __all__ = [
     "HypersphericalHarmonics",
     "SphericalHarmonics",
     "Zernike",
+    # Special (Phase 11)
+    "Airy",
+    "BesselFunc",
+    "EllipticFunctions",
+    "LegendreFunctions",
+    "Mathieu",
+    "ParabolicCylinder",
+    "Slepian",
+    "Whittaker",
     # Wavelets
     "Bump",
     "Coiflet",
