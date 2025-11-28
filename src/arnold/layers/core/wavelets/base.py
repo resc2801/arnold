@@ -28,7 +28,7 @@ class WaveletBase(KANBase):
 
     .. math::
 
-        y_j = \sum_{i=1}^{d_{\text{in}}} w_{i,j} \cdot \frac{1}{\sqrt{s_j}} \, 
+        y_j = \sum_{i=1}^{d_{\text{in}}} w_{i,j} \cdot \frac{1}{\sqrt{s_j}} \,
               \psi\!\left(\frac{x_i - t_j}{s_j}\right) + b_j
 
     where :math:`\psi` is the mother wavelet, :math:`s_j > 0` is the learnable scale,

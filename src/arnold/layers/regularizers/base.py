@@ -12,6 +12,7 @@ from abc import abstractmethod
 
 import tensorflow as tf
 
+
 tfk = tf.keras
 
 
@@ -56,6 +57,6 @@ class KANRegularizer(tfk.regularizers.Regularizer):
         return {}
 
     @classmethod
-    def from_config(cls, config: dict) -> "KANRegularizer":
+    def from_config(cls, config: dict) -> KANRegularizer:
         """Reconstruct from configuration."""
         return cls(**config)

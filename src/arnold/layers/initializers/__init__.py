@@ -46,6 +46,7 @@ from arnold.layers.initializers.polynomial import PolynomialInitializer
 from arnold.layers.initializers.rbf import RBFInitializer
 from arnold.layers.initializers.spectral import SpectralInitializer
 
+
 __all__ = [
     # Base
     "KANInitializer",

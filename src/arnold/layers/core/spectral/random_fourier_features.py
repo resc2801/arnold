@@ -50,6 +50,7 @@ import tensorflow as tf
 
 from arnold.layers.core.spectral.base import SpectralBase
 
+
 tfk = tf.keras
 
 
@@ -171,12 +172,12 @@ class RandomFourierFeatures(SpectralBase):
         # Initialize random frequencies: ω ~ N(0, γ²I)
         # For RBF kernel k(x,y) = exp(-γ²||x-y||²/2), we sample ω ~ N(0, γ²I)
         rng = tf.random.Generator.from_seed(self.seed) if self.seed is not None else tf.random.get_global_generator()
-        
+
         omega_init = rng.normal(
             shape=(input_dim, self.num_features),
             stddev=self.kernel_scale,
         )
-        
+
         self._omega = self.add_weight(
             name="omega",
             shape=(input_dim, self.num_features),
@@ -190,7 +191,7 @@ class RandomFourierFeatures(SpectralBase):
             minval=0.0,
             maxval=2.0 * math.pi,
         )
-        
+
         self._phase = self.add_weight(
             name="phase",
             shape=(self.num_features,),
@@ -238,10 +239,10 @@ class RandomFourierFeatures(SpectralBase):
         # Compute per-dimension projection: x_i * omega[i, :] + phase
         # This maintains the univariate KAN structure
         # x[..., i] * omega[i, d] + phase[d] for each input dimension i
-        
+
         # Expand x: (..., input_dim, 1)
         x_expanded = x[..., tf.newaxis]
-        
+
         # Broadcast: x[..., i, 1] * omega[i, d] -> (..., input_dim, num_features)
         projection = x_expanded * omega + phase  # (..., input_dim, num_features)
 

@@ -23,11 +23,11 @@ import pytest
 import tensorflow as tf
 
 from arnold.layers.core.geometric import (
-    GeometricBase,
-    Zernike,
-    SphericalHarmonics,
     HypersphericalHarmonics,
+    SphericalHarmonics,
+    Zernike,
 )
+
 
 # =============================================================================
 # Test Fixtures

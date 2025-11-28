@@ -27,7 +27,6 @@ from arnold.layers.core.wavelets import (
     Ricker,
     Shannon,
     Symlet,
-    WaveletBase,
 )
 
 

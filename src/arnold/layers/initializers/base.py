@@ -15,6 +15,7 @@ import tensorflow as tf
 
 from arnold.layers.constraints import inverse_softplus
 
+
 tfk = tf.keras
 
 
@@ -56,7 +57,7 @@ class KANInitializer(tfk.initializers.Initializer):
         return {}
 
     @classmethod
-    def from_config(cls, config: dict) -> "KANInitializer":
+    def from_config(cls, config: dict) -> KANInitializer:
         """Reconstruct from configuration."""
         return cls(**config)
 

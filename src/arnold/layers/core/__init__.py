@@ -4,6 +4,12 @@
 Implementation of KAN layers and bases.
 """
 
+from arnold.layers.core.geometric import (
+    GeometricBase,
+    HypersphericalHarmonics,
+    SphericalHarmonics,
+    Zernike,
+)
 from arnold.layers.core.kan_base import (
     KANBase,
     detect_hardware,
@@ -86,11 +92,30 @@ from arnold.layers.core.rbf import (
     RBFBase,
     ThinPlateSplineRBF,
 )
-from arnold.layers.core.splines import (
-    BSpline,
-    Cardinal,
-    CatmullRom,
-    SplineBase,
+
+# Registry API
+from arnold.layers.core.registry import (
+    LAYER_CATEGORIES,
+    LAYER_REGISTRY,
+    get_aliases,
+    get_layer,
+    get_layer_class,
+    is_registered,
+    list_layers,
+    list_layers_by_category,
+)
+from arnold.layers.core.special import (
+    Airy,
+    EllipticFunctions,
+    LegendreFunctions,
+    Mathieu,
+    ParabolicCylinder,
+    Slepian,
+    SpecialBase,
+    Whittaker,
+)
+from arnold.layers.core.special import (
+    Bessel as BesselFunc,  # Alias to avoid collision with Bessel polynomial
 )
 from arnold.layers.core.spectral import (
     CosineBasis,
@@ -102,22 +127,11 @@ from arnold.layers.core.spectral import (
     SpectralBase,
     WindowedSinc,
 )
-from arnold.layers.core.geometric import (
-    GeometricBase,
-    HypersphericalHarmonics,
-    SphericalHarmonics,
-    Zernike,
-)
-from arnold.layers.core.special import (
-    Airy,
-    Bessel as BesselFunc,  # Alias to avoid collision with Bessel polynomial
-    EllipticFunctions,
-    LegendreFunctions,
-    Mathieu,
-    ParabolicCylinder,
-    Slepian,
-    SpecialBase,
-    Whittaker,
+from arnold.layers.core.splines import (
+    BSpline,
+    Cardinal,
+    CatmullRom,
+    SplineBase,
 )
 from arnold.layers.core.wavelets import (
     Bump,
@@ -132,18 +146,6 @@ from arnold.layers.core.wavelets import (
     Shannon,
     Symlet,
     WaveletBase,
-)
-
-# Registry API
-from arnold.layers.core.registry import (
-    LAYER_REGISTRY,
-    LAYER_CATEGORIES,
-    get_layer,
-    get_layer_class,
-    list_layers,
-    list_layers_by_category,
-    is_registered,
-    get_aliases,
 )
 
 

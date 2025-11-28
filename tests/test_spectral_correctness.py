@@ -21,12 +21,11 @@ import numpy as np
 import pytest
 import tensorflow as tf
 
+from arnold.layers.core.registry import get_layer
 from arnold.layers.core.spectral import (
-    SpectralBase,
     FourierKAN,
     RandomFourierFeatures,
 )
-from arnold.layers.core.registry import get_layer, list_layers
 
 
 # =============================================================================
@@ -492,8 +491,8 @@ class TestSpectralTraining:
 
     def test_fourier_model_save_load(self):
         """Test FourierKAN model can be saved and loaded."""
-        import tempfile
         import os
+        import tempfile
 
         # Use Functional API for reliable serialization
         inputs = tf.keras.Input(shape=(5,))
@@ -514,8 +513,8 @@ class TestSpectralTraining:
 
     def test_rff_model_save_load(self):
         """Test RandomFourierFeatures model can be saved and loaded."""
-        import tempfile
         import os
+        import tempfile
 
         # Use Functional API for reliable serialization
         inputs = tf.keras.Input(shape=(5,))

@@ -100,15 +100,15 @@ class TestDiscreteBasicFunctionality:
             layer = discrete_class(degree=3, units=4)
         else:
             layer = discrete_class(degree=3, units=4, N=10)
-        
+
         x1 = tf.constant([[1.0, 2.0]])
         x2 = tf.constant([[3.0, 4.0]])
         x_batch = tf.concat([x1, x2], axis=0)
-        
+
         out1 = layer(x1)
         out2 = layer(x2)
         out_batch = layer(x_batch)
-        
+
         np.testing.assert_allclose(out_batch[0].numpy(), out1[0].numpy(), rtol=1e-5)
         np.testing.assert_allclose(out_batch[1].numpy(), out2[0].numpy(), rtol=1e-5)
 
@@ -133,7 +133,7 @@ class TestKrawtchouk:
         layer = Krawtchouk(degree=3, units=4, p_init=0.3, N=10)
         x = tf.constant([[1.0, 2.0]])
         _ = layer(x)
-        
+
         # Get effective p value via sigmoid
         p = tf.sigmoid(layer._p_logits)
         assert 0 < p.numpy() < 1
@@ -155,10 +155,10 @@ class TestKrawtchouk:
         layer = Krawtchouk(degree=3, units=1, p_init=0.5, N=10)
         x = tf.constant([[0.0]])
         _ = layer(x)
-        
+
         # Get basis directly
         basis = layer.pseudo_vandermonde(x)
-        
+
         # K_0(0) = 1
         np.testing.assert_allclose(basis[0, 0, 0].numpy(), 1.0, rtol=1e-5)
 
@@ -166,11 +166,11 @@ class TestKrawtchouk:
         """Test p parameter is trainable when specified."""
         layer = Krawtchouk(degree=3, units=4, p_trainable=True, N=10)
         x = tf.constant([[1.0, 2.0]])
-        
+
         with tf.GradientTape() as tape:
             output = layer(x)
             loss = tf.reduce_sum(output)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
         p_grad = [g for g, v in zip(grads, layer.trainable_variables) if 'p_logits' in v.name]
         assert len(p_grad) == 1
@@ -181,7 +181,7 @@ class TestKrawtchouk:
         layer = Krawtchouk(degree=3, units=4, p_trainable=False, N=10)
         x = tf.constant([[1.0, 2.0]])
         _ = layer(x)
-        
+
         p_vars = [v for v in layer.trainable_variables if 'p_logits' in v.name]
         assert len(p_vars) == 0
 
@@ -206,7 +206,7 @@ class TestHahn:
         layer = Hahn(degree=3, units=4, alpha_init=0.5, beta_init=0.5, N=10)
         x = tf.constant([[1.0, 2.0]])
         _ = layer(x)
-        
+
         # Parameters should be > -1 via softplus
         from arnold.utils.constraints import softplus_lower_bound
         alpha = softplus_lower_bound(layer._alpha_logits, lower_bound=-1.0)
@@ -224,7 +224,7 @@ class TestHahn:
         layer = Hahn(degree=3, units=1, N=10)
         x = tf.constant([[0.0]])
         _ = layer(x)
-        
+
         basis = layer.pseudo_vandermonde(x)
         # Q_0(0) = 1
         np.testing.assert_allclose(basis[0, 0, 0].numpy(), 1.0, rtol=1e-5)
@@ -233,13 +233,13 @@ class TestHahn:
         """Test alpha and beta are trainable when specified."""
         layer = Hahn(degree=3, units=4, alpha_trainable=True, beta_trainable=True, N=10)
         x = tf.constant([[1.0, 2.0]])
-        
+
         with tf.GradientTape() as tape:
             output = layer(x)
             loss = tf.reduce_sum(output)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
-        param_grads = [g for g, v in zip(grads, layer.trainable_variables) 
+        param_grads = [g for g, v in zip(grads, layer.trainable_variables)
                        if 'alpha' in v.name or 'beta' in v.name]
         assert len(param_grads) == 2
         assert all(g is not None for g in param_grads)
@@ -265,7 +265,7 @@ class TestMeixner:
         layer = Meixner(degree=3, units=4, beta_init=1.0, c_init=0.5)
         x = tf.constant([[1.0, 2.0]])
         _ = layer(x)
-        
+
         from arnold.utils.constraints import softplus_lower_bound
         beta = softplus_lower_bound(layer._beta_logits, lower_bound=0.0)
         assert beta.numpy() > 0
@@ -275,7 +275,7 @@ class TestMeixner:
         layer = Meixner(degree=3, units=4, beta_init=1.0, c_init=0.5)
         x = tf.constant([[1.0, 2.0]])
         _ = layer(x)
-        
+
         c = tf.sigmoid(layer._c_logits)
         assert 0 < c.numpy() < 1
 
@@ -296,7 +296,7 @@ class TestMeixner:
         layer = Meixner(degree=3, units=1)
         x = tf.constant([[0.0]])
         _ = layer(x)
-        
+
         basis = layer.pseudo_vandermonde(x)
         np.testing.assert_allclose(basis[0, 0, 0].numpy(), 1.0, rtol=1e-5)
 
@@ -304,13 +304,13 @@ class TestMeixner:
         """Test beta and c are trainable when specified."""
         layer = Meixner(degree=3, units=4, beta_trainable=True, c_trainable=True)
         x = tf.constant([[1.0, 2.0]])
-        
+
         with tf.GradientTape(persistent=True) as tape:
             output = layer(x)
             loss = tf.reduce_sum(output)
-        
+
         # Filter to only beta and c logits (exclude poly_coeffs)
-        param_vars = [v for v in layer.trainable_variables 
+        param_vars = [v for v in layer.trainable_variables
                       if 'beta_logits' in v.name or 'c_logits' in v.name]
         assert len(param_vars) == 2
         param_grads = [tape.gradient(loss, v) for v in param_vars]
@@ -337,7 +337,7 @@ class TestRacah:
         layer = Racah(degree=3, units=4, N=10)
         x = tf.constant([[1.0, 2.0]])
         _ = layer(x)
-        
+
         from arnold.utils.constraints import softplus_lower_bound
         for name in ['alpha', 'beta', 'gamma', 'delta']:
             logits = getattr(layer, f'_{name}_logits')
@@ -354,7 +354,7 @@ class TestRacah:
         layer = Racah(degree=3, units=1, N=10)
         x = tf.constant([[0.0]])
         _ = layer(x)
-        
+
         basis = layer.pseudo_vandermonde(x)
         np.testing.assert_allclose(basis[0, 0, 0].numpy(), 1.0, rtol=1e-5)
 
@@ -366,14 +366,14 @@ class TestRacah:
             gamma_trainable=True, delta_trainable=True
         )
         x = tf.constant([[1.0, 2.0]])
-        
+
         with tf.GradientTape() as tape:
             output = layer(x)
             loss = tf.reduce_sum(output)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
         param_names = ['alpha', 'beta', 'gamma', 'delta']
-        param_grads = [g for g, v in zip(grads, layer.trainable_variables) 
+        param_grads = [g for g, v in zip(grads, layer.trainable_variables)
                        if any(name in v.name for name in param_names)]
         assert len(param_grads) == 4
         assert all(g is not None for g in param_grads)
@@ -383,7 +383,7 @@ class TestRacah:
         layer = Racah(degree=2, units=1, N=10, gamma_init=1.0, delta_init=1.0)
         x = tf.constant([[2.0]])
         _ = layer(x)
-        
+
         # The transformation should affect the basis
         basis = layer.pseudo_vandermonde(x)
         # Just check it's finite and structured
@@ -404,25 +404,25 @@ class TestMathematicalProperties:
         layer = Krawtchouk(degree=5, units=1, p_init=0.4, N=10)
         x = tf.constant([[3.0]])
         _ = layer(x)
-        
+
         basis = layer.pseudo_vandermonde(x)
         p = tf.sigmoid(layer._p_logits).numpy()
         N = 10.0
-        
+
         # For n=2: verify recurrence approximately holds
         # -x K_n = A_n K_{n+1} - (A_n + C_n) K_n + C_n K_{n-1}
         n = 2
         A_n = p * (N - n)
         C_n = n * (1 - p)
         x_val = 3.0
-        
+
         K_n = basis[0, 0, n].numpy()
         K_nm1 = basis[0, 0, n - 1].numpy()
         K_np1 = basis[0, 0, n + 1].numpy()
-        
+
         lhs = -x_val * K_n
         rhs = A_n * K_np1 - (A_n + C_n) * K_n + C_n * K_nm1
-        
+
         np.testing.assert_allclose(lhs, rhs, rtol=0.1)
 
     def test_degree_zero_is_constant(self, discrete_class):
@@ -431,14 +431,14 @@ class TestMathematicalProperties:
             layer = discrete_class(degree=3, units=1)
         else:
             layer = discrete_class(degree=3, units=1, N=10)
-        
+
         x1 = tf.constant([[1.0]])
         x2 = tf.constant([[5.0]])
-        
+
         _ = layer(x1)
         basis1 = layer.pseudo_vandermonde(x1)
         basis2 = layer.pseudo_vandermonde(x2)
-        
+
         # P_0 should be 1 everywhere
         np.testing.assert_allclose(basis1[0, 0, 0].numpy(), 1.0, rtol=1e-5)
         np.testing.assert_allclose(basis2[0, 0, 0].numpy(), 1.0, rtol=1e-5)
@@ -449,13 +449,13 @@ class TestMathematicalProperties:
             layer = discrete_class(degree=5, units=1)
         else:
             layer = discrete_class(degree=5, units=1, N=10)
-        
+
         # Evaluate at multiple points
         x = tf.constant([[0.0], [1.0], [2.0], [3.0], [4.0]])
         _ = layer(x[:1])
-        
+
         basis = layer.pseudo_vandermonde(x)
-        
+
         # Higher degree polynomials should have more sign changes
         for d in range(1, 5):
             poly_values = basis[:, 0, d].numpy()
@@ -477,11 +477,11 @@ class TestGradientFlow:
             layer = discrete_class(degree=4, units=8)
         else:
             layer = discrete_class(degree=4, units=8, N=10)
-        
+
         with tf.GradientTape() as tape:
             output = layer(sample_input)
             loss = tf.reduce_mean(output ** 2)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
         assert all(g is not None for g in grads)
 
@@ -491,11 +491,11 @@ class TestGradientFlow:
             layer = discrete_class(degree=4, units=8)
         else:
             layer = discrete_class(degree=4, units=8, N=10)
-        
+
         with tf.GradientTape() as tape:
             output = layer(sample_input)
             loss = tf.reduce_mean(output ** 2)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
         for g in grads:
             assert not tf.reduce_any(tf.math.is_nan(g))
@@ -507,13 +507,13 @@ class TestGradientFlow:
             layer = discrete_class(degree=3, units=4)
         else:
             layer = discrete_class(degree=3, units=4, N=10)
-        
+
         x = tf.Variable([[1.0, 2.0, 3.0]])
-        
+
         with tf.GradientTape() as tape:
             output = layer(x)
             loss = tf.reduce_sum(output)
-        
+
         grad = tape.gradient(loss, x)
         assert grad is not None
         assert not tf.reduce_any(tf.math.is_nan(grad))
@@ -533,11 +533,11 @@ class TestXLACompatibility:
             layer = discrete_class(degree=3, units=8)
         else:
             layer = discrete_class(degree=3, units=8, N=10)
-        
+
         @tf.function(jit_compile=True)
         def forward(x):
             return layer(x)
-        
+
         # Should not raise
         output = forward(sample_input)
         assert output.shape == (8, 8)
@@ -549,9 +549,9 @@ class TestXLACompatibility:
             layer = discrete_class(degree=3, units=8)
         else:
             layer = discrete_class(degree=3, units=8, N=10)
-        
+
         optimizer = tf.keras.optimizers.Adam(0.01)
-        
+
         @tf.function(jit_compile=True)
         def train_step(x, y):
             with tf.GradientTape() as tape:
@@ -560,7 +560,7 @@ class TestXLACompatibility:
             grads = tape.gradient(loss, layer.trainable_variables)
             optimizer.apply_gradients(zip(grads, layer.trainable_variables))
             return loss
-        
+
         y = tf.random.uniform((8, 8))
         loss = train_step(sample_input, y)
         assert not tf.math.is_nan(loss)
@@ -581,7 +581,7 @@ class TestSerialization:
         else:
             layer = discrete_class(degree=4, units=8, N=10)
         _ = layer(sample_input)
-        
+
         config = layer.get_config()
         assert "degree" in config
         assert "units" in config
@@ -595,10 +595,10 @@ class TestSerialization:
         else:
             layer = discrete_class(degree=4, units=8, N=10)
         _ = layer(sample_input)
-        
+
         config = layer.get_config()
         new_layer = discrete_class.from_config(config)
-        
+
         output_new = new_layer(sample_input)
         assert output_new.shape == (8, 8)
 
@@ -608,33 +608,33 @@ class TestSerialization:
             layer = discrete_class(degree=3, units=8)
         else:
             layer = discrete_class(degree=3, units=8, N=10)
-        
+
         model = tf.keras.Sequential([
             tf.keras.layers.InputLayer(shape=(4,)),
             layer,
         ])
-        
+
         output_before = model(sample_input)
-        
+
         # Save and load
         save_path = tmp_path / "model.keras"
         model.save(save_path)
         loaded_model = tf.keras.models.load_model(save_path)
-        
+
         output_after = loaded_model(sample_input)
-        
+
         np.testing.assert_allclose(output_before.numpy(), output_after.numpy(), rtol=1e-5)
 
     def test_krawtchouk_config_preserves_params(self, sample_input):
         """Test Krawtchouk config preserves all parameters."""
         layer = Krawtchouk(degree=4, units=8, p_init=0.3, p_trainable=False, N=15)
         _ = layer(sample_input)
-        
+
         config = layer.get_config()
         assert config["p_init"] == 0.3
         assert config["p_trainable"] is False
         assert config["N"] == 15
-        
+
         new_layer = Krawtchouk.from_config(config)
         assert new_layer.p_init == 0.3
         assert new_layer.p_trainable is False
@@ -649,7 +649,7 @@ class TestSerialization:
             N=12
         )
         _ = layer(sample_input)
-        
+
         config = layer.get_config()
         assert config["alpha_init"] == 0.7
         assert config["beta_init"] == 1.2
@@ -663,7 +663,7 @@ class TestSerialization:
             c_init=0.7, c_trainable=True
         )
         _ = layer(sample_input)
-        
+
         config = layer.get_config()
         assert config["beta_init"] == 2.0
         assert config["c_init"] == 0.7
@@ -676,7 +676,7 @@ class TestSerialization:
             gamma_init=0.5, delta_init=0.6
         )
         _ = layer(sample_input)
-        
+
         config = layer.get_config()
         assert config["alpha_init"] == 0.3
         assert config["beta_init"] == 0.4
@@ -699,13 +699,13 @@ class TestIntegration:
             layer = discrete_class(degree=3, units=16)
         else:
             layer = discrete_class(degree=3, units=16, N=10)
-        
+
         model = tf.keras.Sequential([
             tf.keras.layers.InputLayer(shape=(4,)),
             layer,
             tf.keras.layers.Dense(8),
         ])
-        
+
         output = model(sample_input)
         assert output.shape == (8, 8)
 
@@ -715,12 +715,12 @@ class TestIntegration:
             layer = discrete_class(degree=3, units=16)
         else:
             layer = discrete_class(degree=3, units=16, N=10)
-        
+
         inputs = tf.keras.Input(shape=(4,))
         x = layer(inputs)
         outputs = tf.keras.layers.Dense(8)(x)
         model = tf.keras.Model(inputs=inputs, outputs=outputs)
-        
+
         output = model(sample_input)
         assert output.shape == (8, 8)
 
@@ -730,17 +730,17 @@ class TestIntegration:
             layer = discrete_class(degree=3, units=8)
         else:
             layer = discrete_class(degree=3, units=8, N=10)
-        
+
         model = tf.keras.Sequential([
             tf.keras.layers.InputLayer(shape=(4,)),
             layer,
         ])
-        
+
         model.compile(optimizer="adam", loss="mse")
-        
+
         y = tf.random.uniform((8, 8))
         history = model.fit(sample_input, y, epochs=1, verbose=0)
-        
+
         assert len(history.history["loss"]) == 1
 
     def test_with_regularization(self, discrete_class, sample_input):
@@ -758,11 +758,11 @@ class TestIntegration:
                 N=10,
                 kernel_regularizer=tf.keras.regularizers.L2(0.01),
             )
-        
+
         with tf.GradientTape() as tape:
             output = layer(sample_input)
             loss = tf.reduce_mean(output) + sum(layer.losses)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
         assert all(g is not None for g in grads)
 
@@ -781,7 +781,7 @@ class TestEdgeCases:
             layer = discrete_class(degree=0, units=4)
         else:
             layer = discrete_class(degree=0, units=4, N=10)
-        
+
         x = tf.constant([[1.0, 2.0, 3.0]])
         output = layer(x)
         assert output.shape == (1, 4)
@@ -792,7 +792,7 @@ class TestEdgeCases:
             layer = discrete_class(degree=1, units=4)
         else:
             layer = discrete_class(degree=1, units=4, N=10)
-        
+
         x = tf.constant([[1.0, 2.0, 3.0]])
         output = layer(x)
         assert output.shape == (1, 4)
@@ -803,10 +803,10 @@ class TestEdgeCases:
             layer = discrete_class(degree=15, units=4)
         else:
             layer = discrete_class(degree=15, units=4, N=20)
-        
+
         x = tf.constant([[1.0, 2.0, 3.0]])
         output = layer(x)
-        
+
         # Should be finite
         assert not tf.reduce_any(tf.math.is_nan(output))
         assert not tf.reduce_any(tf.math.is_inf(output))
@@ -817,10 +817,10 @@ class TestEdgeCases:
             layer = discrete_class(degree=4, units=8)
         else:
             layer = discrete_class(degree=4, units=8, N=100)
-        
+
         x = tf.constant([[10.0, 20.0, 30.0, 40.0]])
         output = layer(x)
-        
+
         assert output.shape == (1, 8)
         # May have large values but should be finite
         assert not tf.reduce_any(tf.math.is_nan(output))
@@ -831,10 +831,10 @@ class TestEdgeCases:
             layer = discrete_class(degree=3, units=4)
         else:
             layer = discrete_class(degree=3, units=4, N=10)
-        
+
         x = tf.constant([[-1.0, -2.0, 0.0, 1.0]])
         output = layer(x)
-        
+
         # Should handle gracefully (polynomials extend beyond discrete points)
         assert output.shape == (1, 4)
         assert not tf.reduce_any(tf.math.is_nan(output))
@@ -845,7 +845,7 @@ class TestEdgeCases:
             layer = discrete_class(degree=3, units=4)
         else:
             layer = discrete_class(degree=3, units=4, N=10)
-        
+
         x = tf.constant([[1.0, 2.0]])
         output = layer(x)
         assert output.shape == (1, 4)
@@ -856,7 +856,7 @@ class TestEdgeCases:
             layer = discrete_class(degree=3, units=4)
         else:
             layer = discrete_class(degree=3, units=4, N=10)
-        
+
         x = tf.random.uniform((256, 8), minval=0, maxval=5)
         output = layer(x)
         assert output.shape == (256, 4)

@@ -12,6 +12,7 @@ The Tetranacci polynomials are defined by a 4-term recurrence:
 import tensorflow as tf
 
 from arnold.utils.compilation import kan_function
+
 from ..poly_base import PolynomialBase
 
 

@@ -20,6 +20,7 @@ Both are Lucas polynomial sequences with :math:`p(x) = 1, q(x) = 2x`.
 import tensorflow as tf
 
 from arnold.utils.compilation import kan_function
+
 from ..poly_base import PolynomialBase
 
 

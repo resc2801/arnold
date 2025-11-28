@@ -11,7 +11,7 @@ The q-Meixner polynomials are the q-analog of classical Meixner polynomials:
 
 .. math::
 
-    M_n(q^{-x}; b, c; q) = {}_2\phi_1\left(\begin{array}{c} 
+    M_n(q^{-x}; b, c; q) = {}_2\phi_1\left(\begin{array}{c}
         q^{-n}, q^{-x} \\ bq \end{array}; q, -\frac{q^{n+1}}{c}\right)
 
 They are orthogonal on :math:`x \in \{0, 1, 2, \ldots\}` with a q-negative binomial weight.

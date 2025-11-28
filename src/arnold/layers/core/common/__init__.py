@@ -32,40 +32,41 @@ Example
 >>> from arnold.layers.core.common.numerics import safe_log
 """
 
-from arnold.layers.core.common.types import (
-    DomainSpec,
-    BasisProtocol,
-    NormalizationScheme,
-    EvaluationStrategy,
-    RecurrenceCoefficients,
-    DOMAIN_UNIT_INTERVAL,
-    DOMAIN_SYMMETRIC,
-    DOMAIN_POSITIVE,
-    DOMAIN_REAL_LINE,
-    DOMAIN_UNIT_CIRCLE,
-)
 from arnold.layers.core.common.evaluation import (
     clenshaw_eval,
     horner_eval,
     three_term_recurrence,
 )
-from arnold.layers.core.common.parameters import (
-    scale_to_domain,
-    get_domain_bounds,
-    validate_parameters,
-    clip_to_domain,
-    normalize_input,
-)
 from arnold.layers.core.common.numerics import (
+    kahan_sum,
+    log_binomial,
+    log_factorial,
+    log_pochhammer,
+    safe_divide,
     safe_log,
     safe_sqrt,
-    safe_divide,
-    kahan_sum,
-    log_pochhammer,
-    log_factorial,
-    log_binomial,
     stabilize_recurrence,
 )
+from arnold.layers.core.common.parameters import (
+    clip_to_domain,
+    get_domain_bounds,
+    normalize_input,
+    scale_to_domain,
+    validate_parameters,
+)
+from arnold.layers.core.common.types import (
+    DOMAIN_POSITIVE,
+    DOMAIN_REAL_LINE,
+    DOMAIN_SYMMETRIC,
+    DOMAIN_UNIT_CIRCLE,
+    DOMAIN_UNIT_INTERVAL,
+    BasisProtocol,
+    DomainSpec,
+    EvaluationStrategy,
+    NormalizationScheme,
+    RecurrenceCoefficients,
+)
+
 
 __all__ = [
     # Types

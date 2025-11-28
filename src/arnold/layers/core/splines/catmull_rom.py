@@ -6,6 +6,7 @@ import tensorflow as tf
 from arnold.layers.core.splines.base import SplineBase
 from arnold.utils.compilation import kan_function
 
+
 tfk = tf.keras
 kan_fn = kan_function()
 

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+
 if TYPE_CHECKING:
     import sympy as sp
 
@@ -26,7 +27,7 @@ def _ensure_sympy():
         ) from e
 
 
-def simplify_expression(expr: "sp.Expr", **kwargs) -> "sp.Expr":
+def simplify_expression(expr: sp.Expr, **kwargs) -> sp.Expr:
     r"""
     Simplify a symbolic expression.
 
@@ -62,7 +63,7 @@ def simplify_expression(expr: "sp.Expr", **kwargs) -> "sp.Expr":
     return sp.simplify(expr, **kwargs)
 
 
-def expand_expression(expr: "sp.Expr", **kwargs) -> "sp.Expr":
+def expand_expression(expr: sp.Expr, **kwargs) -> sp.Expr:
     r"""
     Expand a symbolic expression.
 
@@ -97,7 +98,7 @@ def expand_expression(expr: "sp.Expr", **kwargs) -> "sp.Expr":
     return sp.expand(expr, **kwargs)
 
 
-def factor_expression(expr: "sp.Expr", **kwargs) -> "sp.Expr":
+def factor_expression(expr: sp.Expr, **kwargs) -> sp.Expr:
     r"""
     Factor a polynomial expression.
 
@@ -133,10 +134,10 @@ def factor_expression(expr: "sp.Expr", **kwargs) -> "sp.Expr":
 
 
 def collect_terms(
-    expr: "sp.Expr",
-    symbols: list["sp.Symbol"] | "sp.Symbol",
+    expr: sp.Expr,
+    symbols: list[sp.Symbol] | sp.Symbol,
     **kwargs,
-) -> "sp.Expr":
+) -> sp.Expr:
     r"""
     Collect terms with respect to specified symbols.
 
@@ -174,7 +175,7 @@ def collect_terms(
     return sp.collect(expr, symbols, **kwargs)
 
 
-def trigsimp_expression(expr: "sp.Expr", **kwargs) -> "sp.Expr":
+def trigsimp_expression(expr: sp.Expr, **kwargs) -> sp.Expr:
     r"""
     Simplify trigonometric expressions.
 
@@ -209,7 +210,7 @@ def trigsimp_expression(expr: "sp.Expr", **kwargs) -> "sp.Expr":
     return sp.trigsimp(expr, **kwargs)
 
 
-def polynomial_degree(expr: "sp.Expr", symbol: "sp.Symbol") -> int:
+def polynomial_degree(expr: sp.Expr, symbol: sp.Symbol) -> int:
     r"""
     Get the polynomial degree with respect to a symbol.
 
@@ -244,8 +245,8 @@ def polynomial_degree(expr: "sp.Expr", symbol: "sp.Symbol") -> int:
 
 
 def coefficient_list(
-    expr: "sp.Expr",
-    symbol: "sp.Symbol",
+    expr: sp.Expr,
+    symbol: sp.Symbol,
 ) -> list:
     r"""
     Extract coefficient list for a polynomial.

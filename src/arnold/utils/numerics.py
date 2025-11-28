@@ -31,7 +31,7 @@ def safe_reciprocal(x: tf.Tensor, eps: float = 1e-7) -> tf.Tensor:
 def clamp_abs(x: tf.Tensor, eps: float = 1e-6) -> tf.Tensor:
     """
     Clamp values away from zero by ``eps`` preserving sign, useful for avoiding poles.
-    
+
     For values with ``abs(x) < eps``:
 
     - Positive or zero values become +eps

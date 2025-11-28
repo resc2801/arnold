@@ -12,7 +12,7 @@ The q-Hahn polynomials are defined as:
 
 .. math::
 
-    Q_n(x) = Q_n(x; \alpha, \beta, N; q) = 
+    Q_n(x) = Q_n(x; \alpha, \beta, N; q) =
         {}_3\phi_2\left(\begin{array}{c} q^{-n}, \alpha\beta q^{n+1}, x \\
         \alpha q, q^{-N} \end{array}; q, q\right)
 
@@ -47,7 +47,7 @@ class QHahn(QPolynomialBase):
 
     .. math::
 
-        Q_n(x) = Q_n(x; \alpha, \beta, N; q) = 
+        Q_n(x) = Q_n(x; \alpha, \beta, N; q) =
             {}_3\phi_2\left(\begin{array}{c} q^{-n}, \alpha\beta q^{n+1}, x \\
             \alpha q, q^{-N} \end{array}; q, q\right)
 
@@ -57,8 +57,8 @@ class QHahn(QPolynomialBase):
 
     .. math::
 
-        \sum_{y=0}^{N} Q_n(q^{-y}) Q_m(q^{-y}) \binom{N}{y}_q 
-            \frac{(\alpha q; q)_y (\beta q; q)_{N-y}}{(\alpha\beta q^2; q)_N} 
+        \sum_{y=0}^{N} Q_n(q^{-y}) Q_m(q^{-y}) \binom{N}{y}_q
+            \frac{(\alpha q; q)_y (\beta q; q)_{N-y}}{(\alpha\beta q^2; q)_N}
             (\alpha q)^y = h_n \delta_{n,m}
 
     Three-term recurrence:
@@ -112,7 +112,7 @@ class QHahn(QPolynomialBase):
         input_clip: tuple[float, float] | None = None,
         **kwargs,
     ):
-        if N < degree:
+        if degree > N:
             raise ValueError(f"N must be >= degree, got N={N}, degree={degree}")
 
         super().__init__(

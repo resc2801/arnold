@@ -11,7 +11,7 @@ The Little q-Jacobi polynomials are defined as:
 
 .. math::
 
-    p_n(x; a, b; q) = {}_2\phi_1\left(\begin{array}{c} 
+    p_n(x; a, b; q) = {}_2\phi_1\left(\begin{array}{c}
         q^{-n}, abq^{n+1} \\ aq \end{array}; q, qx\right)
 
 They are orthogonal with respect to a discrete measure on :math:`\{q^k\}_{k=0}^{\infty}`.

@@ -9,11 +9,12 @@ using B-spline basis functions.
 
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
 import tensorflow as tf
 
 from arnold.layers.core.splines import BSpline
+
 
 tfk = tf.keras
 
@@ -121,5 +122,5 @@ class OriginalKAN(tfk.Model):
         return config
 
     @classmethod
-    def from_config(cls, config: dict) -> "OriginalKAN":
+    def from_config(cls, config: dict) -> OriginalKAN:
         return cls(**config)

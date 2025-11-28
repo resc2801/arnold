@@ -12,6 +12,7 @@ The Hexanacci polynomials are defined by a 6-term recurrence:
 import tensorflow as tf
 
 from arnold.utils.compilation import kan_function
+
 from ..poly_base import PolynomialBase
 
 

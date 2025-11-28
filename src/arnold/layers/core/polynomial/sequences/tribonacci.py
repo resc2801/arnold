@@ -16,6 +16,7 @@ The Tribonacci polynomials :math:`T_n(x)` are defined by the 3-term recurrence:
 import tensorflow as tf
 
 from arnold.utils.compilation import kan_function
+
 from ..poly_base import PolynomialBase
 
 

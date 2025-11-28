@@ -8,15 +8,14 @@ including continuous wavelets (Ricker, Morelet, Meyer) and discrete
 filter-bank wavelets (Haar, Daubechies, Symlet, Coiflet).
 """
 # Import coefficients first (no circular dependency)
+# Then import classes that may use the coefficients
+from arnold.layers.core.wavelets.base import WaveletBase
+from arnold.layers.core.wavelets.bump import Bump
 from arnold.layers.core.wavelets.coefficients import (
     COIFLET_COEFFICIENTS,
     DAUBECHIES_COEFFICIENTS,
     SYMLET_COEFFICIENTS,
 )
-
-# Then import classes that may use the coefficients
-from arnold.layers.core.wavelets.base import WaveletBase
-from arnold.layers.core.wavelets.bump import Bump
 from arnold.layers.core.wavelets.coiflet import Coiflet
 from arnold.layers.core.wavelets.daubechies import Daubechies
 from arnold.layers.core.wavelets.derivative_of_gaussian import DerivativeOfGaussian

@@ -45,27 +45,27 @@ class Boubaker(PolynomialBase):
     def pseudo_vandermonde(self, x):
         r"""
         Vectorized Boubaker polynomial evaluation via tf.scan.
-        
+
         Recurrence: :math:`B_n(x) = x B_{n-1}(x) - B_{n-2}(x)` for :math:`n \geq 3`.
         """
         B0 = tf.ones_like(x)
         if self.degree == 0:
             return tf.expand_dims(B0, axis=-1)
-        
+
         B1 = x
         if self.degree == 1:
             return tf.stack([B0, B1], axis=-1)
-        
+
         B2 = tf.square(x) + 2.0
         if self.degree == 2:
             return tf.stack([B0, B1, B2], axis=-1)
-        
+
         # Use tf.scan for n >= 3
         def step(carry, _):
             Bn_1, Bn_2 = carry
             Bn = x * Bn_1 - Bn_2
             return (Bn, Bn_1)  # Only return new carry
-        
+
         carries = tf.scan(
             step,
             tf.range(3, self.degree + 1),

@@ -62,6 +62,7 @@ from arnold.layers.symbolic.simplification import (
 )
 from arnold.layers.symbolic.sympy_backend import SymPyBackend
 
+
 __all__ = [
     # Base
     "SymbolicBase",

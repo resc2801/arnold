@@ -9,12 +9,13 @@ basis function types with learned mixing weights.
 
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
 import tensorflow as tf
 
 from arnold.layers.core.kan_base import KANBase
 from arnold.layers.core.registry import get_layer_class
+
 
 tfk = tf.keras
 

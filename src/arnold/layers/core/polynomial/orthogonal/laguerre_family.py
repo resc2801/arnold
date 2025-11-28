@@ -79,7 +79,7 @@ class GeneralizedLaguerre(PolynomialBase):
         normalized : bool, default False
             When True, use orthonormal Laguerre polynomials (rescaled by the square root
             of the normalization constant). The standard form has norm
-            :math:`\Gamma(n + \\alpha + 1) / n!`.
+            :math:`\\Gamma(n + \\alpha + 1) / n!`.
         input_clip : tuple[float, float] | None
             Input clamp; defaults to ``(0.0, inf)`` for the natural domain :math:`[0, \\infty)`.
         **kwargs :

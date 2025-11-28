@@ -48,16 +48,17 @@ arnold.layers.core.wavelets : Wavelet basis KAN layers
 """
 
 from arnold.layers.core.rbf.base import RBFBase
-from arnold.layers.core.rbf.gaussian import GaussianRBF
-from arnold.layers.core.rbf.multiquadric import MultiquadricRBF
-from arnold.layers.core.rbf.inverse_multiquadric import InverseMultiQuadricRBF
-from arnold.layers.core.rbf.thin_plate_spline import ThinPlateSplineRBF
 from arnold.layers.core.rbf.cauchy import CauchyRBF
-from arnold.layers.core.rbf.linear import LinearRBF
 from arnold.layers.core.rbf.cubic import CubicRBF
-from arnold.layers.core.rbf.power import PowerRBF
-from arnold.layers.core.rbf.inverse_quadric import InverseQuadricRBF
 from arnold.layers.core.rbf.exponential import ExponentialRBF
+from arnold.layers.core.rbf.gaussian import GaussianRBF
+from arnold.layers.core.rbf.inverse_multiquadric import InverseMultiQuadricRBF
+from arnold.layers.core.rbf.inverse_quadric import InverseQuadricRBF
+from arnold.layers.core.rbf.linear import LinearRBF
+from arnold.layers.core.rbf.multiquadric import MultiquadricRBF
+from arnold.layers.core.rbf.power import PowerRBF
+from arnold.layers.core.rbf.thin_plate_spline import ThinPlateSplineRBF
+
 
 __all__ = [
     # Base

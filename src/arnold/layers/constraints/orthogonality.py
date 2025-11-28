@@ -13,6 +13,7 @@ import tensorflow as tf
 
 from arnold.layers.constraints.base import KANConstraint
 
+
 tfk = tf.keras
 
 

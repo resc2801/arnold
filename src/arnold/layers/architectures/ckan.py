@@ -9,11 +9,12 @@ basis function family (polynomial, RBF, spectral, etc.).
 
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
 import tensorflow as tf
 
 from arnold.layers.core.registry import get_layer_class
+
 
 tfk = tf.keras
 
@@ -130,5 +131,5 @@ class CompactKAN(tfk.Model):
         return config
 
     @classmethod
-    def from_config(cls, config: dict) -> "CompactKAN":
+    def from_config(cls, config: dict) -> CompactKAN:
         return cls(**config)

@@ -12,6 +12,7 @@ import tensorflow as tf
 
 from arnold.layers.initializers.base import KANInitializer
 
+
 tfk = tf.keras
 
 

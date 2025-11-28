@@ -14,6 +14,7 @@ import tensorflow as tf
 from arnold.layers.core.kan_base import KANBase
 from arnold.layers.core.registry import get_layer_class
 
+
 tfk = tf.keras
 
 

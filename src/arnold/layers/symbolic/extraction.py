@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+
 if TYPE_CHECKING:
     import sympy as sp
 
@@ -18,10 +19,10 @@ if TYPE_CHECKING:
 
 
 def kan_to_polynomial(
-    layer: "KANBase",
-    input_symbols: list["sp.Symbol"] | None = None,
+    layer: KANBase,
+    input_symbols: list[sp.Symbol] | None = None,
     simplify: bool = True,
-) -> "sp.Expr":
+) -> sp.Expr:
     r"""
     Convert a trained KAN layer to a symbolic SymPy expression.
 
@@ -82,7 +83,7 @@ def kan_to_polynomial(
 
 
 def kan_to_latex(
-    layer: "KANBase",
+    layer: KANBase,
     simplify: bool = True,
     mode: str = "inline",
 ) -> str:
@@ -133,7 +134,7 @@ def kan_to_latex(
 
 
 def extract_coefficients(
-    layer: "KANBase",
+    layer: KANBase,
     as_dict: bool = True,
 ) -> dict[str, Any] | list[Any]:
     r"""

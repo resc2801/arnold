@@ -24,7 +24,6 @@ from arnold.layers.core.rbf import (
     LinearRBF,
     MultiquadricRBF,
     PowerRBF,
-    RBFBase,
     ThinPlateSplineRBF,
 )
 

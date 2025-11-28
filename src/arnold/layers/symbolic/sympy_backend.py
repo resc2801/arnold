@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING, Any
 
 from arnold.layers.symbolic.base import SymbolicBase
 
+
 if TYPE_CHECKING:
     import sympy as sp
 
@@ -52,9 +53,9 @@ class SymPyBackend(SymbolicBase):
 
     def to_expression(
         self,
-        layer: "KANBase",
-        input_symbols: list["sp.Symbol"] | None = None,
-    ) -> "sp.Expr":
+        layer: KANBase,
+        input_symbols: list[sp.Symbol] | None = None,
+    ) -> sp.Expr:
         r"""
         Convert a KAN layer to a symbolic SymPy expression.
 
@@ -97,7 +98,7 @@ class SymPyBackend(SymbolicBase):
 
         return basis_expr
 
-    def to_latex(self, layer: "KANBase") -> str:
+    def to_latex(self, layer: KANBase) -> str:
         r"""
         Convert a KAN layer to LaTeX representation.
 
@@ -115,7 +116,7 @@ class SymPyBackend(SymbolicBase):
         expr = self.to_expression(layer)
         return sp.latex(expr)
 
-    def get_coefficients(self, layer: "KANBase") -> dict[str, Any]:
+    def get_coefficients(self, layer: KANBase) -> dict[str, Any]:
         r"""
         Extract learned coefficients from a layer.
 
@@ -138,7 +139,7 @@ class SymPyBackend(SymbolicBase):
 
         return coefficients
 
-    def _get_input_dim(self, layer: "KANBase") -> int:
+    def _get_input_dim(self, layer: KANBase) -> int:
         """Get the input dimension from a layer."""
         # Try to get from layer's input_spec or stored dimension
         if hasattr(layer, "input_dim") and layer.input_dim is not None:
@@ -156,11 +157,10 @@ class SymPyBackend(SymbolicBase):
 
     def _build_basis_expression(
         self,
-        layer: "KANBase",
-        input_symbols: list["sp.Symbol"],
-    ) -> "sp.Expr":
+        layer: KANBase,
+        input_symbols: list[sp.Symbol],
+    ) -> sp.Expr:
         """Build the symbolic expression for the layer's basis."""
-        sp = self._sp
 
         # Get layer type name
         layer_type = type(layer).__name__.lower()
@@ -197,10 +197,10 @@ class SymPyBackend(SymbolicBase):
 
     def _legendre_expression(
         self,
-        symbols: list["sp.Symbol"],
+        symbols: list[sp.Symbol],
         kernel,
         degree: int,
-    ) -> "sp.Expr":
+    ) -> sp.Expr:
         """Build Legendre polynomial expression."""
         sp = self._sp
         from sympy import legendre
@@ -215,10 +215,10 @@ class SymPyBackend(SymbolicBase):
 
     def _chebyshev_expression(
         self,
-        symbols: list["sp.Symbol"],
+        symbols: list[sp.Symbol],
         kernel,
         degree: int,
-    ) -> "sp.Expr":
+    ) -> sp.Expr:
         """Build Chebyshev polynomial expression."""
         sp = self._sp
         from sympy import chebyshevt
@@ -233,10 +233,10 @@ class SymPyBackend(SymbolicBase):
 
     def _hermite_expression(
         self,
-        symbols: list["sp.Symbol"],
+        symbols: list[sp.Symbol],
         kernel,
         degree: int,
-    ) -> "sp.Expr":
+    ) -> sp.Expr:
         """Build Hermite polynomial expression."""
         sp = self._sp
         from sympy import hermite
@@ -251,10 +251,10 @@ class SymPyBackend(SymbolicBase):
 
     def _fourier_expression(
         self,
-        symbols: list["sp.Symbol"],
+        symbols: list[sp.Symbol],
         kernel,
         degree: int,
-    ) -> "sp.Expr":
+    ) -> sp.Expr:
         """Build Fourier series expression."""
         sp = self._sp
 
@@ -281,10 +281,10 @@ class SymPyBackend(SymbolicBase):
 
     def _generic_polynomial_expression(
         self,
-        symbols: list["sp.Symbol"],
+        symbols: list[sp.Symbol],
         kernel,
         degree: int,
-    ) -> "sp.Expr":
+    ) -> sp.Expr:
         """Build generic polynomial expression."""
         sp = self._sp
 

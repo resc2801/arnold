@@ -45,9 +45,10 @@ Example
 """
 
 from arnold.layers.core.geometric.base import GeometricBase
-from arnold.layers.core.geometric.zernike import Zernike
-from arnold.layers.core.geometric.spherical_harmonics import SphericalHarmonics
 from arnold.layers.core.geometric.hyperspherical_harmonics import HypersphericalHarmonics
+from arnold.layers.core.geometric.spherical_harmonics import SphericalHarmonics
+from arnold.layers.core.geometric.zernike import Zernike
+
 
 __all__ = [
     # Base class

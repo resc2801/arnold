@@ -12,7 +12,7 @@ Zernike polynomials :math:`Z_n^m(\rho, \theta)` are defined on the unit disk as:
 
 .. math::
 
-    Z_n^m(\rho, \theta) = R_n^{|m|}(\rho) \cdot 
+    Z_n^m(\rho, \theta) = R_n^{|m|}(\rho) \cdot
         \begin{cases}
             \cos(m\theta) & m \geq 0 \\
             \sin(|m|\theta) & m < 0
@@ -22,10 +22,10 @@ where the radial polynomial :math:`R_n^m(\rho)` is:
 
 .. math::
 
-    R_n^m(\rho) = \sum_{k=0}^{(n-m)/2} \frac{(-1)^k (n-k)!}{k! \left(\frac{n+m}{2}-k\right)! 
+    R_n^m(\rho) = \sum_{k=0}^{(n-m)/2} \frac{(-1)^k (n-k)!}{k! \left(\frac{n+m}{2}-k\right)!
         \left(\frac{n-m}{2}-k\right)!} \rho^{n-2k}
 
-For 1D inputs, this layer uses the radial polynomials :math:`R_n^0(\rho)` 
+For 1D inputs, this layer uses the radial polynomials :math:`R_n^0(\rho)`
 (rotationally symmetric Zernike polynomials).
 
 Applications:
@@ -44,6 +44,7 @@ import tensorflow as tf
 
 from arnold.layers.core.geometric.base import GeometricBase
 
+
 tfk = tf.keras
 
 
@@ -60,13 +61,13 @@ class Zernike(GeometricBase):
 
     .. math::
 
-        \int_0^1 R_n^0(\rho) R_{n'}^0(\rho) \rho \, d\rho = 
+        \int_0^1 R_n^0(\rho) R_{n'}^0(\rho) \rho \, d\rho =
             \frac{\delta_{nn'}}{2(n+1)}
 
     Parameters
     ----------
     degree : int
-        Maximum radial degree n. The basis includes :math:`R_n^0` for 
+        Maximum radial degree n. The basis includes :math:`R_n^0` for
         n = 0, 2, 4, ..., degree (only even n for m=0).
     units : int
         Output dimension.
@@ -186,7 +187,7 @@ class Zernike(GeometricBase):
             rho6 = rho4 * rho2
             rho8 = rho4 * rho4
             rho10 = rho8 * rho2
-            R10 = (252.0 * rho10 - 630.0 * rho8 + 560.0 * rho6 
+            R10 = (252.0 * rho10 - 630.0 * rho8 + 560.0 * rho6
                    - 210.0 * rho4 + 30.0 * rho2 - 1.0)
             basis.append(R10)
 

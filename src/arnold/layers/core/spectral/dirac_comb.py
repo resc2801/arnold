@@ -5,6 +5,7 @@ import tensorflow as tf
 
 from arnold.layers.core.spectral.base import SpectralBase
 
+
 tfk = tf.keras
 
 

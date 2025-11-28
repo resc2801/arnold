@@ -12,7 +12,7 @@ Whittaker functions are solutions to Whittaker's differential equation:
 
 .. math::
 
-    \frac{d^2 W}{dx^2} + \left(-\frac{1}{4} + \frac{\kappa}{x} 
+    \frac{d^2 W}{dx^2} + \left(-\frac{1}{4} + \frac{\kappa}{x}
         + \frac{1/4 - \mu^2}{x^2}\right) W = 0
 
 The two independent solutions are:
@@ -33,6 +33,7 @@ References
 import tensorflow as tf
 
 from arnold.layers.core.special.base import SpecialBase
+
 
 tfk = tf.keras
 

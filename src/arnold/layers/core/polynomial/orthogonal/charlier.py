@@ -65,7 +65,7 @@ class Charlier(PolynomialBase):
         input_clip=None,
         **kwargs,
     ):
-        """
+        r"""
         Parameters
         ----------
         degree : int

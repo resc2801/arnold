@@ -6,17 +6,17 @@ Tests for the ARNOLD layer registry.
 
 import pytest
 
+from arnold.layers.core.kan_base import KANBase
 from arnold.layers.core.registry import (
-    LAYER_REGISTRY,
     LAYER_CATEGORIES,
+    LAYER_REGISTRY,
+    get_aliases,
     get_layer,
     get_layer_class,
+    is_registered,
     list_layers,
     list_layers_by_category,
-    is_registered,
-    get_aliases,
 )
-from arnold.layers.core.kan_base import KANBase
 
 
 class TestLayerRegistry:
@@ -33,12 +33,12 @@ class TestLayerRegistry:
 
     def test_all_keys_are_lowercase(self):
         """All registry keys should be lowercase."""
-        for name in LAYER_REGISTRY.keys():
+        for name in LAYER_REGISTRY:
             assert name == name.lower(), f"Key '{name}' is not lowercase"
 
     def test_no_hyphens_in_keys(self):
         """Registry keys should use underscores, not hyphens."""
-        for name in LAYER_REGISTRY.keys():
+        for name in LAYER_REGISTRY:
             assert "-" not in name, f"Key '{name}' contains hyphen"
 
 
@@ -66,19 +66,19 @@ class TestGetLayer:
         layer1 = get_layer("Legendre", degree=3, units=8)
         layer2 = get_layer("LEGENDRE", degree=3, units=8)
         layer3 = get_layer("legendre", degree=3, units=8)
-        assert type(layer1) == type(layer2) == type(layer3)
+        assert type(layer1) is type(layer2) is type(layer3)
 
     def test_get_layer_with_hyphen(self):
         """Hyphens are normalized to underscores."""
         layer1 = get_layer("gaussian-rbf", units=8)
         layer2 = get_layer("gaussian_rbf", units=8)
-        assert type(layer1) == type(layer2)
+        assert type(layer1) is type(layer2)
 
     def test_get_layer_with_spaces(self):
         """Spaces are normalized to underscores."""
         layer1 = get_layer("gaussian rbf", units=8)
         layer2 = get_layer("gaussian_rbf", units=8)
-        assert type(layer1) == type(layer2)
+        assert type(layer1) is type(layer2)
 
     def test_get_layer_unknown_raises(self):
         """Unknown layer names raise ValueError."""
@@ -90,19 +90,19 @@ class TestGetLayer:
         layer1 = get_layer("chebyshev", degree=3, units=8)
         layer2 = get_layer("chebyshev_t", degree=3, units=8)
         layer3 = get_layer("chebyshev1", degree=3, units=8)
-        assert type(layer1) == type(layer2) == type(layer3)
+        assert type(layer1) is type(layer2) is type(layer3)
 
     def test_get_layer_alias_ultraspherical(self):
         """Ultraspherical is an alias for Gegenbauer."""
         layer1 = get_layer("ultraspherical", degree=3, units=8)
         layer2 = get_layer("gegenbauer", degree=3, units=8)
-        assert type(layer1) == type(layer2)
+        assert type(layer1) is type(layer2)
 
     def test_get_layer_alias_mexican_hat(self):
         """Mexican hat is an alias for Ricker."""
         layer1 = get_layer("mexican_hat", units=8)
         layer2 = get_layer("ricker", units=8)
-        assert type(layer1) == type(layer2)
+        assert type(layer1) is type(layer2)
 
 
 class TestGetLayerClass:

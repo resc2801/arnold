@@ -11,7 +11,7 @@ The Affine q-Krawtchouk polynomials are an affine variant of q-Krawtchouk polyno
 
 .. math::
 
-    K_n^{\text{Aff}}(q^{-x}; p, N | q) = 
+    K_n^{\text{Aff}}(q^{-x}; p, N | q) =
         {}_3\phi_2\left(\begin{array}{c}
         q^{-n}, 0, q^{-x} \\
         pq, q^{-N} \end{array}; q, q\right)
@@ -77,7 +77,7 @@ class AffineQKrawtchouk(QPolynomialBase):
         input_clip: tuple[float, float] | None = None,
         **kwargs,
     ):
-        if N < degree:
+        if degree > N:
             raise ValueError(f"N must be >= degree, got N={N}, degree={degree}")
 
         super().__init__(

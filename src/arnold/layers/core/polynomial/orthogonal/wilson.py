@@ -216,7 +216,7 @@ class Wilson(PolynomialBase):
 
         if self.orthonormal:
             # Compute orthonormalization factors h_n for Wilson polynomials
-            # h_n = n! * Gamma(n+a+b+c+d-1) * prod_{pairs} Gamma(n+p+q) / 
+            # h_n = n! * Gamma(n+a+b+c+d-1) * prod_{pairs} Gamma(n+p+q) /
             #       (Gamma(2n+a+b+c+d-1) * prod_{pairs} Gamma(p+q))
             # We compute log(h_n) for numerical stability, then exp(-0.5 * log_hn)
             log_hn = []

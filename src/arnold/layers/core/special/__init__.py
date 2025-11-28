@@ -71,15 +71,16 @@ References
 .. [3] Olver, F.W.J. (2010). "NIST Handbook of Mathematical Functions"
 """
 
-from arnold.layers.core.special.base import SpecialBase
 from arnold.layers.core.special.airy import Airy
+from arnold.layers.core.special.base import SpecialBase
 from arnold.layers.core.special.bessel_functions import Bessel
-from arnold.layers.core.special.parabolic_cylinder import ParabolicCylinder
-from arnold.layers.core.special.mathieu import Mathieu
-from arnold.layers.core.special.whittaker import Whittaker
-from arnold.layers.core.special.slepian import Slepian
-from arnold.layers.core.special.legendre_functions import LegendreFunctions
 from arnold.layers.core.special.elliptic_functions import EllipticFunctions
+from arnold.layers.core.special.legendre_functions import LegendreFunctions
+from arnold.layers.core.special.mathieu import Mathieu
+from arnold.layers.core.special.parabolic_cylinder import ParabolicCylinder
+from arnold.layers.core.special.slepian import Slepian
+from arnold.layers.core.special.whittaker import Whittaker
+
 
 __all__ = [
     # Base class

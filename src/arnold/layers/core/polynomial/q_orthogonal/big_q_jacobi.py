@@ -11,7 +11,7 @@ The Big q-Jacobi polynomials are defined as:
 
 .. math::
 
-    P_n(x; a, b, c; q) = {}_3\phi_2\left(\begin{array}{c} 
+    P_n(x; a, b, c; q) = {}_3\phi_2\left(\begin{array}{c}
         q^{-n}, abq^{n+1}, x \\ aq, cq \end{array}; q, q\right)
 
 In the limit :math:`q \to 1`, Big q-Jacobi polynomials reduce to Jacobi polynomials.
@@ -43,10 +43,10 @@ class BigQJacobi(QPolynomialBase):
 
     .. math::
 
-        P_n(x; a, b, c; q) = {}_3\phi_2\left(\begin{array}{c} 
+        P_n(x; a, b, c; q) = {}_3\phi_2\left(\begin{array}{c}
             q^{-n}, abq^{n+1}, x \\ aq, cq \end{array}; q, q\right)
 
-    They are orthogonal with respect to a discrete measure on 
+    They are orthogonal with respect to a discrete measure on
     :math:`\{aq^{k+1}\}_{k=0}^{\infty} \cup \{cq^{k+1}\}_{k=0}^{\infty}`.
 
     Parameters

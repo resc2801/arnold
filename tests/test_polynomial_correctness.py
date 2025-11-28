@@ -8,6 +8,7 @@ import pytest
 import tensorflow as tf
 from scipy import special
 
+
 try:
     import mpmath
     HAS_MPMATH = True
@@ -280,7 +281,7 @@ def test_askey_wilson_smoke_and_clamp():
 def test_hermite_overflow_warning_at_high_degree():
     """Hermite should warn at degree > 15 when not normalized."""
     import warnings
-    
+
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
         _ = Hermite(degree=20, units=4)
@@ -292,7 +293,7 @@ def test_hermite_overflow_warning_at_high_degree():
 def test_hermite_no_warning_when_normalized():
     """Hermite should NOT warn at degree > 15 when normalized=True."""
     import warnings
-    
+
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
         _ = Hermite(degree=20, units=4, normalized=True)
@@ -303,8 +304,9 @@ def test_hermite_no_warning_when_normalized():
 def test_bessel_overflow_warning_at_high_degree():
     """Bessel should warn at degree > 15."""
     import warnings
+
     from arnold.layers.core.polynomial.orthogonal import Bessel
-    
+
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
         _ = Bessel(degree=18, units=4)
@@ -318,19 +320,19 @@ def test_laguerre_normalized_option():
     x = tf.constant([[0.5], [1.0], [2.0]], dtype=tf.float32)
     degree = 4
     alpha = 0.5
-    
+
     layer = Laguerre(degree=degree, units=1, alpha_init=alpha, normalized=True)
     _ = layer(x)
     basis = tf.squeeze(layer.pseudo_vandermonde(x), axis=1).numpy()
-    
+
     # Check that the normalized basis differs from un-normalized
     layer_unnorm = Laguerre(degree=degree, units=1, alpha_init=alpha, normalized=False)
     _ = layer_unnorm(x)
     basis_unnorm = tf.squeeze(layer_unnorm.pseudo_vandermonde(x), axis=1).numpy()
-    
+
     # Normalized should be different from unnormalized
     assert not np.allclose(basis, basis_unnorm), "Normalized and unnormalized should differ"
-    
+
     # Verify scaling factor is applied correctly (check n=0 and n=1)
     # Norm for Laguerre: Γ(n + α + 1) / n!
     # Scale factor: 1 / sqrt(norm)
@@ -347,12 +349,12 @@ def test_laguerre_normalized_serialization():
     layer = Laguerre(degree=3, units=4, alpha_init=0.5, normalized=True)
     x = tf.random.uniform((2, 3), dtype=tf.float32)
     _ = layer(x)
-    
+
     config = layer.get_config()
-    assert config["normalized"] == True
-    
+    assert config["normalized"]
+
     restored = Laguerre.from_config(config)
-    assert restored.normalized == True
+    assert restored.normalized
 
 
 # ============================================================================
@@ -362,7 +364,7 @@ def test_laguerre_normalized_serialization():
 def test_detect_hardware_returns_valid_value():
     """detect_hardware should return one of cpu, gpu, tpu, mps."""
     from arnold import detect_hardware
-    
+
     hw = detect_hardware()
     assert hw in ("cpu", "gpu", "tpu", "mps")
 
@@ -370,7 +372,7 @@ def test_detect_hardware_returns_valid_value():
 def test_get_recommended_dtype_cpu_high_degree():
     """CPU should recommend float64 for high-degree polynomials."""
     from arnold import get_recommended_dtype
-    
+
     dtype = get_recommended_dtype(degree=15, hardware="cpu")
     assert dtype == tf.float64
 
@@ -378,7 +380,7 @@ def test_get_recommended_dtype_cpu_high_degree():
 def test_get_recommended_dtype_cpu_low_degree():
     """CPU should recommend float32 for low-degree polynomials."""
     from arnold import get_recommended_dtype
-    
+
     dtype = get_recommended_dtype(degree=5, hardware="cpu")
     assert dtype == tf.float32
 
@@ -386,7 +388,7 @@ def test_get_recommended_dtype_cpu_low_degree():
 def test_get_recommended_dtype_gpu():
     """GPU should recommend float32 regardless of degree."""
     from arnold import get_recommended_dtype
-    
+
     dtype = get_recommended_dtype(degree=20, hardware="gpu")
     assert dtype == tf.float32
 
@@ -394,7 +396,7 @@ def test_get_recommended_dtype_gpu():
 def test_get_recommended_dtype_mps():
     """MPS (Apple Silicon) should recommend float32."""
     from arnold import get_recommended_dtype
-    
+
     dtype = get_recommended_dtype(degree=20, hardware="mps")
     assert dtype == tf.float32
 
@@ -405,7 +407,7 @@ def test_hardware_adaptive_high_degree_layer():
     layer = Legendre(degree=15, units=4, hardware_adaptive=True)
     x = tf.random.uniform((2, 3), dtype=tf.float32)
     y = layer(x)
-    
+
     # Layer should be built and produce output
     assert y.shape == (2, 4)
     # On CPU, should have detected hardware
@@ -417,29 +419,28 @@ def test_hardware_adaptive_serialization():
     layer = Legendre(degree=5, units=4, hardware_adaptive=False)
     x = tf.random.uniform((2, 3), dtype=tf.float32)
     _ = layer(x)
-    
+
     config = layer.get_config()
-    assert config["hardware_adaptive"] == False
-    
+    assert not config["hardware_adaptive"]
+
     restored = Legendre.from_config(config)
-    assert restored.hardware_adaptive == False
+    assert not restored.hardware_adaptive
 
 
 def test_mixed_precision_policy_respected():
     """Layer should respect global mixed-precision policy."""
-    from arnold.layers.core.kan_base import KANBase
-    
+
     # Save original policy
     original_policy = tf.keras.mixed_precision.global_policy()
-    
+
     try:
         # Set mixed_float16 policy
         tf.keras.mixed_precision.set_global_policy("mixed_float16")
-        
+
         layer = Legendre(degree=3, units=4)
         x = tf.random.uniform((2, 3), dtype=tf.float16)
         _ = layer(x)
-        
+
         # Check that layer respects the policy
         assert layer.effective_compute_dtype == tf.float16
     finally:
@@ -449,12 +450,11 @@ def test_mixed_precision_policy_respected():
 
 def test_compute_dtype_override():
     """User-specified compute_dtype should override policy."""
-    from arnold.layers.core.kan_base import KANBase
-    
+
     layer = Legendre(degree=3, units=4, compute_dtype=tf.float64)
     x = tf.random.uniform((2, 3), dtype=tf.float32)
     _ = layer(x)
-    
+
     assert layer.effective_compute_dtype == tf.float64
 
 
@@ -463,10 +463,10 @@ def test_compute_dtype_serialization():
     layer = Legendre(degree=3, units=4, compute_dtype="float64")
     x = tf.random.uniform((2, 3), dtype=tf.float32)
     _ = layer(x)
-    
+
     config = layer.get_config()
     assert config["compute_dtype"] == "float64"
-    
+
     restored = Legendre.from_config(config)
     assert restored.effective_compute_dtype == tf.float64
 
@@ -491,18 +491,18 @@ def test_clenshaw_matches_pseudo_vandermonde(layer_cls, kwargs):
     """clenshaw_basis should produce same results as pseudo_vandermonde."""
     degree = 8
     layer = layer_cls(degree=degree, units=4, input_clip=(-0.99, 0.99), **kwargs)
-    
+
     x = tf.constant([[-0.5, 0.3], [0.7, -0.2]], dtype=tf.float32)
     _ = layer(x)  # build
-    
+
     # Get basis from both methods
     pseudo = layer.pseudo_vandermonde(x)
     clenshaw = layer.clenshaw_basis(x)
-    
+
     np.testing.assert_allclose(
-        pseudo.numpy(), 
-        clenshaw.numpy(), 
-        rtol=1e-4, 
+        pseudo.numpy(),
+        clenshaw.numpy(),
+        rtol=1e-4,
         atol=1e-5,
         err_msg=f"{layer_cls.__name__} clenshaw_basis doesn't match pseudo_vandermonde"
     )
@@ -514,7 +514,7 @@ def test_clenshaw_matches_pseudo_vandermonde(layer_cls, kwargs):
 
 class TestMeixnerPollaczekCorrectness:
     """Reference correctness tests for Associated Meixner-Pollaczek polynomials.
-    
+
     Since SciPy doesn't have Meixner-Pollaczek, we test against:
     1. Recurrence relation consistency
     2. Known special values
@@ -524,24 +524,24 @@ class TestMeixnerPollaczekCorrectness:
 
     def test_recurrence_relation_holds(self):
         """Verify the three-term recurrence relation is satisfied.
-        
-        P_{n+1} = ((2x*sin(phi) + 2(n+c+lambda)*cos(phi)) * P_n 
+
+        P_{n+1} = ((2x*sin(phi) + 2(n+c+lambda)*cos(phi)) * P_n
                   - (n+c+2*lambda-1) * P_{n-1}) / (n+c+1)
         """
         from arnold.layers.core.polynomial.orthogonal import AssociatedMeixnerPollaczek
-        
+
         lambda_val, phi_val, c_val = 0.7, 0.6, 0.5
         layer = AssociatedMeixnerPollaczek(
             degree=6, units=1,
             lambda_init=lambda_val, phi_init=phi_val, c_init=c_val,
             lambda_trainable=False, phi_trainable=False, c_trainable=False
         )
-        
+
         x = tf.constant([[0.3], [-0.5], [1.2]], dtype=tf.float32)
         _ = layer(x)  # build
-        
+
         basis = layer.pseudo_vandermonde(x).numpy().squeeze()  # (3, 7)
-        
+
         # Check recurrence for n=2..5
         for n in range(2, 6):
             term1 = 2 * x.numpy().squeeze() * np.sin(phi_val) + 2 * (n + c_val + lambda_val) * np.cos(phi_val)
@@ -556,38 +556,38 @@ class TestMeixnerPollaczekCorrectness:
     def test_p0_is_one(self):
         """P_0(x) = 1 for all x."""
         from arnold.layers.core.polynomial.orthogonal import AssociatedMeixnerPollaczek
-        
+
         layer = AssociatedMeixnerPollaczek(
             degree=3, units=1,
             lambda_init=0.5, phi_init=0.4, c_init=0.3
         )
-        
+
         x = tf.constant([[-2.0], [0.0], [3.5]], dtype=tf.float32)
         _ = layer(x)
-        
+
         basis = layer.pseudo_vandermonde(x).numpy().squeeze()
         np.testing.assert_allclose(basis[:, 0], 1.0, rtol=1e-6)
 
     def test_p1_formula(self):
         """P_1(x) = (2x*sin(phi) + 2(1+c+lambda)*cos(phi)) / (c+2).
-        
+
         For the recurrence at n=0: P_1 = (2x*sin + 2(0+c+lambda)*cos) * P_0 / (0+c+1)
         Wait - check the formula more carefully for n=0 case.
         """
         from arnold.layers.core.polynomial.orthogonal import AssociatedMeixnerPollaczek
-        
+
         lambda_val, phi_val, c_val = 0.8, np.pi/4, 0.2
         layer = AssociatedMeixnerPollaczek(
             degree=2, units=1,
             lambda_init=lambda_val, phi_init=phi_val, c_init=c_val,
             lambda_trainable=False, phi_trainable=False, c_trainable=False
         )
-        
+
         x = tf.constant([[0.5], [-1.0]], dtype=tf.float32)
         _ = layer(x)
-        
+
         basis = layer.pseudo_vandermonde(x).numpy().squeeze()
-        
+
         # P_1 = (2x*sin(phi) + 2*(1 + c + lambda)*cos(phi)) / (1 + c + 1)
         # But looking at the code, it's (2x*sin + 2*(1+c+lambda)*cos) / (1+c+1)
         x_np = x.numpy().squeeze()
@@ -597,20 +597,20 @@ class TestMeixnerPollaczekCorrectness:
     def test_gradient_flow(self):
         """Gradients should flow through Meixner-Pollaczek layer."""
         from arnold.layers.core.polynomial.orthogonal import AssociatedMeixnerPollaczek
-        
+
         layer = AssociatedMeixnerPollaczek(
             degree=4, units=2,
             lambda_init=0.5, phi_init=0.5, c_init=0.5
         )
-        
+
         x = tf.Variable([[0.1, 0.2], [-0.3, 0.4]], dtype=tf.float32)
-        
+
         with tf.GradientTape() as tape:
             y = layer(x)
             loss = tf.reduce_mean(y ** 2)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
-        
+
         # All trainable params should have gradients
         assert all(g is not None for g in grads)
         assert all(not tf.reduce_any(tf.math.is_nan(g)) for g in grads)
@@ -618,15 +618,15 @@ class TestMeixnerPollaczekCorrectness:
     def test_numerical_stability_moderate_x(self):
         """Layer should be stable for moderate x values."""
         from arnold.layers.core.polynomial.orthogonal import AssociatedMeixnerPollaczek
-        
+
         layer = AssociatedMeixnerPollaczek(
             degree=8, units=1,
             lambda_init=1.0, phi_init=np.pi/3, c_init=0.0
         )
-        
+
         x = tf.constant([[-5.0], [0.0], [5.0]], dtype=tf.float32)
         y = layer(x)
-        
+
         assert not tf.reduce_any(tf.math.is_nan(y))
         assert not tf.reduce_any(tf.math.is_inf(y))
 
@@ -637,12 +637,12 @@ class TestMeixnerPollaczekCorrectness:
 
 class TestClenshawHighDegreeStability:
     """Test Clenshaw recurrence stability at high degree.
-    
+
     High-degree polynomial evaluation is prone to:
     - Numerical overflow in monic polynomials
     - Accumulation of rounding errors
     - Loss of orthogonality
-    
+
     These tests verify the implementation remains stable where mathematically possible.
     Note: Some polynomials (like physicist's Hermite) inherently overflow at high degree.
     """
@@ -661,13 +661,13 @@ class TestClenshawHighDegreeStability:
     def test_no_nan_at_degree_100(self, layer_cls, kwargs):
         """Basis evaluation at degree 100 should not produce NaN for bounded polynomials."""
         layer = layer_cls(degree=100, units=1, use_clenshaw=True, **kwargs)
-        
+
         # Test on interior points (avoid boundaries)
         x = tf.constant([[-0.8], [-0.3], [0.0], [0.4], [0.9]], dtype=tf.float32)
         _ = layer(x)  # build
-        
+
         basis = layer.clenshaw_basis(x)
-        
+
         assert not tf.reduce_any(tf.math.is_nan(basis)), \
             f"{layer_cls.__name__} produced NaN at degree 100"
 
@@ -682,12 +682,12 @@ class TestClenshawHighDegreeStability:
     def test_no_inf_at_degree_100(self, layer_cls, kwargs):
         """Basis evaluation at degree 100 should not overflow to Inf."""
         layer = layer_cls(degree=100, units=1, use_clenshaw=True, **kwargs)
-        
+
         x = tf.constant([[-0.7], [0.0], [0.7]], dtype=tf.float32)
         _ = layer(x)
-        
+
         basis = layer.clenshaw_basis(x)
-        
+
         assert not tf.reduce_any(tf.math.is_inf(basis)), \
             f"{layer_cls.__name__} overflowed to Inf at degree 100"
 
@@ -702,17 +702,17 @@ class TestClenshawHighDegreeStability:
         """Clenshaw and pseudo-Vandermonde should agree at moderate-high degree."""
         # Use degree 50 for comparison (100 may have float32 precision issues)
         layer = layer_cls(degree=50, units=1, **kwargs)
-        
+
         x = tf.constant([[-0.5], [0.3]], dtype=tf.float32)
         _ = layer(x)
-        
+
         # Force both evaluation paths
         layer.use_clenshaw = False
         pseudo = layer.pseudo_vandermonde(x)
-        
+
         layer.use_clenshaw = True
         clenshaw = layer.clenshaw_basis(x)
-        
+
         # Allow larger tolerance at high degree
         np.testing.assert_allclose(
             pseudo.numpy(), clenshaw.numpy(),
@@ -723,12 +723,12 @@ class TestClenshawHighDegreeStability:
     def test_legendre_degree_100_values_bounded(self):
         """Legendre polynomials should satisfy |P_n(x)| <= 1 for |x| <= 1."""
         layer = Legendre(degree=100, units=1, use_clenshaw=True)
-        
+
         x = tf.constant([[-0.99], [-0.5], [0.0], [0.5], [0.99]], dtype=tf.float32)
         _ = layer(x)
-        
+
         basis = layer.clenshaw_basis(x)
-        
+
         # Legendre polynomials are bounded by 1 on [-1, 1]
         assert tf.reduce_all(tf.abs(basis) <= 1.1), \
             "Legendre P_n(x) exceeded expected bound on [-1,1]"
@@ -736,34 +736,34 @@ class TestClenshawHighDegreeStability:
     def test_chebyshev_degree_100_values_bounded(self):
         """Chebyshev T_n should satisfy |T_n(x)| <= 1 for |x| <= 1."""
         layer = Chebyshev1st(degree=100, units=1, use_clenshaw=True)
-        
+
         x = tf.constant([[-0.99], [-0.5], [0.0], [0.5], [0.99]], dtype=tf.float32)
         _ = layer(x)
-        
+
         basis = layer.clenshaw_basis(x)
-        
+
         # Chebyshev T_n are bounded by 1 on [-1, 1]
         assert tf.reduce_all(tf.abs(basis) <= 1.1), \
             "Chebyshev T_n(x) exceeded expected bound on [-1,1]"
 
     def test_hermite_overflow_expected_at_high_degree(self):
         """Physicist's Hermite polynomials overflow at degree ~50 (expected behavior).
-        
+
         This test documents the known limitation that H_n(x) ~ (2x)^n / sqrt(pi)
         grows without bound, causing overflow in float32 around degree 50.
         """
         import warnings
-        
+
         # Suppress the expected overflow warning - this test documents the limitation
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", message="Physicist's Hermite polynomials with degree")
             layer = Hermite(degree=60, units=1, input_clip=(-2.0, 2.0))
-        
+
         x = tf.constant([[-1.0], [0.5], [1.5]], dtype=tf.float32)
         _ = layer(x)
-        
+
         basis = layer.pseudo_vandermonde(x)
-        
+
         # We expect NaN/Inf at high degrees - this documents the limitation
         has_overflow = tf.reduce_any(tf.math.is_nan(basis)) or tf.reduce_any(tf.math.is_inf(basis))
         assert has_overflow, \
@@ -772,12 +772,12 @@ class TestClenshawHighDegreeStability:
     def test_normalized_hermite_more_stable(self):
         """Probabilist's (normalized) Hermite should be more stable at moderate degree."""
         layer = Hermite(degree=30, units=1, normalized=True, input_clip=(-3.0, 3.0))
-        
+
         x = tf.constant([[-1.0], [0.0], [1.0]], dtype=tf.float32)
         _ = layer(x)
-        
+
         basis = layer.pseudo_vandermonde(x)
-        
+
         # Normalized Hermite should not overflow at degree 30
         assert not tf.reduce_any(tf.math.is_nan(basis)), \
             "Normalized Hermite produced NaN at degree 30"
@@ -788,15 +788,15 @@ class TestClenshawHighDegreeStability:
         """Gradients should remain finite at moderate degree."""
         # Use degree 15 and avoid XLA boundary issues by using use_clenshaw=False
         layer = Legendre(degree=15, units=2, use_clenshaw=False)
-        
+
         x = tf.Variable([[0.3, -0.2]], dtype=tf.float32)
-        
+
         with tf.GradientTape() as tape:
             y = layer(x)
             loss = tf.reduce_mean(y ** 2)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
-        
+
         # Check all gradients are finite
         for g in grads:
             if g is not None:
@@ -808,7 +808,7 @@ class TestClenshawHighDegreeStability:
 
 class TestTrueClenshawEvaluation:
     """Test true Clenshaw summation with fused coefficient contraction.
-    
+
     True Clenshaw provides O(1) memory per degree step by not materializing
     the full basis tensor. It should produce numerically identical (within
     floating-point tolerance) results to the standard basis + einsum path.
@@ -827,29 +827,29 @@ class TestTrueClenshawEvaluation:
         """True Clenshaw output should match standard basis + einsum."""
         degree = 10
         units = 4
-        
+
         # Create layer with true Clenshaw
         layer_clenshaw = layer_cls(
             degree=degree, units=units, use_true_clenshaw=True, **kwargs
         )
-        
+
         # Create layer with standard evaluation
         layer_standard = layer_cls(
             degree=degree, units=units, use_true_clenshaw=False, use_clenshaw=False, **kwargs
         )
-        
+
         x = tf.constant([[-0.7, 0.3], [0.5, -0.2], [0.0, 0.9]], dtype=tf.float32)
-        
+
         # Build both layers
         _ = layer_clenshaw(x)
         _ = layer_standard(x)
-        
+
         # Copy weights from standard to clenshaw for exact comparison
         layer_clenshaw.set_weights(layer_standard.get_weights())
-        
+
         y_clenshaw = layer_clenshaw(x)
         y_standard = layer_standard(x)
-        
+
         np.testing.assert_allclose(
             y_clenshaw.numpy(), y_standard.numpy(),
             rtol=1e-4, atol=1e-5,
@@ -866,11 +866,11 @@ class TestTrueClenshawEvaluation:
     def test_true_clenshaw_high_degree(self, layer_cls, kwargs):
         """True Clenshaw should remain stable at high degree."""
         layer = layer_cls(degree=50, units=2, use_true_clenshaw=True, **kwargs)
-        
+
         x = tf.constant([[-0.8], [0.0], [0.7]], dtype=tf.float32)
-        
+
         y = layer(x)
-        
+
         # Should not produce NaN or Inf
         assert not tf.reduce_any(tf.math.is_nan(y)), \
             f"{layer_cls.__name__} true Clenshaw produced NaN at degree 50"
@@ -887,15 +887,15 @@ class TestTrueClenshawEvaluation:
     def test_true_clenshaw_gradient_finite(self, layer_cls, kwargs):
         """Gradients through true Clenshaw should be finite."""
         layer = layer_cls(degree=10, units=2, use_true_clenshaw=True, **kwargs)
-        
+
         x = tf.Variable([[0.3, -0.5]], dtype=tf.float32)
-        
+
         with tf.GradientTape() as tape:
             y = layer(x)
             loss = tf.reduce_mean(y ** 2)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
-        
+
         for g in grads:
             if g is not None:
                 assert not tf.reduce_any(tf.math.is_nan(g)), \
@@ -906,14 +906,14 @@ class TestTrueClenshawEvaluation:
     def test_true_clenshaw_with_tpu_sharding(self):
         """True Clenshaw with TPU sharding should work (no-op on CPU)."""
         layer = Chebyshev1st(
-            degree=5, units=2, 
-            use_true_clenshaw=True, 
+            degree=5, units=2,
+            use_true_clenshaw=True,
             enable_tpu_sharding=True
         )
-        
+
         x = tf.constant([[0.3, -0.5]], dtype=tf.float32)
         y = layer(x)
-        
+
         assert y.shape == (1, 2), "Output shape mismatch with TPU sharding enabled"
         assert not tf.reduce_any(tf.math.is_nan(y)), "NaN with TPU sharding enabled"
 
@@ -924,12 +924,12 @@ class TestTrueClenshawEvaluation:
             use_true_clenshaw=True,
             enable_tpu_sharding=True,
         )
-        
+
         config = layer.get_config()
-        
+
         assert config["use_true_clenshaw"] is True
         assert config["enable_tpu_sharding"] is True
-        
+
         # Test reconstruction from config
         layer2 = Legendre.from_config(config)
         assert layer2.use_true_clenshaw is True
@@ -938,7 +938,7 @@ class TestTrueClenshawEvaluation:
 
 class TestQPolynomialXLACompatibility:
     """Test XLA-compatible q-polynomial implementations.
-    
+
     q-polynomials (Al-Salam-Carlitz, Askey-Wilson, etc.) have recurrences that
     traditionally required Python lists. The clenshaw_basis implementations use
     tf.while_loop with TensorArray for XLA compatibility.
@@ -947,15 +947,15 @@ class TestQPolynomialXLACompatibility:
     def test_al_salam_carlitz_1st_clenshaw_matches_pseudo(self):
         """Al-Salam-Carlitz U clenshaw_basis should match pseudo_vandermonde."""
         from arnold.layers.core.polynomial.orthogonal import AlSalamCarlitz1st
-        
+
         layer = AlSalamCarlitz1st(degree=5, units=2, a_init=0.5, q_init=0.8)
-        
+
         x = tf.constant([[-0.5], [0.3], [0.7]], dtype=tf.float32)
         _ = layer(x)  # build
-        
+
         pseudo = layer.pseudo_vandermonde(x)
         clenshaw = layer.clenshaw_basis(x)
-        
+
         np.testing.assert_allclose(
             pseudo.numpy(), clenshaw.numpy(),
             rtol=1e-4, atol=1e-5,
@@ -965,15 +965,15 @@ class TestQPolynomialXLACompatibility:
     def test_al_salam_carlitz_2nd_clenshaw_matches_pseudo(self):
         """Al-Salam-Carlitz V clenshaw_basis should match pseudo_vandermonde."""
         from arnold.layers.core.polynomial.orthogonal import AlSalamCarlitz2nd
-        
+
         layer = AlSalamCarlitz2nd(degree=5, units=2, a_init=0.3, q_init=0.9)
-        
+
         x = tf.constant([[-0.3], [0.5], [0.8]], dtype=tf.float32)
         _ = layer(x)  # build
-        
+
         pseudo = layer.pseudo_vandermonde(x)
         clenshaw = layer.clenshaw_basis(x)
-        
+
         np.testing.assert_allclose(
             pseudo.numpy(), clenshaw.numpy(),
             rtol=1e-4, atol=1e-5,
@@ -983,29 +983,29 @@ class TestQPolynomialXLACompatibility:
     def test_al_salam_carlitz_with_use_clenshaw(self):
         """Al-Salam-Carlitz with use_clenshaw=True should use XLA-compatible path."""
         from arnold.layers.core.polynomial.orthogonal import AlSalamCarlitz1st
-        
+
         layer = AlSalamCarlitz1st(
-            degree=5, units=2, 
+            degree=5, units=2,
             use_clenshaw=True,
-            a_init=0.5, 
+            a_init=0.5,
             q_init=0.8
         )
-        
+
         x = tf.constant([[-0.5, 0.3]], dtype=tf.float32)
         y = layer(x)
-        
+
         assert y.shape == (1, 2), "Output shape mismatch"
         assert not tf.reduce_any(tf.math.is_nan(y)), "NaN in output"
 
     def test_q_polynomial_gradients_finite(self):
         """Gradients through q-polynomial clenshaw should be finite.
-        
+
         Note: Due to TensorFlow/XLA limitations with TensorList operations crossing
         XLA boundaries, q-polynomial layers use jit_compile=False by default.
         This test verifies gradients work correctly in non-XLA mode.
         """
         from arnold.layers.core.polynomial.orthogonal import AlSalamCarlitz1st
-        
+
         # Use pseudo_vandermonde path (jit_compile=False) for gradient stability
         layer = AlSalamCarlitz1st(
             degree=5, units=2,
@@ -1013,15 +1013,15 @@ class TestQPolynomialXLACompatibility:
             a_init=0.5,
             q_init=0.8,
         )
-        
+
         x = tf.Variable([[0.3, -0.2]], dtype=tf.float32)
-        
+
         with tf.GradientTape() as tape:
             y = layer(x)
             loss = tf.reduce_mean(y ** 2)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
-        
+
         for g in grads:
             if g is not None:
                 assert not tf.reduce_any(tf.math.is_nan(g)), \
@@ -1032,20 +1032,20 @@ class TestQPolynomialXLACompatibility:
     def test_q_polynomial_xla_clenshaw_numeric(self):
         """Test that clenshaw_basis produces correct values (may not work with XLA gradients)."""
         from arnold.layers.core.polynomial.orthogonal import AlSalamCarlitz1st
-        
+
         layer = AlSalamCarlitz1st(
             degree=5, units=2,
             a_init=0.5,
             q_init=0.8,
         )
-        
+
         x = tf.constant([[0.3, -0.2]], dtype=tf.float32)
         _ = layer(x)  # build
-        
+
         # clenshaw_basis uses tf.scan, should produce same results as pseudo_vandermonde
         pseudo = layer.pseudo_vandermonde(x)
         clenshaw = layer.clenshaw_basis(x)
-        
+
         np.testing.assert_allclose(
             pseudo.numpy(), clenshaw.numpy(),
             rtol=1e-4, atol=1e-5,

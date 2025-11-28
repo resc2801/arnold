@@ -41,11 +41,11 @@ References
 .. [2] Cohen, T.S., et al. (2018). "Spherical CNNs". ICLR.
 .. [3] Thomas, N., et al. (2018). "Tensor Field Networks". arXiv:1802.08219.
 """
-import math
 
 import tensorflow as tf
 
 from arnold.layers.core.geometric.base import GeometricBase
+
 
 tfk = tf.keras
 

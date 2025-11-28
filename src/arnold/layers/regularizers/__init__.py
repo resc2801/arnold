@@ -46,6 +46,7 @@ from arnold.layers.regularizers.l1_l2 import (
 from arnold.layers.regularizers.smoothness import SmoothnessRegularizer
 from arnold.layers.regularizers.sparsity import SparsityRegularizer
 
+
 __all__ = [
     # Base
     "KANRegularizer",

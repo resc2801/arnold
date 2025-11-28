@@ -26,192 +26,169 @@ The registry supports multiple aliases for the same layer class:
 
 from typing import Any
 
+# =============================================================================
+# Geometric Basis Functions
+# =============================================================================
+from .geometric import (
+    HypersphericalHarmonics,
+    SphericalHarmonics,
+    Zernike,
+)
 from .kan_base import KANBase
 
-# =============================================================================
-# Polynomial Layers
-# =============================================================================
-
-# Jacobi Family (orthogonal/)
-from .polynomial.orthogonal import (
-    Jacobi,
-    Legendre,
-    Gegenbauer,
-    Chebyshev1st,
-    Chebyshev2nd,
-    Chebyshev3rd,
-    Chebyshev4th,
-)
-
-# Laguerre Family (orthogonal/)
-from .polynomial.orthogonal import GeneralizedLaguerre
-
-# Hermite Family (orthogonal/)
-from .polynomial.orthogonal import Hermite
-
-# Bessel Family (orthogonal/)
-from .polynomial.orthogonal import Bessel
-
-# Meixner-Pollaczek Family (orthogonal/)
-from .polynomial.orthogonal import AssociatedMeixnerPollaczek
-
-# Pollaczek (orthogonal/)
-from .polynomial.orthogonal import Pollaczek
-
-# Wilson (orthogonal/)
-from .polynomial.orthogonal import Wilson
-
-# Al-Salam-Carlitz (orthogonal/)
-from .polynomial.orthogonal import AlSalamCarlitz1st, AlSalamCarlitz2nd
-
-# Askey-Wilson (orthogonal/)
-from .polynomial.orthogonal import AskeyWilson
-
-# Bannai-Ito (orthogonal/)
-from .polynomial.orthogonal import BannaiIto
-
-# Charlier (orthogonal/)
-from .polynomial.orthogonal import Charlier
-
-# q-Orthogonal Polynomials (q_orthogonal/)
-from .polynomial.q_orthogonal import (
-    QPolynomialBase,
-    QHahn,
-    BigQJacobi,
-    LittleQJacobi,
-    QMeixner,
-    QKrawtchouk,
-    QCharlier,
-    QRacah,
-    DualQHahn,
-    DualQKrawtchouk,
-    AffineQKrawtchouk,
-    DiscreteQHermite1,
-    DiscreteQHermite2,
-    ContinuousQHermite,
-    ContinuousQJacobi,
-    ContinuousQUltraspherical,
-    QuantumQKrawtchouk,
-    ContinuousQLaguerre,
-    ContinuousQLegendre,
+# Continuous Hahn Family (continuous_hahn.py)
+from .polynomial.continuous_hahn import (
+    ContinuousDualHahn,
+    ContinuousHahn,
+    DualHahn,
+    StieltjesWigert,
 )
 
 # Discrete Orthogonal (discrete.py)
 from .polynomial.discrete import Hahn, Krawtchouk, Meixner, Racah
 
-# Continuous Hahn Family (continuous_hahn.py)
-from .polynomial.continuous_hahn import (
-    ContinuousHahn,
-    ContinuousDualHahn,
-    DualHahn,
-    StieltjesWigert,
+# Non-Orthogonal (non_orthogonal.py)
+from .polynomial.non_orthogonal import Boubaker
+
+# =============================================================================
+# Polynomial Layers
+# =============================================================================
+# Jacobi Family (orthogonal/)
+# Laguerre Family (orthogonal/)
+# Hermite Family (orthogonal/)
+# Bessel Family (orthogonal/)
+# Meixner-Pollaczek Family (orthogonal/)
+# Pollaczek (orthogonal/)
+# Wilson (orthogonal/)
+# Al-Salam-Carlitz (orthogonal/)
+# Askey-Wilson (orthogonal/)
+# Bannai-Ito (orthogonal/)
+# Charlier (orthogonal/)
+from .polynomial.orthogonal import (
+    AlSalamCarlitz1st,
+    AlSalamCarlitz2nd,
+    AskeyWilson,
+    AssociatedMeixnerPollaczek,
+    BannaiIto,
+    Bessel,
+    Charlier,
+    Chebyshev1st,
+    Chebyshev2nd,
+    Chebyshev3rd,
+    Chebyshev4th,
+    Gegenbauer,
+    GeneralizedLaguerre,
+    Hermite,
+    Jacobi,
+    Legendre,
+    Pollaczek,
+    Wilson,
+)
+
+# q-Orthogonal Polynomials (q_orthogonal/)
+from .polynomial.q_orthogonal import (
+    AffineQKrawtchouk,
+    BigQJacobi,
+    ContinuousQHermite,
+    ContinuousQJacobi,
+    ContinuousQLaguerre,
+    ContinuousQLegendre,
+    ContinuousQUltraspherical,
+    DiscreteQHermite1,
+    DiscreteQHermite2,
+    DualQHahn,
+    DualQKrawtchouk,
+    LittleQJacobi,
+    QCharlier,
+    QHahn,
+    QKrawtchouk,
+    QMeixner,
+    QRacah,
+    QuantumQKrawtchouk,
 )
 
 # N-bonacci Sequences (sequences/)
-from .polynomial.sequences import (
-    Fibonacci,
-    Tribonacci,
-    Tetranacci,
-    Pentanacci,
-    Hexanacci,
-    Heptanacci,
-    Octanacci,
-)
-
 # W-Polynomials / Lucas-type (sequences/)
 from .polynomial.sequences import (
-    Lucas,
-    Pell,
-    PellLucas,
     Fermat,
     FermatLucas,
+    Fibonacci,
+    Heptanacci,
+    Hexanacci,
     Jacobsthal,
     JacobsthalLucas,
+    Lucas,
+    Octanacci,
+    Pell,
+    PellLucas,
+    Pentanacci,
+    Tetranacci,
+    Tribonacci,
 )
-
-# Non-Orthogonal (non_orthogonal.py)
-from .polynomial.non_orthogonal import Boubaker
 
 # Rational Functions
 from .rational_functions import Laurent
 
 # =============================================================================
-# Geometric Basis Functions
-# =============================================================================
-
-from .geometric import (
-    Zernike,
-    SphericalHarmonics,
-    HypersphericalHarmonics,
-)
-
-# =============================================================================
 # Radial Basis Functions
 # =============================================================================
-
 from .rbf import (
-    RBFBase,
-    GaussianRBF,
-    MultiquadricRBF,
-    InverseMultiQuadricRBF,
-    ThinPlateSplineRBF,
     CauchyRBF,
-    LinearRBF,
     CubicRBF,
-    InverseQuadricRBF,
     ExponentialRBF,
+    GaussianRBF,
+    InverseMultiQuadricRBF,
+    InverseQuadricRBF,
+    LinearRBF,
+    MultiquadricRBF,
     PowerRBF,
-)
-
-# =============================================================================
-# Splines
-# =============================================================================
-
-from .splines import SplineBase, BSpline, CatmullRom, Cardinal
-
-# =============================================================================
-# Wavelets
-# =============================================================================
-
-from .wavelets import (
-    WaveletBase,
-    Haar,
-    Daubechies,
-    Symlet,
-    Coiflet,
-    Ricker,
-    Morelet,
-    Shannon,
-    Meyer,
-    Bump,
-    Poisson,
-    DerivativeOfGaussian,
-)
-
-# =============================================================================
-# Spectral Layers
-# =============================================================================
-
-from .spectral import (
-    SpectralBase,
-    FourierKAN,
-    RandomFourierFeatures,
+    ThinPlateSplineRBF,
 )
 
 # =============================================================================
 # Special Functions
 # =============================================================================
-
 from .special import (
-    SpecialBase,
     Airy,
-    Bessel as BesselFunc,  # Avoid collision with Bessel polynomial
-    ParabolicCylinder,
-    Mathieu,
-    Whittaker,
-    Slepian,
-    LegendreFunctions,
     EllipticFunctions,
+    LegendreFunctions,
+    Mathieu,
+    ParabolicCylinder,
+    Slepian,
+    Whittaker,
+)
+from .special import (
+    Bessel as BesselFunc,  # Avoid collision with Bessel polynomial
+)
+
+# =============================================================================
+# Spectral Layers
+# =============================================================================
+from .spectral import (
+    FourierKAN,
+    RandomFourierFeatures,
+)
+
+# =============================================================================
+# Splines
+# =============================================================================
+from .splines import BSpline, Cardinal, CatmullRom
+
+# =============================================================================
+# Wavelets
+# =============================================================================
+from .wavelets import (
+    Bump,
+    Coiflet,
+    Daubechies,
+    DerivativeOfGaussian,
+    Haar,
+    Meyer,
+    Morelet,
+    Poisson,
+    Ricker,
+    Shannon,
+    Symlet,
 )
 
 

@@ -51,6 +51,7 @@ import tensorflow as tf
 
 from arnold.layers.core.special.base import SpecialBase
 
+
 tfk = tf.keras
 
 
@@ -94,7 +95,7 @@ class Bessel(SpecialBase):
 
     .. math::
 
-        J_n(x) \approx \sqrt{\frac{2}{\pi x}} \cos\left(x - \frac{n\pi}{2} 
+        J_n(x) \approx \sqrt{\frac{2}{\pi x}} \cos\left(x - \frac{n\pi}{2}
             - \frac{\pi}{4}\right)
 
     Example
@@ -190,7 +191,7 @@ class Bessel(SpecialBase):
 
         # J_1(x) approximation
         # J_1(x) = x/2 - x³/16 + x⁵/384 - x⁷/18432 + ...
-        J1 = (x_safe / 2.0 - x2 * x_safe / 16.0 + x4 * x_safe / 384.0 
+        J1 = (x_safe / 2.0 - x2 * x_safe / 16.0 + x4 * x_safe / 384.0
               - x6 * x_safe / 18432.0)
 
         basis = [J0, J1]
@@ -220,7 +221,7 @@ class Bessel(SpecialBase):
         # Y_0(x) ≈ (2/π)(ln(x/2) + γ) J_0(x) + ... for small x
         # For simplicity, use an approximation
         gamma = 0.5772156649015329  # Euler-Mascheroni constant
-        
+
         # Simple approximation for Y_0
         ln_term = tf.math.log(x_safe / 2.0) + gamma
         Y0 = (2.0 / 3.14159265358979) * ln_term

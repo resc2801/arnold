@@ -19,22 +19,6 @@ from .discrete import (
     Racah,
 )
 from .non_orthogonal import Boubaker
-from .sequences import (
-    Fibonacci,
-    Tribonacci,
-    Tetranacci,
-    Pentanacci,
-    Hexanacci,
-    Heptanacci,
-    Octanacci,
-    Lucas,
-    Pell,
-    PellLucas,
-    Fermat,
-    FermatLucas,
-    Jacobsthal,
-    JacobsthalLucas,
-)
 from .orthogonal import (
     AlSalamCarlitz1st,
     AlSalamCarlitz2nd,
@@ -77,6 +61,23 @@ from .q_orthogonal import (
     QRacah,
     QuantumQKrawtchouk,
 )
+from .sequences import (
+    Fermat,
+    FermatLucas,
+    Fibonacci,
+    Heptanacci,
+    Hexanacci,
+    Jacobsthal,
+    JacobsthalLucas,
+    Lucas,
+    Octanacci,
+    Pell,
+    PellLucas,
+    Pentanacci,
+    Tetranacci,
+    Tribonacci,
+)
+
 
 # Note: Zernike moved to arnold.layers.core.geometric in Phase 10
 

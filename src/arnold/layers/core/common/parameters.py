@@ -29,11 +29,9 @@ For semi-infinite and infinite domains, we use nonlinear maps
 
 from __future__ import annotations
 
-from typing import Tuple, Union, Optional
-
 import tensorflow as tf
 
-from .types import DomainSpec, DOMAIN_SYMMETRIC
+from .types import DOMAIN_SYMMETRIC, DomainSpec
 
 
 def scale_to_domain(
@@ -42,15 +40,15 @@ def scale_to_domain(
     target: DomainSpec = DOMAIN_SYMMETRIC,
 ) -> tf.Tensor:
     r"""Transform input from one domain to another.
-    
+
     Applies an affine transformation:
-    
+
     .. math::
         t = \frac{(x - a)(d - c)}{b - a} + c
-    
+
     where :math:`[a, b]` is the input domain and :math:`[c, d]` is
     the target domain.
-    
+
     Parameters
     ----------
     x : tf.Tensor
@@ -59,17 +57,17 @@ def scale_to_domain(
         Input domain specification.
     target : DomainSpec
         Target domain. Defaults to :math:`[-1, 1]`.
-    
+
     Returns
     -------
     tf.Tensor
         Transformed tensor.
-    
+
     Raises
     ------
     ValueError
         If the domain bounds are invalid (lower >= upper).
-    
+
     Examples
     --------
     >>> from arnold.layers.core.common.types import DomainSpec
@@ -86,28 +84,28 @@ def scale_to_domain(
         raise ValueError(
             f"Invalid target bounds: lower={target.lower} >= upper={target.upper}"
         )
-    
+
     # Cast bounds to tensor dtype
     dtype = x.dtype
     a = tf.cast(domain.lower, dtype)
     b = tf.cast(domain.upper, dtype)
     c = tf.cast(target.lower, dtype)
     d = tf.cast(target.upper, dtype)
-    
+
     # Affine transformation
     return (x - a) * (d - c) / (b - a) + c
 
 
 def get_domain_bounds(
     domain: DomainSpec,
-) -> Tuple[float, float]:
+) -> tuple[float, float]:
     r"""Extract domain bounds as a tuple.
-    
+
     Parameters
     ----------
     domain : DomainSpec
         Domain specification.
-    
+
     Returns
     -------
     Tuple[float, float]
@@ -118,15 +116,15 @@ def get_domain_bounds(
 
 def validate_parameters(
     degree: int,
-    alpha: Optional[float] = None,
-    beta: Optional[float] = None,
+    alpha: float | None = None,
+    beta: float | None = None,
     min_degree: int = 0,
-    max_degree: Optional[int] = None,
+    max_degree: int | None = None,
 ) -> None:
     r"""Validate polynomial parameters.
-    
+
     Checks that degree and shape parameters are within valid ranges.
-    
+
     Parameters
     ----------
     degree : int
@@ -139,12 +137,12 @@ def validate_parameters(
         Minimum allowed degree. Default 0.
     max_degree : int, optional
         Maximum allowed degree. No limit if None.
-    
+
     Raises
     ------
     ValueError
         If any parameter is out of valid range.
-    
+
     Notes
     -----
     For Jacobi polynomials :math:`P_n^{(\alpha, \beta)}(x)`, we require
@@ -152,13 +150,13 @@ def validate_parameters(
     """
     if degree < min_degree:
         raise ValueError(f"degree must be >= {min_degree}, got {degree}")
-    
+
     if max_degree is not None and degree > max_degree:
         raise ValueError(f"degree must be <= {max_degree}, got {degree}")
-    
+
     if alpha is not None and alpha <= -1:
         raise ValueError(f"alpha must be > -1, got {alpha}")
-    
+
     if beta is not None and beta <= -1:
         raise ValueError(f"beta must be > -1, got {beta}")
 
@@ -169,10 +167,10 @@ def clip_to_domain(
     epsilon: float = 1e-7,
 ) -> tf.Tensor:
     r"""Clip values to domain with small margin.
-    
+
     Clips input to :math:`[a + \epsilon, b - \epsilon]` to avoid
     boundary singularities.
-    
+
     Parameters
     ----------
     x : tf.Tensor
@@ -181,12 +179,12 @@ def clip_to_domain(
         Target domain.
     epsilon : float
         Margin from boundaries. Default ``1e-7``.
-    
+
     Returns
     -------
     tf.Tensor
         Clipped tensor.
-    
+
     Notes
     -----
     This is useful for polynomials with weight functions that are
@@ -200,16 +198,16 @@ def clip_to_domain(
 
 def normalize_input(
     x: tf.Tensor,
-    mean: Optional[tf.Tensor] = None,
-    std: Optional[tf.Tensor] = None,
+    mean: tf.Tensor | None = None,
+    std: tf.Tensor | None = None,
 ) -> tf.Tensor:
     r"""Normalize input to zero mean and unit variance.
-    
+
     Computes:
-    
+
     .. math::
         \hat{x} = \frac{x - \mu}{\sigma}
-    
+
     Parameters
     ----------
     x : tf.Tensor
@@ -218,7 +216,7 @@ def normalize_input(
         Mean to subtract. Computed from x if None.
     std : tf.Tensor, optional
         Standard deviation to divide. Computed from x if None.
-    
+
     Returns
     -------
     tf.Tensor
@@ -228,10 +226,10 @@ def normalize_input(
         mean = tf.reduce_mean(x)
     if std is None:
         std = tf.math.reduce_std(x)
-    
+
     # Avoid division by zero
     std = tf.maximum(std, tf.constant(1e-7, dtype=x.dtype))
-    
+
     return (x - mean) / std
 
 

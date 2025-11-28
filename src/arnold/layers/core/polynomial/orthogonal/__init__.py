@@ -61,6 +61,21 @@ arnold.layers.core.polynomial.hypergeometric : Hypergeometric-based polynomials
 """
 
 # Jacobi family
+# Al-Salam-Carlitz (q-orthogonal)
+from .al_salam_carlitz import AlSalamCarlitz, AlSalamCarlitz1st, AlSalamCarlitz2nd
+
+# Askey-Wilson (q-orthogonal)
+from .askey_wilson import AskeyWilson
+
+# Discrete orthogonal
+from .bannai_ito import BannaiIto
+
+# Bessel family
+from .bessel_family import Bessel
+from .charlier import Charlier
+
+# Hermite family
+from .hermite_family import Hermite
 from .jacobi_family import (
     Chebyshev,
     Chebyshev1st,
@@ -75,28 +90,12 @@ from .jacobi_family import (
 # Laguerre family
 from .laguerre_family import GeneralizedLaguerre
 
-# Hermite family
-from .hermite_family import Hermite
-
-# Bessel family
-from .bessel_family import Bessel
-
 # Meixner-Pollaczek family
 from .meixner_pollaczek import AssociatedMeixnerPollaczek
 from .pollaczek import Pollaczek
 
 # Wilson family
 from .wilson import Wilson
-
-# Al-Salam-Carlitz (q-orthogonal)
-from .al_salam_carlitz import AlSalamCarlitz, AlSalamCarlitz1st, AlSalamCarlitz2nd
-
-# Askey-Wilson (q-orthogonal)
-from .askey_wilson import AskeyWilson
-
-# Discrete orthogonal
-from .bannai_ito import BannaiIto
-from .charlier import Charlier
 
 
 __all__ = [

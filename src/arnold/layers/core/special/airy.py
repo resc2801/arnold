@@ -49,6 +49,7 @@ import tensorflow as tf
 
 from arnold.layers.core.special.base import SpecialBase
 
+
 tfk = tf.keras
 
 
@@ -184,7 +185,7 @@ class Airy(SpecialBase):
 
         # Use a simple polynomial approximation for demonstration
         # In production, use scipy or a proper implementation
-        
+
         # Maclaurin series coefficients for Ai(x)
         c0 = 0.3550280538878172  # Ai(0)
         c1 = -0.2588194037928068  # Ai'(0)
@@ -205,7 +206,7 @@ class Airy(SpecialBase):
         # For large negative x, Ai(x) oscillates
         # Apply a damping factor for numerical stability
         damping = tf.exp(-tf.maximum(x, 0.0) * 0.5)
-        
+
         return ai_approx * damping
 
     def _airy_bi(self, x: tf.Tensor) -> tf.Tensor:
@@ -233,7 +234,7 @@ class Airy(SpecialBase):
 
         # Normalize to prevent explosion
         normalization = 1.0 / (1.0 + tf.exp(tf.maximum(x, 0.0)))
-        
+
         return bi_approx * normalization
 
     def get_config(self):

@@ -6,6 +6,7 @@ import tensorflow as tf
 from arnold.layers.core.wavelets.base import WaveletBase
 from arnold.utils.compilation import kan_function
 
+
 kan_fn = kan_function()
 
 

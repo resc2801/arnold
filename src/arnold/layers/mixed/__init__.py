@@ -32,6 +32,7 @@ from arnold.layers.mixed.attention_basis import AttentionBasis
 from arnold.layers.mixed.mixed_basis import MixedBasis
 from arnold.layers.mixed.product_basis import ProductBasis
 
+
 __all__ = [
     "MixedBasis",
     "ProductBasis",

@@ -11,11 +11,11 @@ Mathematical Background
 The key transformations are:
 
 1. **Softplus lower bound**: :math:`f(x) = \text{softplus}(x) + L + \epsilon`
-   
+
    Maps :math:`\mathbb{R} \to (L + \epsilon, \infty)`
 
 2. **Sigmoid interval**: :math:`f(x) = \sigma(x) \cdot (H - L - 2\epsilon) + L + \epsilon`
-   
+
    Maps :math:`\mathbb{R} \to (L + \epsilon, H - \epsilon)`
 
 These are preferred over hard constraints because:
@@ -30,6 +30,7 @@ from __future__ import annotations
 import tensorflow as tf
 
 from arnold.layers.constraints.base import KANConstraint
+
 
 tfk = tf.keras
 

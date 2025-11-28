@@ -9,11 +9,12 @@ allowing fully learnable nonlinear transformations.
 
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
 import tensorflow as tf
 
 from arnold.layers.core.kan_base import KANBase
+
 
 tfk = tf.keras
 

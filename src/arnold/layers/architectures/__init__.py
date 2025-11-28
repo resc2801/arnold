@@ -46,6 +46,7 @@ from arnold.layers.architectures.kalman_kan import KalmanKAN
 from arnold.layers.architectures.mlp_basis import MLPBasis
 from arnold.layers.architectures.original_kan import OriginalKAN
 
+
 __all__ = [
     "OriginalKAN",
     "CompactKAN",

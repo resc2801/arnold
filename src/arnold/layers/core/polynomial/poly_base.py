@@ -70,11 +70,11 @@ class PolynomialBase(KANBase):
         :param degree: Maximum degree of the polynomial basis.
         :param core_ranks: Optional Tucker ranks (r1, r2, r3) for decomposed coefficient tensor.
         :param input_clip: Optional (min, max) tuple for clamping inputs prior to basis evaluation.
-        :param promote_to_float64: Whether to evaluate basis/contract in float64 when degree exceeds 
+        :param promote_to_float64: Whether to evaluate basis/contract in float64 when degree exceeds
             ``precision_threshold`` (cast back to original dtype afterward). If None (default),
             uses hardware-adaptive selection when ``hardware_adaptive=True``.
         :param precision_threshold: Degree threshold above which promotion is considered.
-        :param use_clenshaw: Force use of ``clenshaw_basis`` when True, force pseudo-Vandermonde 
+        :param use_clenshaw: Force use of ``clenshaw_basis`` when True, force pseudo-Vandermonde
             when False; ``None`` auto-selects (Clenshaw for high degree).
         :param use_true_clenshaw: When True, use true Clenshaw summation that fuses basis evaluation
             with coefficient contraction, achieving O(1) memory per degree step. Only supported for
@@ -93,7 +93,7 @@ class PolynomialBase(KANBase):
         self.use_true_clenshaw = use_true_clenshaw
         self.enable_tpu_sharding = enable_tpu_sharding
         self.hardware_adaptive = hardware_adaptive
-        
+
         # Handle promote_to_float64 with hardware-adaptive default
         if promote_to_float64 is None and hardware_adaptive:
             # Auto-select based on hardware
@@ -104,7 +104,7 @@ class PolynomialBase(KANBase):
         else:
             self.promote_to_float64 = promote_to_float64 if promote_to_float64 is not None else True
             self._detected_hardware = None
-        
+
         self.poly_coeffs = None
         self.poly_coeffs_core = None
         self.poly_coeffs_A = None
@@ -160,9 +160,9 @@ class PolynomialBase(KANBase):
     def call(self, inputs):
         """
         Forward computation: evaluate basis and combine with coefficients.
-        
+
         Respects mixed-precision policy from ``tf.keras.mixed_precision``.
-        
+
         Supports three evaluation modes:
         1. Standard: Compute full pseudo-Vandermonde, then contract with coefficients
         2. Clenshaw basis: Use tf.scan-based recurrence (memory efficient for high degree)
@@ -182,14 +182,14 @@ class PolynomialBase(KANBase):
 
         # Determine compute dtype: respect mixed-precision policy
         compute_dtype = self.effective_compute_dtype
-        
+
         # Decide whether to promote to float64 for numerical stability
         promote = (
-            self.promote_to_float64 
-            and self.degree > self.precision_threshold 
+            self.promote_to_float64
+            and self.degree > self.precision_threshold
             and compute_dtype in (tf.float32, tf.float16, tf.bfloat16)
         )
-        
+
         if promote:
             x_eval = tf.cast(x_flat, tf.float64)
         elif x_flat.dtype != compute_dtype:
@@ -218,7 +218,7 @@ class PolynomialBase(KANBase):
                 coeff_A = tf.cast(self.poly_coeffs_A, coeff_dtype) if self.poly_coeffs_A.dtype != coeff_dtype else self.poly_coeffs_A
                 coeff_B = tf.cast(self.poly_coeffs_B, coeff_dtype) if self.poly_coeffs_B.dtype != coeff_dtype else self.poly_coeffs_B
                 coeff_C = tf.cast(self.poly_coeffs_C, coeff_dtype) if self.poly_coeffs_C.dtype != coeff_dtype else self.poly_coeffs_C
-                
+
                 # Apply TPU sharding to coefficients
                 if self.enable_tpu_sharding:
                     optimized_ops = _get_optimized_ops()
@@ -226,7 +226,7 @@ class PolynomialBase(KANBase):
                     coeff_A = optimized_ops.with_tpu_sharding(coeff_A, "replicated")
                     coeff_B = optimized_ops.with_tpu_sharding(coeff_B, "replicated")
                     coeff_C = optimized_ops.with_tpu_sharding(coeff_C, "replicated")
-                
+
                 # Tucker decomposition: coeffs[i,d,o] ≈ Σ_xyz core[x,y,z] * A[i,x] * B[d,y] * C[o,z]
                 y_flat = tf.einsum(
                     "bid,xyz,ix,dy,oz->bo",
@@ -240,12 +240,12 @@ class PolynomialBase(KANBase):
             else:
                 coeff_dtype = tf.float64 if promote else compute_dtype
                 coeffs = tf.cast(self.poly_coeffs, coeff_dtype) if self.poly_coeffs.dtype != coeff_dtype else self.poly_coeffs
-                
+
                 # Apply TPU sharding to coefficients
                 if self.enable_tpu_sharding:
                     optimized_ops = _get_optimized_ops()
                     coeffs = optimized_ops.with_tpu_sharding(coeffs, "replicated")
-                
+
                 y_flat = tf.einsum(
                     "bid,ido->bo",
                     basis,
@@ -264,10 +264,10 @@ class PolynomialBase(KANBase):
     def _true_clenshaw_forward(self, x: tf.Tensor, promote: bool, compute_dtype) -> tf.Tensor:
         """
         True Clenshaw summation: fuses basis evaluation with coefficient contraction.
-        
+
         This achieves O(1) memory per degree step by not materializing the full basis tensor.
         Subclasses should override this if they support true Clenshaw for their polynomial type.
-        
+
         Default implementation falls back to standard evaluation.
         """
         # Default: fall back to standard evaluation
@@ -279,10 +279,10 @@ class PolynomialBase(KANBase):
             basis = self.clenshaw_basis(x)
         else:
             basis = self.pseudo_vandermonde(x)
-        
+
         coeff_dtype = tf.float64 if promote else compute_dtype
         coeffs = tf.cast(self.poly_coeffs, coeff_dtype) if self.poly_coeffs.dtype != coeff_dtype else self.poly_coeffs
-        
+
         return tf.einsum("bid,ido->bo", basis, coeffs, optimize="auto")
 
     @abstractmethod

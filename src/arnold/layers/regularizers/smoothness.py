@@ -12,6 +12,7 @@ import tensorflow as tf
 
 from arnold.layers.regularizers.base import KANRegularizer
 
+
 tfk = tf.keras
 
 

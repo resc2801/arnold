@@ -18,9 +18,11 @@ import tensorflow as tf
 from arnold.layers.core.polynomial.orthogonal import (
     Chebyshev1st,
     Chebyshev2nd,
-    Legendre,
-    GeneralizedLaguerre as Laguerre,
     Hermite,
+    Legendre,
+)
+from arnold.layers.core.polynomial.orthogonal import (
+    GeneralizedLaguerre as Laguerre,
 )
 
 
@@ -328,7 +330,7 @@ class TestTuckerEdgeCases:
         _ = layer_tucker(sample_input)
 
         # Should have same number of coefficient params (plus some overhead)
-        full_params = input_dim * (degree + 1) * output_dim
+        input_dim * (degree + 1) * output_dim
         tucker_core_params = input_dim * (degree + 1) * output_dim
 
         assert np.prod(layer_tucker.poly_coeffs_core.shape) == tucker_core_params

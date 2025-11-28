@@ -11,7 +11,7 @@ The Dual q-Krawtchouk polynomials are dual to the q-Krawtchouk polynomials:
 
 .. math::
 
-    K_n(\lambda(x); c, N | q) = 
+    K_n(\lambda(x); c, N | q) =
         {}_3\phi_2\left(\begin{array}{c}
         q^{-n}, q^{-x}, cq^{x-N} \\
         q^{-N}, 0 \end{array}; q, q\right)
@@ -77,7 +77,7 @@ class DualQKrawtchouk(QPolynomialBase):
         input_clip: tuple[float, float] | None = None,
         **kwargs,
     ):
-        if N < degree:
+        if degree > N:
             raise ValueError(f"N must be >= degree, got N={N}, degree={degree}")
 
         super().__init__(

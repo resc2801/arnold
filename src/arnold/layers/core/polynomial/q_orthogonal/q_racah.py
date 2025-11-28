@@ -8,12 +8,12 @@ the top of the Askey-Wilson scheme for discrete q-orthogonal polynomials.
 
 Mathematical Background
 -----------------------
-The q-Racah polynomials are defined for :math:`n = 0, 1, \ldots, N` where one of 
+The q-Racah polynomials are defined for :math:`n = 0, 1, \ldots, N` where one of
 :math:`\alpha q, \beta\delta q, \gamma q = q^{-N}`:
 
 .. math::
 
-    R_n(\mu(y); \alpha, \beta, \gamma, \delta | q) = 
+    R_n(\mu(y); \alpha, \beta, \gamma, \delta | q) =
         {}_4\phi_3\left(\begin{array}{c}
         q^{-n}, \alpha\beta q^{n+1}, q^{-y}, \gamma\delta q^{y+1} \\
         \alpha q, \beta\delta q, \gamma q \end{array}; q, q\right)
@@ -22,7 +22,7 @@ where :math:`\mu(y) = q^{-y} + \gamma\delta q^{y+1}`.
 
 Notes
 -----
-q-Racah polynomials satisfy a duality relation: swapping :math:`(\alpha, \beta) \leftrightarrow (\gamma, \delta)` 
+q-Racah polynomials satisfy a duality relation: swapping :math:`(\alpha, \beta) \leftrightarrow (\gamma, \delta)`
 and :math:`n \leftrightarrow y` gives the same polynomial value.
 
 References
@@ -88,7 +88,7 @@ class QRacah(QPolynomialBase):
         input_clip: tuple[float, float] | None = None,
         **kwargs,
     ):
-        if N < degree:
+        if degree > N:
             raise ValueError(f"N must be >= degree, got N={N}, degree={degree}")
 
         super().__init__(

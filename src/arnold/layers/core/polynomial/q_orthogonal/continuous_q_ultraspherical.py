@@ -11,8 +11,8 @@ The Continuous q-Ultraspherical polynomials are defined as:
 
 .. math::
 
-    C_n(\cos\theta; \beta | q) = \sum_{\ell=0}^{n} 
-        \frac{(\beta; q)_\ell (\beta; q)_{n-\ell}}{(q; q)_\ell (q; q)_{n-\ell}} 
+    C_n(\cos\theta; \beta | q) = \sum_{\ell=0}^{n}
+        \frac{(\beta; q)_\ell (\beta; q)_{n-\ell}}{(q; q)_\ell (q; q)_{n-\ell}}
         e^{i(n-2\ell)\theta}
 
 They satisfy the three-term recurrence:

@@ -11,7 +11,7 @@ The Continuous q-Hermite polynomials are defined as:
 
 .. math::
 
-    H_n(\cos\theta | q) = \sum_{\ell=0}^{n} \frac{(q; q)_n}{(q; q)_\ell (q; q)_{n-\ell}} 
+    H_n(\cos\theta | q) = \sum_{\ell=0}^{n} \frac{(q; q)_n}{(q; q)_\ell (q; q)_{n-\ell}}
         e^{i(n-2\ell)\theta}
 
 They satisfy the three-term recurrence:

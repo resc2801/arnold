@@ -11,7 +11,7 @@ The Dual q-Hahn polynomials are dual to the q-Hahn polynomials:
 
 .. math::
 
-    R_n(\mu(x); \gamma, \delta, N | q) = 
+    R_n(\mu(x); \gamma, \delta, N | q) =
         {}_3\phi_2\left(\begin{array}{c}
         q^{-n}, q^{-x}, \gamma\delta q^{x+1} \\
         \gamma q, q^{-N} \end{array}; q, q\right)
@@ -81,7 +81,7 @@ class DualQHahn(QPolynomialBase):
         input_clip: tuple[float, float] | None = None,
         **kwargs,
     ):
-        if N < degree:
+        if degree > N:
             raise ValueError(f"N must be >= degree, got N={N}, degree={degree}")
 
         super().__init__(

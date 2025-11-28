@@ -11,7 +11,6 @@ Note: Most special function layers are stubs with NotImplementedError.
 These tests will expand as implementations are added.
 """
 
-import numpy as np
 import pytest
 import tensorflow as tf
 
@@ -66,15 +65,15 @@ class TestAiry:
         layer = Airy(max_order=3, units=16)
         # Build the layer
         layer.build(sample_input.shape)
-        
+
         # Get basis values at x=0
         x_zero = tf.constant([[0.0]], dtype=tf.float64)
         basis = layer.special_basis(x_zero)
-        
+
         # First component should be Ai(0)
         ai_zero = float(basis[0, 0, 0])
         expected = 0.35502805388781724
-        
+
         # Power series approximation should be close for small arguments
         assert abs(ai_zero - expected) < 0.01, f"Ai(0) = {ai_zero}, expected ≈ {expected}"
 
@@ -82,9 +81,9 @@ class TestAiry:
         """Test Airy layer output shape."""
         layer = Airy(max_order=4, units=32)
         layer.build(batch_input.shape)
-        
+
         output = layer(batch_input)
-        
+
         # Output shape: (batch, units)
         assert output.shape == (3, 32)
 
@@ -92,12 +91,12 @@ class TestAiry:
         """Test Airy layer is differentiable."""
         layer = Airy(max_order=3, units=16)
         layer.build(sample_input.shape)
-        
+
         with tf.GradientTape() as tape:
             tape.watch(sample_input)
             output = layer(sample_input)
             loss = tf.reduce_sum(output)
-        
+
         grads = tape.gradient(loss, sample_input)
         assert grads is not None
         assert not tf.reduce_any(tf.math.is_nan(grads))
@@ -120,11 +119,11 @@ class TestBessel:
         """Test J_0(0) = 1."""
         layer = Bessel(max_order=3, units=16)
         layer.build(sample_input.shape)
-        
+
         # Get basis values at x=0
         x_zero = tf.constant([[0.0]], dtype=tf.float64)
         basis = layer.special_basis(x_zero)
-        
+
         # J_0(0) = 1
         j0_zero = float(basis[0, 0, 0])
         assert abs(j0_zero - 1.0) < 1e-10, f"J_0(0) = {j0_zero}, expected 1.0"
@@ -133,11 +132,11 @@ class TestBessel:
         """Test J_1(0) = 0."""
         layer = Bessel(max_order=3, units=16)
         layer.build(sample_input.shape)
-        
+
         # Get basis values at x=0
         x_zero = tf.constant([[0.0]], dtype=tf.float64)
         basis = layer.special_basis(x_zero)
-        
+
         # J_1(0) = 0 (second order in output)
         if basis.shape[-1] > 1:
             j1_zero = float(basis[0, 0, 1])
@@ -147,9 +146,9 @@ class TestBessel:
         """Test Bessel layer output shape."""
         layer = Bessel(max_order=4, units=32)
         layer.build(batch_input.shape)
-        
+
         output = layer(batch_input)
-        
+
         # Output shape: (batch, units)
         assert output.shape == (3, 32)
 
@@ -157,12 +156,12 @@ class TestBessel:
         """Test Bessel layer is differentiable."""
         layer = Bessel(max_order=3, units=16)
         layer.build(sample_input.shape)
-        
+
         with tf.GradientTape() as tape:
             tape.watch(sample_input)
             output = layer(sample_input)
             loss = tf.reduce_sum(output)
-        
+
         grads = tape.gradient(loss, sample_input)
         assert grads is not None
         assert not tf.reduce_any(tf.math.is_nan(grads))
@@ -214,7 +213,7 @@ class TestRegistryIntegration:
     def test_airy_in_registry(self):
         """Test Airy layer is registered."""
         from arnold.layers.core.registry import get_layer, is_registered
-        
+
         assert is_registered("airy")
         layer = get_layer("airy", max_order=3, units=16)
         assert isinstance(layer, Airy)
@@ -222,7 +221,7 @@ class TestRegistryIntegration:
     def test_bessel_functions_in_registry(self):
         """Test Bessel functions layer is registered (as bessel_functions)."""
         from arnold.layers.core.registry import get_layer, is_registered
-        
+
         # Note: "bessel" maps to Bessel polynomial, "bessel_functions" to special
         assert is_registered("bessel_functions")
         layer = get_layer("bessel_functions", max_order=3, units=16)
@@ -231,7 +230,7 @@ class TestRegistryIntegration:
     def test_special_category_exists(self):
         """Test special category exists in registry."""
         from arnold.layers.core.registry import LAYER_CATEGORIES
-        
+
         assert "special" in LAYER_CATEGORIES
         assert "airy" in LAYER_CATEGORIES["special"]
         assert "bessel_functions" in LAYER_CATEGORIES["special"]
@@ -252,7 +251,7 @@ class TestSpecialBase:
     def test_concrete_layer_has_required_methods(self):
         """Test concrete layers have required methods from SpecialBase."""
         layer = Airy(max_order=5, units=32)
-        
+
         assert hasattr(layer, "max_order")
         assert hasattr(layer, "special_basis")
         assert callable(layer.special_basis)

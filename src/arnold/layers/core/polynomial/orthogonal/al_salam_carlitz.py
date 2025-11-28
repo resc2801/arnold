@@ -174,20 +174,20 @@ class AlSalamCarlitz1st(AlSalamCarlitz):
         a = tf.cast(self.a, x.dtype)
         q = tf.cast(self.q, x.dtype)
         degree = self.degree
-        
+
         # Flatten x for processing
         x = tf.reshape(x, (-1, self.input_dim))  # (batch, input_dim)
-        
+
         # U_0 = 1
         u0 = tf.ones_like(x)
         if degree == 0:
             return tf.expand_dims(u0, -1)
-        
+
         # U_1 = x - (1 + a)
         u1 = x - (1.0 + a)
         if degree == 1:
             return tf.stack([u0, u1], axis=-1)
-        
+
         # Use tf.scan for recurrence (n = 1, 2, ..., degree-1)
         # At step n, compute U_{n+1} from U_n and U_{n-1}
         def step(carry, n):
@@ -198,19 +198,19 @@ class AlSalamCarlitz1st(AlSalamCarlitz):
             # U_{n+1} = (x - (1+a) q^n) U_n + a q^{n-1} (1 - q^n) U_{n-1}
             u_next = (x - (1.0 + a) * q_n) * u_n + a * q_nm1 * (1.0 - q_n) * u_n_1
             return (u_next, u_n)
-        
+
         ns = tf.range(1, degree)  # n=1 gives U_2, n=degree-1 gives U_degree
         carries = tf.scan(step, ns, initializer=(u1, u0))
         # carries[0] has shape (degree-1, batch, input_dim)
         us = tf.transpose(carries[0], perm=[1, 2, 0])  # (batch, input_dim, degree-1)
-        
+
         # Stack all basis functions
         basis = tf.concat([
             tf.expand_dims(u0, -1),
             tf.expand_dims(u1, -1),
             us
         ], axis=-1)
-        
+
         return tf.reshape(basis, (-1, self.input_dim, degree + 1))
 
 
@@ -270,20 +270,20 @@ class AlSalamCarlitz2nd(AlSalamCarlitz):
         q = tf.cast(self.q, x.dtype)
         q_inv = 1.0 / q  # V uses inverse q
         degree = self.degree
-        
+
         # Flatten x for processing
         x = tf.reshape(x, (-1, self.input_dim))  # (batch, input_dim)
-        
+
         # V_0 = 1
         v0 = tf.ones_like(x)
         if degree == 0:
             return tf.expand_dims(v0, -1)
-        
+
         # V_1 = x - (1 + a)
         v1 = x - (1.0 + a)
         if degree == 1:
             return tf.stack([v0, v1], axis=-1)
-        
+
         # Use tf.scan for recurrence
         def step(carry, n):
             v_n, v_n_1 = carry
@@ -293,17 +293,17 @@ class AlSalamCarlitz2nd(AlSalamCarlitz):
             # Same recurrence as U, with 1/q
             v_next = (x - (1.0 + a) * q_n) * v_n + a * q_nm1 * (1.0 - q_n) * v_n_1
             return (v_next, v_n)
-        
+
         ns = tf.range(1, degree)
         carries = tf.scan(step, ns, initializer=(v1, v0))
         vs = tf.transpose(carries[0], perm=[1, 2, 0])
-        
+
         basis = tf.concat([
             tf.expand_dims(v0, -1),
             tf.expand_dims(v1, -1),
             vs
         ], axis=-1)
-        
+
         return tf.reshape(basis, (-1, self.input_dim, degree + 1))
 
 

@@ -400,62 +400,62 @@ class Legendre(PolynomialBase):
         """
         # Reshape x for computation: (batch, input_dim)
         x = tf.reshape(x, (-1, self.input_dim))  # (B, D)
-        
+
         # coefficients: (input_dim, degree+1, output_dim)
         degree = self.degree
-        
+
         # Apply orthonormal scaling to coefficients if needed
         if self.orthonormal:
             n = tf.range(0, degree + 1, dtype=coefficients.dtype)
             scale = tf.sqrt((2.0 * n + 1.0) / 2.0)
             # scale: (degree+1,) -> (1, degree+1, 1) for broadcasting
             coefficients = coefficients * tf.reshape(scale, (1, -1, 1))
-        
+
         # Legendre Clenshaw recurrence (backward):
         # b_{k} = c_k + alpha_k * x * b_{k+1} - beta_{k+1} * b_{k+2}
         # where alpha_k = (2k+1)/(k+1), beta_{k+1} = (k+1)/(k+2)
-        
+
         # Initialize: b_{n+1} = 0, b_n = c_n
         batch_size = tf.shape(x)[0]
         output_dim = tf.shape(coefficients)[-1]
-        
+
         b_next2 = tf.zeros((batch_size, self.input_dim, output_dim), dtype=coefficients.dtype)
         b_next1 = tf.broadcast_to(
             tf.expand_dims(coefficients[:, degree, :], 0),  # (1, D, O)
             (batch_size, self.input_dim, output_dim)
         )
-        
+
         # x for broadcasting: (B, D) -> (B, D, 1)
         x_expanded = tf.expand_dims(x, -1)
-        
+
         def clenshaw_step(carry, k):
             b_next1, b_next2 = carry
             k_f = tf.cast(k, coefficients.dtype)
-            
+
             # Coefficients for Legendre recurrence
             alpha = (2.0 * k_f + 1.0) / (k_f + 1.0)  # (2k+1)/(k+1)
             beta = (k_f + 1.0) / (k_f + 2.0)  # (k+1)/(k+2)
-            
+
             # c_k coefficient
             c_k = coefficients[:, k, :]  # (D, O)
             c_k = tf.broadcast_to(tf.expand_dims(c_k, 0), tf.shape(b_next1))
-            
+
             # b_k = c_k + alpha_k * x * b_{k+1} - beta_{k+1} * b_{k+2}
             b_new = c_k + alpha * x_expanded * b_next1 - beta * b_next2
-            
+
             return (b_new, b_next1)
-        
+
         # Run recurrence from k = degree-1 down to k = 0
         if degree > 0:
             ks = tf.range(degree - 1, -1, -1)  # degree-1, degree-2, ..., 0
             (b_0, _) = tf.foldl(clenshaw_step, ks, initializer=(b_next1, b_next2))
         else:
             b_0 = b_next1
-        
+
         # For Legendre, the result is simply b_0 (P_0(x) = 1)
         # Sum over input dimensions: (B, D, O) -> (B, O)
         output = tf.reduce_sum(b_0, axis=1)
-        
+
         return output
 
     def get_config(self):
@@ -743,10 +743,10 @@ class Chebyshev1st(Chebyshev):
         # Reshape x for computation: (batch, input_dim)
         x = tf.reshape(x, (-1, self.input_dim))  # (B, D)
         cos_x = tf.cos(safe_acos(x))  # Use acos for Chebyshev domain
-        
+
         # coefficients: (input_dim, degree+1, output_dim)
         degree = self.degree
-        
+
         # Apply orthonormal scaling to coefficients if needed
         if self.orthonormal:
             n = tf.range(0, degree + 1, dtype=coefficients.dtype)
@@ -757,11 +757,11 @@ class Chebyshev1st(Chebyshev):
             )
             # scale: (degree+1,) -> (1, degree+1, 1) for broadcasting
             coefficients = coefficients * tf.reshape(scale, (1, -1, 1))
-        
+
         # Clenshaw recurrence: b_{k-1} = c_{k-1} + 2*cos_x*b_k - b_{k+1}
         # Start with b_{n+1} = 0, b_n = c_n
         # coefficients[:, k, :] is c_k for all input dims and output dims
-        
+
         # Initialize: b_{n+1} = 0, b_n = c_n
         # Shape: (B, D, O) where O is output_dim
         b_next = tf.zeros((tf.shape(x)[0], self.input_dim, tf.shape(coefficients)[-1]), dtype=coefficients.dtype)
@@ -769,10 +769,10 @@ class Chebyshev1st(Chebyshev):
             tf.expand_dims(coefficients[:, degree, :], 0),  # (1, D, O)
             (tf.shape(x)[0], self.input_dim, tf.shape(coefficients)[-1])
         )
-        
+
         # cos_x for Chebyshev: (B, D) -> (B, D, 1) for broadcasting
         cos_x_expanded = tf.expand_dims(cos_x, -1)
-        
+
         def clenshaw_step(carry, k):
             b_curr, b_next = carry
             # c_{k-1} + 2*cos_x*b_k - b_{k+1}
@@ -780,20 +780,20 @@ class Chebyshev1st(Chebyshev):
             c_k = tf.broadcast_to(tf.expand_dims(c_k, 0), tf.shape(b_curr))
             b_new = c_k + 2.0 * cos_x_expanded * b_curr - b_next
             return (b_new, b_curr)
-        
+
         # Run recurrence from k = degree-1 down to k = 0
         if degree > 0:
             ks = tf.range(degree - 1, -1, -1)  # degree-1, degree-2, ..., 0
             (b_0, b_1) = tf.foldl(clenshaw_step, ks, initializer=(b_curr, b_next))
         else:
             b_0, b_1 = b_curr, b_next
-        
+
         # Final result: b_0 - cos_x * b_1
         result = b_0 - cos_x_expanded * b_1
-        
+
         # Sum over input dimensions: (B, D, O) -> (B, O)
         output = tf.reduce_sum(result, axis=1)
-        
+
         return output
 
     def get_config(self):

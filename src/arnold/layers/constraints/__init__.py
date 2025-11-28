@@ -40,7 +40,7 @@ Examples
 Using transformation functions in a custom layer:
 
 >>> from arnold.layers.constraints import softplus_lower_bound, inverse_softplus_lower_bound
->>> 
+>>>
 >>> class MyLayer(tf.keras.layers.Layer):
 ...     def build(self, input_shape):
 ...         # Initialize logits to produce alpha=1.0 (for alpha > -0.5)
@@ -51,7 +51,7 @@ Using transformation functions in a custom layer:
 ...             name="alpha_logits",
 ...             initializer=tf.keras.initializers.Constant(float(init_logits))
 ...         )
-...     
+...
 ...     def call(self, inputs):
 ...         # Transform logits to constrained alpha in forward pass
 ...         alpha = softplus_lower_bound(self.alpha_logits, lower_bound=-0.5)
@@ -91,6 +91,7 @@ from arnold.layers.constraints.orthogonality import (
 from arnold.layers.constraints.positivity import (
     PositivityConstraint,
 )
+
 
 __all__ = [
     # Base

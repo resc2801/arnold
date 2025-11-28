@@ -9,11 +9,10 @@ recursive state updates for sequential/time-series data.
 
 from __future__ import annotations
 
-from typing import Sequence
-
 import tensorflow as tf
 
 from arnold.layers.core.registry import get_layer_class
+
 
 tfk = tf.keras
 
@@ -172,5 +171,5 @@ class KalmanKAN(tfk.Model):
         return config
 
     @classmethod
-    def from_config(cls, config: dict) -> "KalmanKAN":
+    def from_config(cls, config: dict) -> KalmanKAN:
         return cls(**config)

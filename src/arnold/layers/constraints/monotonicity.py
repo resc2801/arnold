@@ -12,6 +12,7 @@ import tensorflow as tf
 
 from arnold.layers.constraints.base import KANConstraint
 
+
 tfk = tf.keras
 
 
@@ -40,7 +41,7 @@ class MonotonicityConstraint(KANConstraint):
     --------
     >>> # For spline control points that should be increasing:
     >>> constraint = MonotonicityConstraint(increasing=True)
-    >>> 
+    >>>
     >>> # For decay rates that should be decreasing:
     >>> constraint = MonotonicityConstraint(increasing=False)
     """

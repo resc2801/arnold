@@ -10,6 +10,7 @@ import tensorflow as tf
 
 from arnold.layers.core.kan_base import KANBase
 
+
 tfk = tf.keras
 
 

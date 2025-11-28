@@ -50,19 +50,20 @@ References
 """
 
 # Fibonacci-type (multi-step recurrences)
+from .fermat import Fermat, FermatLucas
 from .fibonacci import Fibonacci
-from .tribonacci import Tribonacci
-from .tetranacci import Tetranacci
-from .pentanacci import Pentanacci
-from .hexanacci import Hexanacci
 from .heptanacci import Heptanacci
-from .octanacci import Octanacci
+from .hexanacci import Hexanacci
+from .jacobsthal import Jacobsthal, JacobsthalLucas
 
 # Lucas polynomial sequences (w-polynomials)
 from .lucas import Lucas
+from .octanacci import Octanacci
 from .pell import Pell, PellLucas
-from .fermat import Fermat, FermatLucas
-from .jacobsthal import Jacobsthal, JacobsthalLucas
+from .pentanacci import Pentanacci
+from .tetranacci import Tetranacci
+from .tribonacci import Tribonacci
+
 
 __all__ = [
     # Fibonacci-type

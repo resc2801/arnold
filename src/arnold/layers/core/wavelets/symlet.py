@@ -10,6 +10,7 @@ from arnold.layers.core.wavelets.base import WaveletBase
 from arnold.layers.core.wavelets.coefficients import SYMLET_COEFFICIENTS
 from arnold.utils.compilation import kan_function
 
+
 kan_fn = kan_function()
 
 

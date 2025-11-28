@@ -14,6 +14,7 @@ This is the w-polynomial sequence with :math:`p(x) = x, q(x) = 1, (a, b) = (2, x
 import tensorflow as tf
 
 from arnold.utils.compilation import kan_function
+
 from ..poly_base import PolynomialBase
 
 

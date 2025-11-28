@@ -31,11 +31,11 @@ Example
 >>> x = tf.random.normal((16, 10))  # batch=16, features=10
 >>> y = layer(x)  # shape: (16, 32)
 """
-import math
 
 import tensorflow as tf
 
 from arnold.layers.core.spectral.base import SpectralBase
+
 
 tfk = tf.keras
 

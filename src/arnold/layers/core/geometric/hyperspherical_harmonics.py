@@ -40,11 +40,11 @@ References
 .. [3] Cohen, T.S., et al. (2019). "Gauge Equivariant Convolutional Networks".
        ICML.
 """
-import math
 
 import tensorflow as tf
 
 from arnold.layers.core.geometric.base import GeometricBase
+
 
 tfk = tf.keras
 

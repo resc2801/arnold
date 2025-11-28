@@ -11,6 +11,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any
 
+
 if TYPE_CHECKING:
     import sympy as sp
 
@@ -37,9 +38,9 @@ class SymbolicBase(ABC):
     @abstractmethod
     def to_expression(
         self,
-        layer: "KANBase",
-        input_symbols: list["sp.Symbol"] | None = None,
-    ) -> "sp.Expr":
+        layer: KANBase,
+        input_symbols: list[sp.Symbol] | None = None,
+    ) -> sp.Expr:
         r"""
         Convert a KAN layer to a symbolic expression.
 
@@ -58,7 +59,7 @@ class SymbolicBase(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def to_latex(self, layer: "KANBase") -> str:
+    def to_latex(self, layer: KANBase) -> str:
         r"""
         Convert a KAN layer to LaTeX representation.
 
@@ -75,7 +76,7 @@ class SymbolicBase(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_coefficients(self, layer: "KANBase") -> dict[str, Any]:
+    def get_coefficients(self, layer: KANBase) -> dict[str, Any]:
         r"""
         Extract learned coefficients from a layer.
 
@@ -101,7 +102,7 @@ class BasisSymbolic(ABC):
     """
 
     @abstractmethod
-    def basis_symbol(self, degree: int, variable: "sp.Symbol") -> "sp.Expr":
+    def basis_symbol(self, degree: int, variable: sp.Symbol) -> sp.Expr:
         r"""
         Get the symbolic expression for a single basis function.
 

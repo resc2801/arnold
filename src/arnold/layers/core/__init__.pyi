@@ -2,7 +2,8 @@
 # Type stubs for arnold.layers.core
 
 from abc import ABC
-from typing import Any, Callable, Literal, Sequence
+from collections.abc import Callable
+from typing import Any, Literal
 
 import tensorflow as tf
 from tensorflow import keras
@@ -14,7 +15,7 @@ def get_recommended_dtype(degree: int, hardware: str | None = None) -> tf.DType:
 # Base Classes
 class KANBase(keras.layers.Layer, ABC):
     """Abstract base class for Kolmogorov-Arnold Network layers."""
-    
+
     units: int
     output_dim: int  # Legacy alias for units
     input_dim: int | None
@@ -25,7 +26,7 @@ class KANBase(keras.layers.Layer, ABC):
     input_clip: tuple[float, float] | None
     tanh_x: bool
     bias: tf.Variable | None
-    
+
     def __init__(
         self,
         units: int | None = None,
@@ -41,17 +42,17 @@ class KANBase(keras.layers.Layer, ABC):
         compute_dtype: tf.DType | str | None = None,
         **kwargs: Any,
     ) -> None: ...
-    
+
     @property
     def effective_compute_dtype(self) -> tf.DType: ...
-    
+
     def call(self, inputs: tf.Tensor, training: bool | None = None) -> tf.Tensor: ...
     def get_config(self) -> dict[str, Any]: ...
 
 
 class PolynomialBase(KANBase):
     """Abstract base class for polynomial KAN layers."""
-    
+
     degree: int
     core_ranks: tuple[int, int, int] | None
     promote_to_float64: bool
@@ -63,7 +64,7 @@ class PolynomialBase(KANBase):
     poly_coeffs_A: tf.Variable | None
     poly_coeffs_B: tf.Variable | None
     poly_coeffs_C: tf.Variable | None
-    
+
     def __init__(
         self,
         degree: int,
@@ -77,21 +78,21 @@ class PolynomialBase(KANBase):
         hardware_adaptive: bool = True,
         **kwargs: Any,
     ) -> None: ...
-    
+
     def pseudo_vandermonde(self, x: tf.Tensor) -> tf.Tensor: ...
     def clenshaw_basis(self, x: tf.Tensor) -> tf.Tensor: ...
 
 
 class RBFBase(KANBase):
     """Abstract base class for RBF KAN layers."""
-    
+
     num_grids: int
     grid_min: float
     grid_max: float
     grid_eps: float
     kernel_weights: tf.Variable | None
     grid_tensor: tf.Variable | None
-    
+
     def __init__(
         self,
         num_grids: int,
@@ -102,20 +103,20 @@ class RBFBase(KANBase):
         grid_eps: float = 0.02,
         **kwargs: Any,
     ) -> None: ...
-    
+
     def rbf_basis(self, x: tf.Tensor) -> tf.Tensor: ...
 
 
 class WaveletBase(KANBase):
     """Abstract base class for wavelet KAN layers."""
-    
+
     num_grids: int
     grid_min: float
     grid_max: float
     wavelet_weights: tf.Variable | None
     scale_logits: tf.Variable | None
     translation: tf.Variable | None
-    
+
     def __init__(
         self,
         num_grids: int,
@@ -125,7 +126,7 @@ class WaveletBase(KANBase):
         grid_max: float = 1.0,
         **kwargs: Any,
     ) -> None: ...
-    
+
     def wavelet_basis(self, x: tf.Tensor) -> tf.Tensor: ...
 
 
@@ -401,7 +402,7 @@ class AskeyWilson(PolynomialBase):
 # Polynomial Layers - Discrete Orthogonal
 class Krawtchouk(PolynomialBase):
     """Krawtchouk polynomial KAN layer K_n(x; p, N).
-    
+
     Orthogonal on {0, 1, ..., N} with binomial weight.
     """
     def __init__(
@@ -418,7 +419,7 @@ class Krawtchouk(PolynomialBase):
 
 class Hahn(PolynomialBase):
     """Hahn polynomial KAN layer Q_n(x; alpha, beta, N).
-    
+
     Generalization of Krawtchouk with two shape parameters.
     Orthogonal on {0, 1, ..., N} with hypergeometric weight.
     """
@@ -437,7 +438,7 @@ class Hahn(PolynomialBase):
 
 class Meixner(PolynomialBase):
     """Meixner polynomial KAN layer M_n(x; beta, c).
-    
+
     Orthogonal on {0, 1, 2, ...} with negative binomial weight.
     """
     def __init__(
@@ -454,7 +455,7 @@ class Meixner(PolynomialBase):
 
 class Racah(PolynomialBase):
     """Racah polynomial KAN layer R_n(lambda(x); alpha, beta, gamma, delta).
-    
+
     The most general classical discrete orthogonal polynomials.
     lambda(x) = x(x + gamma + delta + 1)
     """
