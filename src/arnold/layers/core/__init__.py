@@ -108,6 +108,18 @@ from arnold.layers.core.wavelets import (
     WaveletBase,
 )
 
+# Registry API
+from arnold.layers.core.registry import (
+    LAYER_REGISTRY,
+    LAYER_CATEGORIES,
+    get_layer,
+    get_layer_class,
+    list_layers,
+    list_layers_by_category,
+    is_registered,
+    get_aliases,
+)
+
 
 __all__ = [
     # Base classes and utilities
@@ -216,4 +228,13 @@ __all__ = [
     "MultiquadricRBF",
     "PowerRBF",
     "ThinPlateSplineRBF",
+    # Registry API
+    "LAYER_REGISTRY",
+    "LAYER_CATEGORIES",
+    "get_layer",
+    "get_layer_class",
+    "list_layers",
+    "list_layers_by_category",
+    "is_registered",
+    "get_aliases",
 ]
