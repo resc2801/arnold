@@ -14,7 +14,7 @@ import numpy as np
 import pytest
 import tensorflow as tf
 
-from arnold.layers.core.radial_basis_functions import (
+from arnold.layers.core.rbf import (
     CauchyRBF,
     CubicRBF,
     ExponentialRBF,

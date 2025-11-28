@@ -144,7 +144,7 @@ def test_regularizer_serialization():
 
 def test_kernel_regularizer_rbf():
     """Test kernel_regularizer works on RBFBase layers."""
-    from arnold.layers.core.radial_basis_functions import GaussianRBF
+    from arnold.layers.core.rbf import GaussianRBF
     
     x = tf.random.uniform((4, 3), minval=0.0, maxval=1.0, seed=102)
     layer = GaussianRBF(

@@ -12,7 +12,7 @@ import pytest
 import tensorflow as tf
 
 from arnold.layers.core.polynomial.orthogonal import Legendre, Chebyshev1st
-from arnold.layers.core.radial_basis_functions import GaussianRBF
+from arnold.layers.core.rbf import GaussianRBF
 
 
 # ============================================================================
