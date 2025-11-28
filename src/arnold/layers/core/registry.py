@@ -107,8 +107,8 @@ from .polynomial.continuous_hahn import (
     StieltjesWigert,
 )
 
-# N-bonacci Sequences (n_bonacci.py)
-from .polynomial.n_bonacci import (
+# N-bonacci Sequences (sequences/)
+from .polynomial.sequences import (
     Fibonacci,
     Tribonacci,
     Tetranacci,
@@ -118,8 +118,8 @@ from .polynomial.n_bonacci import (
     Octanacci,
 )
 
-# W-Polynomials (w_polynomials.py)
-from .polynomial.w_polynomials import (
+# W-Polynomials / Lucas-type (sequences/)
+from .polynomial.sequences import (
     Lucas,
     Pell,
     PellLucas,

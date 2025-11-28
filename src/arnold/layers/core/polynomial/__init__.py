@@ -18,16 +18,23 @@ from .discrete import (
     Meixner,
     Racah,
 )
-from .n_bonacci import (
-    Fibonacci,
-    Heptanacci,
-    Hexanacci,
-    Octanacci,
-    Pentanacci,
-    Tetranacci,
-    Tribonacci,
-)
 from .non_orthogonal import Boubaker
+from .sequences import (
+    Fibonacci,
+    Tribonacci,
+    Tetranacci,
+    Pentanacci,
+    Hexanacci,
+    Heptanacci,
+    Octanacci,
+    Lucas,
+    Pell,
+    PellLucas,
+    Fermat,
+    FermatLucas,
+    Jacobsthal,
+    JacobsthalLucas,
+)
 from .orthogonal import (
     AlSalamCarlitz1st,
     AlSalamCarlitz2nd,
@@ -69,15 +76,6 @@ from .q_orthogonal import (
     QPolynomialBase,
     QRacah,
     QuantumQKrawtchouk,
-)
-from .w_polynomials import (
-    Fermat,
-    FermatLucas,
-    Jacobsthal,
-    JacobsthalLucas,
-    Lucas,
-    Pell,
-    PellLucas,
 )
 from .zernike import Zernike
 
