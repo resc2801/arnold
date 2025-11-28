@@ -1,97 +1,146 @@
+## Copyright (c) 2025 René Schubotz. All rights reserved.
+# Licensed under the terms specified in the LICENSE file in the project root.
 """
-Implementation of KAN layers.
+Implementation of KAN layers and bases.
 """
 
-from .polynomial.n_bonacci import (
-    Fibonacci,
-    Heptanacci,
-    Hexanacci,
-    Octanacci,
-    Pentanacci,
-    Tetranacci,
+from arnold.layers.core.kan_base import (
+    KANBase,
+    detect_hardware,
+    get_recommended_dtype,
 )
-
-from .polynomial.w_polynomials import (
-    Lucas,
-    Fermat,
-    FermatLucas,
-    Jacobsthal,
-    JacobsthalLucas,
-    Pell,
-    PellLucas
-)
-
-from .polynomial.orthogonal import (
+from arnold.layers.core.polynomial import (
+    AffineQKrawtchouk,
     AlSalamCarlitz1st,
     AlSalamCarlitz2nd,
     AskeyWilson,
     AssociatedMeixnerPollaczek,
     BannaiIto,
     Bessel,
+    BigQJacobi,
+    Boubaker,
     Charlier,
     Chebyshev1st,
     Chebyshev2nd,
     Chebyshev3rd,
     Chebyshev4th,
+    ContinuousDualHahn,
+    ContinuousHahn,
+    ContinuousQHermite,
+    ContinuousQJacobi,
+    ContinuousQLaguerre,
+    ContinuousQLegendre,
+    ContinuousQUltraspherical,
+    DiscreteQHermite1,
+    DiscreteQHermite2,
+    DualHahn,
+    DualQHahn,
+    DualQKrawtchouk,
+    Fermat,
+    FermatLucas,
+    Fibonacci,
     Gegenbauer,
     GeneralizedLaguerre,
+    Hahn,
+    Heptanacci,
     Hermite,
+    Hexanacci,
     Jacobi,
+    Jacobsthal,
+    JacobsthalLucas,
+    Krawtchouk,
+    Laurent,
     Legendre,
+    LittleQJacobi,
+    Lucas,
+    Meixner,
+    Octanacci,
+    Pell,
+    PellLucas,
+    Pentanacci,
     Pollaczek,
+    PolynomialBase,
+    QCharlier,
+    QHahn,
+    QKrawtchouk,
+    QMeixner,
+    QPolynomialBase,
+    QRacah,
+    QuantumQKrawtchouk,
+    Racah,
+    StieltjesWigert,
+    Tetranacci,
+    Tribonacci,
     Wilson,
+    Zernike,
 )
-
-from .polynomial.non_orthogonal import (
-    Boubaker
-)
-
-from .rational_functions import (
-    Laurent
-)
-
-from .radial_basis_functions import (
-    ExponentialRBF, 
-    CauchyRBF, 
-    CubicRBF, 
-    GaussianRBF, 
-    InverseMultiQuadricRBF, 
-    InverseQuadricRBF, 
-    LinearRBF, 
-    MultiquadricRBF, 
-    PowerRBF, 
+from arnold.layers.core.radial_basis_functions import (
+    CauchyRBF,
+    CubicRBF,
+    ExponentialRBF,
+    GaussianRBF,
+    InverseMultiQuadricRBF,
+    InverseQuadricRBF,
+    LinearRBF,
+    MultiquadricRBF,
+    PowerRBF,
+    RBFBase,
     ThinPlateSplineRBF,
 )
-
-from .wavelets import (
+from arnold.layers.core.splines import (
+    BSpline,
+    Cardinal,
+    CatmullRom,
+    SplineBase,
+)
+from arnold.layers.core.wavelets import (
     Bump,
+    Coiflet,
+    Daubechies,
     DerivativeOfGaussian,
+    Haar,
     Meyer,
     Morelet,
     Poisson,
     Ricker,
     Shannon,
+    Symlet,
+    WaveletBase,
 )
 
+
 __all__ = [
-    # Wavelet KAN layers
+    # Base classes and utilities
+    "KANBase",
+    "PolynomialBase",
+    "RBFBase",
+    "SplineBase",
+    "WaveletBase",
+    "detect_hardware",
+    "get_recommended_dtype",
+    # Splines
+    "BSpline",
+    "Cardinal",
+    "CatmullRom",
+    # Wavelets
     "Bump",
+    "Coiflet",
+    "Daubechies",
     "DerivativeOfGaussian",
+    "Haar",
     "Meyer",
     "Morelet",
     "Poisson",
     "Ricker",
     "Shannon",
-
-    # N-bonacci polynomial KAN layers
+    "Symlet",
+    # Fibonacci-type polynomials
     "Fibonacci",
     "Heptanacci",
     "Hexanacci",
     "Octanacci",
     "Pentanacci",
     "Tetranacci",
-
-    # W polynomial KAN layers
     "Lucas",
     "Fermat",
     "FermatLucas",
@@ -99,8 +148,7 @@ __all__ = [
     "JacobsthalLucas",
     "Pell",
     "PellLucas",
-
-    # Orthogonal polynomial KAN layers
+    # Orthogonal polynomials
     "AlSalamCarlitz1st",
     "AlSalamCarlitz2nd",
     "AskeyWilson",
@@ -119,22 +167,53 @@ __all__ = [
     "Legendre",
     "Pollaczek",
     "Wilson",
-
-    # Nonorthogonal KAN layers
+    # Discrete orthogonal polynomials
+    "Hahn",
+    "Krawtchouk",
+    "Meixner",
+    "Racah",
+    # Continuous Hahn family (Wilson class)
+    "ContinuousHahn",
+    "ContinuousDualHahn",
+    "DualHahn",
+    "StieltjesWigert",
+    # q-Hahn class (q-orthogonal polynomials) - Sprint 7E
+    "QPolynomialBase",
+    "QHahn",
+    "BigQJacobi",
+    "LittleQJacobi",
+    "QMeixner",
+    "QKrawtchouk",
+    # q-Polynomials Part 2 - Sprint 7F
+    "QCharlier",
+    "QRacah",
+    "DualQHahn",
+    "DualQKrawtchouk",
+    "AffineQKrawtchouk",
+    # q-Polynomials Part 3 (Askey-Wilson Class) - Sprint 7G
+    "DiscreteQHermite1",
+    "DiscreteQHermite2",
+    "ContinuousQHermite",
+    "ContinuousQJacobi",
+    "ContinuousQUltraspherical",
+    # q-Polynomials Part 4 & Special - Sprint 7H
+    "QuantumQKrawtchouk",
+    "ContinuousQLaguerre",
+    "ContinuousQLegendre",
+    "Tribonacci",
+    "Zernike",
+    # Other polynomials
     "Boubaker",
-    
-    # Rational function KAN layers
     "Laurent",
-
-    # Radial Basis Function KAN layers
-    "ExponentialRBF", 
-    "CauchyRBF", 
-    "CubicRBF", 
-    "GaussianRBF", 
-    "InverseMultiQuadricRBF", 
-    "InverseQuadricRBF", 
-    "LinearRBF", 
-    "MultiquadricRBF", 
-    "PowerRBF", 
+    # RBFs
+    "ExponentialRBF",
+    "CauchyRBF",
+    "CubicRBF",
+    "GaussianRBF",
+    "InverseMultiQuadricRBF",
+    "InverseQuadricRBF",
+    "LinearRBF",
+    "MultiquadricRBF",
+    "PowerRBF",
     "ThinPlateSplineRBF",
 ]
