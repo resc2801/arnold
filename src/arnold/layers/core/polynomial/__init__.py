@@ -49,7 +49,7 @@ from .orthogonal import (
     Wilson,
 )
 from .poly_base import PolynomialBase
-from .q_polynomials import (
+from .q_orthogonal import (
     AffineQKrawtchouk,
     BigQJacobi,
     ContinuousQHermite,
