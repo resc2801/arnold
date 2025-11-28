@@ -4,6 +4,12 @@
 Implementation of KAN layers and bases.
 """
 
+from arnold.layers.core.geometric import (
+    GeometricBase,
+    HypersphericalHarmonics,
+    SphericalHarmonics,
+    Zernike,
+)
 from arnold.layers.core.kan_base import (
     KANBase,
     detect_hardware,
@@ -72,9 +78,8 @@ from arnold.layers.core.polynomial import (
     Tetranacci,
     Tribonacci,
     Wilson,
-    Zernike,
 )
-from arnold.layers.core.radial_basis_functions import (
+from arnold.layers.core.rbf import (
     CauchyRBF,
     CubicRBF,
     ExponentialRBF,
@@ -86,6 +91,41 @@ from arnold.layers.core.radial_basis_functions import (
     PowerRBF,
     RBFBase,
     ThinPlateSplineRBF,
+)
+
+# Registry API
+from arnold.layers.core.registry import (
+    LAYER_CATEGORIES,
+    LAYER_REGISTRY,
+    get_aliases,
+    get_layer,
+    get_layer_class,
+    is_registered,
+    list_layers,
+    list_layers_by_category,
+)
+from arnold.layers.core.special import (
+    Airy,
+    EllipticFunctions,
+    LegendreFunctions,
+    Mathieu,
+    ParabolicCylinder,
+    Slepian,
+    SpecialBase,
+    Whittaker,
+)
+from arnold.layers.core.special import (
+    Bessel as BesselFunc,  # Alias to avoid collision with Bessel polynomial
+)
+from arnold.layers.core.spectral import (
+    CosineBasis,
+    DiracComb,
+    FourierKAN,
+    Lorentzian,
+    RandomFourierFeatures,
+    SincBasis,
+    SpectralBase,
+    WindowedSinc,
 )
 from arnold.layers.core.splines import (
     BSpline,
@@ -112,9 +152,12 @@ from arnold.layers.core.wavelets import (
 __all__ = [
     # Base classes and utilities
     "KANBase",
+    "GeometricBase",
     "PolynomialBase",
     "RBFBase",
     "SplineBase",
+    "SpectralBase",
+    "SpecialBase",
     "WaveletBase",
     "detect_hardware",
     "get_recommended_dtype",
@@ -122,6 +165,28 @@ __all__ = [
     "BSpline",
     "Cardinal",
     "CatmullRom",
+    # Spectral (Phase 9b implemented)
+    "CosineBasis",
+    "DiracComb",
+    "FourierKAN",
+    "Lorentzian",
+    "RandomFourierFeatures",
+    "SincBasis",
+    "WindowedSinc",
+    # Geometric (Phase 10)
+    "GeometricBase",
+    "HypersphericalHarmonics",
+    "SphericalHarmonics",
+    "Zernike",
+    # Special (Phase 11)
+    "Airy",
+    "BesselFunc",
+    "EllipticFunctions",
+    "LegendreFunctions",
+    "Mathieu",
+    "ParabolicCylinder",
+    "Slepian",
+    "Whittaker",
     # Wavelets
     "Bump",
     "Coiflet",
@@ -216,4 +281,13 @@ __all__ = [
     "MultiquadricRBF",
     "PowerRBF",
     "ThinPlateSplineRBF",
+    # Registry API
+    "LAYER_REGISTRY",
+    "LAYER_CATEGORIES",
+    "get_layer",
+    "get_layer_class",
+    "list_layers",
+    "list_layers_by_category",
+    "is_registered",
+    "get_aliases",
 ]

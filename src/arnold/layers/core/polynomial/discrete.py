@@ -29,7 +29,7 @@ kan_fn = kan_function()
 def _inverse_softplus_lower_bound(value: float, lower_bound: float, eps: float = 1e-6) -> float:
     """
     Compute logits that produce `value` when passed through softplus_lower_bound.
-    
+
     Python-only version for graph-mode compatibility.
     softplus_lower_bound(x) = softplus(x) + lower_bound + eps
     So we need: x = inverse_softplus(value - lower_bound - eps)
@@ -63,7 +63,7 @@ class Krawtchouk(PolynomialBase):
 
         K_0(x) &= 1 \\
         K_1(x) &= 1 - \frac{x}{Np} \\
-        (n+1) K_{n+1}(x) &= [(N-2x)p + (n+1) - Np(1-p)] K_n(x) 
+        (n+1) K_{n+1}(x) &= [(N-2x)p + (n+1) - Np(1-p)] K_n(x)
                           - (N-n+1)(1-p) K_{n-1}(x)
 
     Alternative form using DLMF 18.22.2:
@@ -134,13 +134,13 @@ class Krawtchouk(PolynomialBase):
         **kwargs :
             Forwarded to :class:`PolynomialBase`.
         """
-        if N < degree:
+        if degree > N:
             raise ValueError(f"N must be >= degree, got N={N}, degree={degree}")
         if not 0 < p_init < 1:
             raise ValueError(f"p_init must be in (0, 1), got {p_init}")
-        
+
         super().__init__(degree=degree, units=units, input_clip=input_clip, **kwargs)
-        
+
         self.p_init = p_init
         self.p_trainable = p_trainable
         self.N = N
@@ -164,15 +164,15 @@ class Krawtchouk(PolynomialBase):
         # p ∈ (0, 1) via sigmoid
         p = tf.sigmoid(tf.cast(self._p_logits, x.dtype))
         N = tf.cast(self.N, x.dtype)
-        
+
         # K_0(x) = 1
         basis = [tf.ones_like(x)]
-        
+
         if self.degree > 0:
             # K_1(x) = 1 - x/(Np)
             K1 = 1.0 - x / (N * p + 1e-8)
             basis.append(K1)
-        
+
         # Use DLMF recurrence: -x K_n = A_n K_{n+1} - (A_n + C_n) K_n + C_n K_{n-1}
         # Rearranged: K_{n+1} = [(A_n + C_n - x) K_n - C_n K_{n-1}] / A_n
         for n in range(1, self.degree):
@@ -183,7 +183,7 @@ class Krawtchouk(PolynomialBase):
             A_n_safe = A_n + 1e-8
             K_next = ((A_n + C_n - x) * basis[n] - C_n * basis[n - 1]) / A_n_safe
             basis.append(K_next)
-        
+
         return tf.stack(basis, axis=-1)
 
     def get_config(self):
@@ -275,11 +275,11 @@ class Hahn(PolynomialBase):
         **kwargs :
             Forwarded to :class:`PolynomialBase`.
         """
-        if N < degree:
+        if degree > N:
             raise ValueError(f"N must be >= degree, got N={N}, degree={degree}")
-        
+
         super().__init__(degree=degree, units=units, input_clip=input_clip, **kwargs)
-        
+
         self.alpha_init = alpha_init
         self.alpha_trainable = alpha_trainable
         self.beta_init = beta_init
@@ -313,10 +313,10 @@ class Hahn(PolynomialBase):
         alpha = softplus_lower_bound(tf.cast(self._alpha_logits, x.dtype), lower_bound=-1.0)
         beta = softplus_lower_bound(tf.cast(self._beta_logits, x.dtype), lower_bound=-1.0)
         N = tf.cast(self.N, x.dtype)
-        
+
         # Q_0(x) = 1
         basis = [tf.ones_like(x)]
-        
+
         if self.degree > 0:
             # Q_1(x) from recurrence with n=0
             # A_0 = (α+β+1)(α+1)N / [(α+β+1)(α+β+2)]
@@ -329,25 +329,25 @@ class Hahn(PolynomialBase):
             A_0 = A_0_num / A_0_den
             Q1 = 1.0 - x / (A_0 + 1e-8)
             basis.append(Q1)
-        
+
         for n in range(1, self.degree):
             n_f = tf.cast(n, x.dtype)
             s = alpha + beta
-            
+
             # A_n numerator and denominator
             A_n_num = (n_f + s + 1.0) * (n_f + alpha + 1.0) * (N - n_f)
             A_n_den = (2.0 * n_f + s + 1.0) * (2.0 * n_f + s + 2.0) + 1e-8
             A_n = A_n_num / A_n_den
-            
+
             # C_n numerator and denominator
             C_n_num = n_f * (n_f + s + N + 1.0) * (n_f + beta)
             C_n_den = (2.0 * n_f + s) * (2.0 * n_f + s + 1.0) + 1e-8
             C_n = C_n_num / C_n_den
-            
+
             # Q_{n+1} = [(A_n + C_n - x) Q_n - C_n Q_{n-1}] / A_n
             Q_next = ((A_n + C_n - x) * basis[n] - C_n * basis[n - 1]) / (A_n + 1e-8)
             basis.append(Q_next)
-        
+
         return tf.stack(basis, axis=-1)
 
     def get_config(self):
@@ -454,9 +454,9 @@ class Meixner(PolynomialBase):
             raise ValueError(f"beta_init must be > 0, got {beta_init}")
         if not 0 < c_init < 1:
             raise ValueError(f"c_init must be in (0, 1), got {c_init}")
-        
+
         super().__init__(degree=degree, units=units, input_clip=input_clip, **kwargs)
-        
+
         self.beta_init = beta_init
         self.beta_trainable = beta_trainable
         self.c_init = c_init
@@ -488,10 +488,10 @@ class Meixner(PolynomialBase):
         """Compute Meixner basis using three-term recurrence."""
         beta = softplus_lower_bound(tf.cast(self._beta_logits, x.dtype), lower_bound=0.0)
         c = tf.sigmoid(tf.cast(self._c_logits, x.dtype))
-        
+
         # M_0(x) = 1
         basis = [tf.ones_like(x)]
-        
+
         if self.degree > 0:
             # M_1 from recurrence with n=0
             # A_0 = c*β / (1-c)
@@ -502,18 +502,18 @@ class Meixner(PolynomialBase):
             A_0 = c * beta / one_minus_c
             M1 = 1.0 - x / (A_0 + 1e-8)
             basis.append(M1)
-        
+
         for n in range(1, self.degree):
             n_f = tf.cast(n, x.dtype)
             one_minus_c = 1.0 - c + 1e-8
-            
+
             A_n = c * (n_f + beta) / one_minus_c
             C_n = n_f / one_minus_c
-            
+
             # M_{n+1} = [(A_n + C_n - x) M_n - C_n M_{n-1}] / A_n
             M_next = ((A_n + C_n - x) * basis[n] - C_n * basis[n - 1]) / (A_n + 1e-8)
             basis.append(M_next)
-        
+
         return tf.stack(basis, axis=-1)
 
     def get_config(self):
@@ -621,11 +621,11 @@ class Racah(PolynomialBase):
         **kwargs :
             Forwarded to :class:`PolynomialBase`.
         """
-        if N < degree:
+        if degree > N:
             raise ValueError(f"N must be >= degree, got N={N}, degree={degree}")
-        
+
         super().__init__(degree=degree, units=units, input_clip=input_clip, **kwargs)
-        
+
         self.alpha_init = alpha_init
         self.alpha_trainable = alpha_trainable
         self.beta_init = beta_init
@@ -635,7 +635,7 @@ class Racah(PolynomialBase):
         self.delta_init = delta_init
         self.delta_trainable = delta_trainable
         self.N = N
-        
+
         self._alpha_logits = None
         self._beta_logits = None
         self._gamma_logits = None
@@ -682,13 +682,13 @@ class Racah(PolynomialBase):
         gamma = softplus_lower_bound(tf.cast(self._gamma_logits, x.dtype), lower_bound=-1.0)
         delta = softplus_lower_bound(tf.cast(self._delta_logits, x.dtype), lower_bound=-1.0)
         N = tf.cast(self.N, x.dtype)
-        
+
         # Transform to λ(x) = x(x + γ + δ + 1)
         lam = x * (x + gamma + delta + 1.0)
-        
+
         # R_0 = 1
         basis = [tf.ones_like(x)]
-        
+
         if self.degree > 0:
             # R_1 from recurrence with n=0
             s = alpha + beta
@@ -700,25 +700,25 @@ class Racah(PolynomialBase):
             # R_1 = (A_0 - λ) / A_0
             R1 = (A_0 - lam) / (A_0 + 1e-8)
             basis.append(R1)
-        
+
         for n in range(1, self.degree):
             n_f = tf.cast(n, x.dtype)
             s = alpha + beta
-            
+
             # A_n
             A_n_num = (n_f + alpha + 1.0) * (n_f + beta + delta + 1.0) * (n_f + gamma + 1.0) * (N - n_f)
             A_n_den = (2.0 * n_f + s + 2.0) * (2.0 * n_f + s + 1.0) + 1e-8
             A_n = A_n_num / A_n_den
-            
+
             # C_n
             C_n_num = n_f * (n_f + s - N) * (n_f + alpha - gamma) * (n_f + beta)
             C_n_den = (2.0 * n_f + s + 1.0) * (2.0 * n_f + s) + 1e-8
             C_n = C_n_num / C_n_den
-            
+
             # R_{n+1} = [(A_n + C_n - λ) R_n - C_n R_{n-1}] / A_n
             R_next = ((A_n + C_n - lam) * basis[n] - C_n * basis[n - 1]) / (A_n + 1e-8)
             basis.append(R_next)
-        
+
         return tf.stack(basis, axis=-1)
 
     def get_config(self):

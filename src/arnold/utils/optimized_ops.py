@@ -13,7 +13,7 @@ This module provides performance-optimized implementations for:
 
 from __future__ import annotations
 
-from typing import Callable, Tuple
+from collections.abc import Callable
 
 import tensorflow as tf
 
@@ -26,14 +26,14 @@ def _detect_hardware() -> str:
             return 'tpu'
     except Exception:
         pass
-    
+
     try:
         gpu_devices = tf.config.list_logical_devices('GPU')
         if gpu_devices:
             return 'gpu'
     except Exception:
         pass
-    
+
     return 'cpu'
 
 
@@ -55,7 +55,7 @@ def clenshaw_chebyshev_sum(
     per degree step, rather than materializing the full pseudo-Vandermonde tensor.
 
     For Chebyshev T_n with recurrence T_{n+1} = 2x T_n - T_{n-1}:
-    
+
     The Clenshaw algorithm evaluates sum_{k=0}^{n} c_k T_k(x) by:
         b_{n+2} = b_{n+1} = 0
         b_k = c_k + 2x b_{k+1} - b_{k+2}  for k = n, n-1, ..., 1
@@ -80,18 +80,18 @@ def clenshaw_chebyshev_sum(
     # x: (batch, input_dim)
     # coeffs: (input_dim, degree+1, output_dim)
     degree = tf.shape(coeffs)[1] - 1
-    
+
     # Initialize b_{n+1} = 0, b_{n+2} = 0
     batch_size = tf.shape(x)[0]
     b_k1 = tf.zeros((batch_size, input_dim, output_dim), dtype=x.dtype)  # b_{k+1}
     b_k2 = tf.zeros((batch_size, input_dim, output_dim), dtype=x.dtype)  # b_{k+2}
-    
+
     # Cast coeffs to compute dtype
     coeffs = tf.cast(coeffs, x.dtype)
-    
+
     # x expanded for broadcasting: (batch, input_dim, 1)
     x_expanded = tf.expand_dims(x, -1)
-    
+
     # Clenshaw backward recurrence: b_k = c_k + 2x b_{k+1} - b_{k+2}
     def clenshaw_step(carry, k):
         b_k1, b_k2 = carry
@@ -99,7 +99,7 @@ def clenshaw_chebyshev_sum(
         c_k = tf.expand_dims(coeffs[:, k, :], 0)
         b_k = c_k + 2.0 * x_expanded * b_k1 - b_k2
         return (b_k, b_k1)
-    
+
     # Iterate k = degree, degree-1, ..., 1
     k_range = tf.range(degree, 0, -1)
     final_carry = tf.foldl(
@@ -108,11 +108,11 @@ def clenshaw_chebyshev_sum(
         initializer=(b_k1, b_k2),
     )
     b_1, b_2 = final_carry
-    
+
     # Final step: result = c_0 + x * b_1 - b_2
     c_0 = tf.expand_dims(coeffs[:, 0, :], 0)  # (1, input_dim, output_dim)
     result = c_0 + x_expanded * b_1 - b_2  # (batch, input_dim, output_dim)
-    
+
     # Sum over input dimension
     return tf.reduce_sum(result, axis=1)  # (batch, output_dim)
 
@@ -129,7 +129,7 @@ def clenshaw_legendre_sum(
 
     For Legendre P_n with recurrence:
     (n+1) P_{n+1} = (2n+1) x P_n - n P_{n-1}
-    
+
     The Clenshaw algorithm uses the modified recurrence.
 
     Parameters
@@ -150,13 +150,13 @@ def clenshaw_legendre_sum(
     """
     degree = tf.shape(coeffs)[1] - 1
     batch_size = tf.shape(x)[0]
-    
+
     b_k1 = tf.zeros((batch_size, input_dim, output_dim), dtype=x.dtype)
     b_k2 = tf.zeros((batch_size, input_dim, output_dim), dtype=x.dtype)
-    
+
     coeffs = tf.cast(coeffs, x.dtype)
     x_expanded = tf.expand_dims(x, -1)
-    
+
     # Legendre Clenshaw: b_k = c_k + (2k+1)/(k+1) x b_{k+1} - (k+1)/(k+2) b_{k+2}
     def clenshaw_step(carry, k):
         b_k1, b_k2 = carry
@@ -166,7 +166,7 @@ def clenshaw_legendre_sum(
         beta = (k_f + 1.0) / (k_f + 2.0)
         b_k = c_k + alpha * x_expanded * b_k1 - beta * b_k2
         return (b_k, b_k1)
-    
+
     k_range = tf.range(degree, 0, -1)
     final_carry = tf.foldl(
         clenshaw_step,
@@ -174,11 +174,11 @@ def clenshaw_legendre_sum(
         initializer=(b_k1, b_k2),
     )
     b_1, b_2 = final_carry
-    
+
     # Final: result = c_0 + x * b_1 - 0.5 * b_2
     c_0 = tf.expand_dims(coeffs[:, 0, :], 0)
     result = c_0 + x_expanded * b_1 - 0.5 * b_2
-    
+
     return tf.reduce_sum(result, axis=1)
 
 
@@ -205,7 +205,7 @@ def clenshaw_generic_sum(
         Coefficient tensor of shape (input_dim, degree+1, output_dim).
     alpha_fn : Callable
         Function (n, x) -> alpha_n coefficient tensor.
-    beta_fn : Callable  
+    beta_fn : Callable
         Function (n, x) -> beta_n coefficient tensor.
     input_dim : int
         Input dimension.
@@ -219,12 +219,12 @@ def clenshaw_generic_sum(
     """
     degree = tf.shape(coeffs)[1] - 1
     batch_size = tf.shape(x)[0]
-    
+
     b_k1 = tf.zeros((batch_size, input_dim, output_dim), dtype=x.dtype)
     b_k2 = tf.zeros((batch_size, input_dim, output_dim), dtype=x.dtype)
-    
+
     coeffs = tf.cast(coeffs, x.dtype)
-    
+
     def clenshaw_step(carry, k):
         b_k1, b_k2 = carry
         c_k = tf.expand_dims(coeffs[:, k, :], 0)
@@ -232,7 +232,7 @@ def clenshaw_generic_sum(
         beta = tf.expand_dims(beta_fn(k, x), -1)
         b_k = c_k + alpha * b_k1 - beta * b_k2
         return (b_k, b_k1)
-    
+
     k_range = tf.range(degree, 0, -1)
     final_carry = tf.foldl(
         clenshaw_step,
@@ -240,12 +240,12 @@ def clenshaw_generic_sum(
         initializer=(b_k1, b_k2),
     )
     b_1, b_2 = final_carry
-    
+
     c_0 = tf.expand_dims(coeffs[:, 0, :], 0)
     alpha_0 = tf.expand_dims(alpha_fn(tf.constant(0), x), -1)
     beta_0 = tf.expand_dims(beta_fn(tf.constant(0), x), -1)
     result = c_0 + alpha_0 * b_1 - beta_0 * b_2
-    
+
     return tf.reduce_sum(result, axis=1)
 
 
@@ -288,8 +288,8 @@ def q_polynomial_basis_xla(
     """
     original_shape = tf.shape(x)
     x_flat = tf.reshape(x, [-1])
-    batch_size = tf.shape(x_flat)[0]
-    
+    tf.shape(x_flat)[0]
+
     # Initialize TensorArray
     basis_ta = tf.TensorArray(
         dtype=x.dtype,
@@ -298,34 +298,34 @@ def q_polynomial_basis_xla(
         element_shape=[None],
         infer_shape=False,
     )
-    
+
     # P_0
     p0 = p0_fn(x_flat)
     basis_ta = basis_ta.write(0, p0)
-    
+
     if degree == 0:
         basis = basis_ta.stack()
         basis = tf.transpose(basis)  # (batch, 1)
         return tf.reshape(basis, tf.concat([original_shape, [degree + 1]], axis=0))
-    
+
     # P_1
     p1 = p1_fn(x_flat, q)
     basis_ta = basis_ta.write(1, p1)
-    
+
     if degree == 1:
         basis = basis_ta.stack()
         basis = tf.transpose(basis)
         return tf.reshape(basis, tf.concat([original_shape, [degree + 1]], axis=0))
-    
+
     # Use while_loop for n = 2, ..., degree
     def cond(n, p_n, p_n_1, ta):
         return n <= degree
-    
+
     def body(n, p_n, p_n_1, ta):
         p_next = recurrence_fn(p_n, p_n_1, x_flat, q, n)
         ta = ta.write(n, p_next)
         return (n + 1, p_next, p_n, ta)
-    
+
     _, _, _, basis_ta = tf.while_loop(
         cond,
         body,
@@ -338,7 +338,7 @@ def q_polynomial_basis_xla(
         ),
         parallel_iterations=1,  # Sequential for recurrence
     )
-    
+
     basis = basis_ta.stack()  # (degree+1, batch)
     basis = tf.transpose(basis)  # (batch, degree+1)
     return tf.reshape(basis, tf.concat([original_shape, [degree + 1]], axis=0))
@@ -358,19 +358,19 @@ def al_salam_carlitz_1st_basis_xla(
     """
     a = tf.cast(a, x.dtype)
     q = tf.cast(q, x.dtype)
-    
+
     def p0_fn(x):
         return tf.ones_like(x)
-    
+
     def p1_fn(x, q):
         return x - (1.0 + a)
-    
+
     def recurrence_fn(p_n, p_n_1, x, q, n):
         n_f = tf.cast(n, x.dtype)
         q_n = tf.pow(q, n_f)
         q_n_1 = tf.pow(q, n_f - 1.0)
         return (x - (1.0 + a) * q_n) * p_n + a * q_n_1 * (1.0 - q_n) * p_n_1
-    
+
     return q_polynomial_basis_xla(x, q, degree, recurrence_fn, p0_fn, p1_fn)
 
 
@@ -413,7 +413,7 @@ def fused_polynomial_forward(
     """
     if use_clenshaw and clenshaw_fn is not None:
         return clenshaw_fn(x, coeffs)
-    
+
     # Standard path: compute basis then contract
     basis = basis_fn(x)  # (batch, input_dim, degree+1)
     return tf.einsum('bid,ido->bo', basis, coeffs)
@@ -453,10 +453,10 @@ def parallel_polynomial_eval(
     """
     # For Chebyshev T_k(x) = cos(k * arccos(x)), we can parallelize
     degrees = tf.range(0, degree + 1, dtype=tf.int32)
-    
+
     def eval_degree(k):
         return eval_single_degree(x, k)
-    
+
     # Returns (degree+1, batch, input_dim)
     basis_transposed = tf.vectorized_map(eval_degree, degrees)
     # Transpose to (batch, input_dim, degree+1)
@@ -471,7 +471,7 @@ def chebyshev_parallel_eval(x: tf.Tensor, degree: int) -> tf.Tensor:
     across all degrees simultaneously, avoiding sequential recurrence.
     """
     from arnold.utils.numerics import safe_acos
-    
+
     x = tf.reshape(x, (-1, tf.shape(x)[-1], 1))  # (batch, input_dim, 1)
     theta = safe_acos(x)  # (batch, input_dim, 1)
     degrees = tf.cast(tf.range(0, degree + 1), x.dtype)  # (degree+1,)
@@ -511,7 +511,7 @@ def with_tpu_sharding(
     hardware = _detect_hardware()
     if hardware != "tpu":
         return tensor
-    
+
     # TPU-specific sharding using tf.distribute
     if sharding_spec == "batch":
         # Hint that batch dimension should be sharded
@@ -520,7 +520,7 @@ def with_tpu_sharding(
             return tf.ensure_shape(tensor, tensor.shape)
         except Exception:
             return tensor
-    
+
     return tensor
 
 
@@ -590,18 +590,18 @@ def optimized_polynomial_forward(
     if tpu_sharding:
         x = with_tpu_sharding(x, "batch")
         coeffs = with_tpu_sharding(coeffs, "replicated")
-    
+
     # Choose evaluation strategy based on polynomial type and degree
     if use_clenshaw and degree > 10:
         if polynomial_type == "chebyshev":
             return clenshaw_chebyshev_sum(x, coeffs, input_dim=input_dim, output_dim=output_dim)
         elif polynomial_type == "legendre":
             return clenshaw_legendre_sum(x, coeffs, input_dim=input_dim, output_dim=output_dim)
-    
+
     if use_parallel and polynomial_type == "chebyshev":
         basis = chebyshev_parallel_eval(x, degree)
         return tf.einsum('bid,ido->bo', basis, coeffs)
-    
+
     # Fallback to standard evaluation
     # This would call the appropriate basis function
     raise NotImplementedError(

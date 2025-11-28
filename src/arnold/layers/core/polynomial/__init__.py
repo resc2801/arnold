@@ -18,15 +18,6 @@ from .discrete import (
     Meixner,
     Racah,
 )
-from .n_bonacci import (
-    Fibonacci,
-    Heptanacci,
-    Hexanacci,
-    Octanacci,
-    Pentanacci,
-    Tetranacci,
-    Tribonacci,
-)
 from .non_orthogonal import Boubaker
 from .orthogonal import (
     AlSalamCarlitz1st,
@@ -49,7 +40,7 @@ from .orthogonal import (
     Wilson,
 )
 from .poly_base import PolynomialBase
-from .q_polynomials import (
+from .q_orthogonal import (
     AffineQKrawtchouk,
     BigQJacobi,
     ContinuousQHermite,
@@ -70,16 +61,25 @@ from .q_polynomials import (
     QRacah,
     QuantumQKrawtchouk,
 )
-from .w_polynomials import (
+from .sequences import (
     Fermat,
     FermatLucas,
+    Fibonacci,
+    Heptanacci,
+    Hexanacci,
     Jacobsthal,
     JacobsthalLucas,
     Lucas,
+    Octanacci,
     Pell,
     PellLucas,
+    Pentanacci,
+    Tetranacci,
+    Tribonacci,
 )
-from .zernike import Zernike
+
+
+# Note: Zernike moved to arnold.layers.core.geometric in Phase 10
 
 
 __all__ = [
@@ -151,5 +151,4 @@ __all__ = [
     "ContinuousQLaguerre",
     "ContinuousQLegendre",
     "Tribonacci",
-    "Zernike",
 ]

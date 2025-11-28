@@ -22,7 +22,7 @@ Example usage::
 Hardware-adaptive dtype selection::
 
     from arnold import detect_hardware, get_recommended_dtype
-    
+
     hw = detect_hardware()  # "cpu", "gpu", "tpu", or "mps"
     dtype = get_recommended_dtype(degree=15, hardware=hw)
 

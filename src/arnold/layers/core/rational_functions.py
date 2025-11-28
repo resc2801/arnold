@@ -65,27 +65,27 @@ class Laurent(PolynomialBase):
     def pseudo_vandermonde(self, x):
         r"""
         Vectorized Laurent basis evaluation via cumulative products.
-        
+
         Evaluates :math:`\{x^{-d}, \ldots, x^{-1}, 1, x, \ldots, x^d\}` without Python loops.
         Uses separate forward/backward passes for positive/negative powers to maintain
         numerical stability.
-        
+
         :param x: Input tensor, shape (batch, input_dim)
         :type x: tf.Tensor
         :returns: Laurent basis tensor, shape (batch, input_dim, 2*degree+1)
         :rtype: tf.Tensor
         """
         x_safe = clamp_abs(x, eps=1e-6)
-        
+
         # Handle degree=0 case: just return 1
         if self.degree == 0:
             return tf.expand_dims(tf.ones_like(x_safe), axis=-1)
-        
+
         # Positive powers: x^0, x^1, ..., x^degree via cumulative product
         def pos_step(x_acc, _):
             x_next = x_acc * x_safe
             return x_next  # Only return new accumulator
-        
+
         carries_pos = tf.scan(
             pos_step,
             tf.range(self.degree),
@@ -95,13 +95,13 @@ class Laurent(PolynomialBase):
         pos_powers = tf.transpose(carries_pos, perm=[1, 2, 0])
         # Prepend x^0 = 1
         pos_basis = tf.concat([tf.expand_dims(tf.ones_like(x_safe), axis=-1), pos_powers], axis=-1)
-        
+
         # Negative powers: x^(-1), ..., x^(-degree) via cumulative product of 1/x
         x_inv = tf.math.reciprocal(x_safe)
         def neg_step(x_acc, _):
             x_next = x_acc * x_inv
             return x_next  # Only return new accumulator
-        
+
         carries_neg = tf.scan(
             neg_step,
             tf.range(self.degree),
@@ -111,8 +111,8 @@ class Laurent(PolynomialBase):
         neg_powers = tf.transpose(carries_neg, perm=[1, 2, 0])
         # Reverse to get [x^(-degree), ..., x^(-1)]
         neg_basis = tf.reverse(neg_powers, axis=[-1])
-        
+
         # Concatenate: [x^(-degree), ..., x^(-1), 1, x, ..., x^degree]
         laurent_basis = tf.concat([neg_basis, pos_basis], axis=-1)
-        
+
         return laurent_basis

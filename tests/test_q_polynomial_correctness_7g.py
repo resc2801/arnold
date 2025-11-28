@@ -72,7 +72,7 @@ class TestDiscreteQHermite1Basic:
         layer = DiscreteQHermite1(degree=3, units=4, q_trainable=True)
         x = tf.random.uniform((2, 3), dtype=tf.float32)
         _ = layer(x)
-        
+
         trainable_names = [v.name for v in layer.trainable_variables]
         assert any("q_logits" in name for name in trainable_names)
 
@@ -80,11 +80,11 @@ class TestDiscreteQHermite1Basic:
         """Test that q stays in (0, 1)."""
         layer = DiscreteQHermite1(degree=3, units=4, q=0.9, q_trainable=True)
         x = tf.random.uniform((2, 3), dtype=tf.float32)
-        
+
         with tf.GradientTape() as tape:
             y = layer(x)
             loss = tf.reduce_mean(y)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
         assert all(g is not None for g in grads if g is not None)
 
@@ -96,20 +96,20 @@ class TestDiscreteQHermite1Mathematical:
         """Test h_0(x) = 1 for all x."""
         layer = DiscreteQHermite1(degree=0, units=1)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.1, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         np.testing.assert_allclose(basis[..., 0].numpy(), 1.0, rtol=1e-5)
 
     def test_h1_equals_x(self):
         """Test h_1(x) = x."""
         layer = DiscreteQHermite1(degree=1, units=1)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.1, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         np.testing.assert_allclose(basis[..., 1].numpy(), x.numpy(), rtol=1e-5)
 
     def test_three_term_recurrence(self):
@@ -117,16 +117,16 @@ class TestDiscreteQHermite1Mathematical:
         q = 0.5
         layer = DiscreteQHermite1(degree=5, units=1, q=q, q_trainable=False)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.3, 0.6, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         x_np = x.numpy()
         for n in range(1, 5):
             h_n = basis[..., n].numpy()
             h_nm1 = basis[..., n-1].numpy()
             h_np1 = basis[..., n+1].numpy()
-            
+
             # h_{n+1} = x * h_n - (1 - q^n) * h_{n-1}
             expected = x_np * h_n - (1 - q**n) * h_nm1
             np.testing.assert_allclose(h_np1, expected, rtol=1e-4, atol=1e-6)
@@ -135,13 +135,13 @@ class TestDiscreteQHermite1Mathematical:
         """Test h_n(-x; q) = (-1)^n h_n(x; q)."""
         layer = DiscreteQHermite1(degree=4, units=1, q=0.5)
         layer.build((None, 2))
-        
+
         x = tf.constant([[0.3, 0.7]], dtype=tf.float32)
         neg_x = tf.constant([[-0.3, -0.7]], dtype=tf.float32)
-        
+
         basis_pos = layer.pseudo_vandermonde(x)
         basis_neg = layer.pseudo_vandermonde(neg_x)
-        
+
         for n in range(5):
             sign = (-1) ** n
             np.testing.assert_allclose(
@@ -158,7 +158,7 @@ class TestDiscreteQHermite1Serialization:
         """Test configuration roundtrip."""
         layer = DiscreteQHermite1(degree=4, units=8, q=0.7, q_trainable=True)
         config = layer.get_config()
-        
+
         assert config["degree"] == 4
         assert config["units"] == 8
         assert config["q"] == 0.7
@@ -168,7 +168,7 @@ class TestDiscreteQHermite1Serialization:
         """Test layer recreation from config."""
         layer = DiscreteQHermite1(degree=4, units=8, q=0.7)
         config = layer.get_config()
-        
+
         new_layer = DiscreteQHermite1.from_config(config)
         assert new_layer.degree == layer.degree
         assert new_layer.units == layer.units
@@ -180,15 +180,15 @@ class TestDiscreteQHermite1Serialization:
             tf.keras.layers.Input(shape=(5,)),
             layer,
         ])
-        
+
         x = tf.random.uniform((2, 5), dtype=tf.float32)
         original_output = model(x)
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             model.save(Path(tmpdir) / "model.keras")
             loaded = tf.keras.models.load_model(Path(tmpdir) / "model.keras")
             loaded_output = loaded(x)
-        
+
         np.testing.assert_allclose(
             original_output.numpy(), loaded_output.numpy(), rtol=1e-5
         )
@@ -223,7 +223,7 @@ class TestDiscreteQHermite2Basic:
         layer = DiscreteQHermite2(degree=3, units=4, q_trainable=True)
         x = tf.random.uniform((2, 3), dtype=tf.float32)
         _ = layer(x)
-        
+
         trainable_names = [v.name for v in layer.trainable_variables]
         assert any("q_logits" in name for name in trainable_names)
 
@@ -235,20 +235,20 @@ class TestDiscreteQHermite2Mathematical:
         """Test h̃_0(x) = 1 for all x."""
         layer = DiscreteQHermite2(degree=0, units=1)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.1, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         np.testing.assert_allclose(basis[..., 0].numpy(), 1.0, rtol=1e-5)
 
     def test_h1_equals_x(self):
         """Test h̃_1(x) = x."""
         layer = DiscreteQHermite2(degree=1, units=1)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.1, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         np.testing.assert_allclose(basis[..., 1].numpy(), x.numpy(), rtol=1e-5)
 
     def test_three_term_recurrence(self):
@@ -256,16 +256,16 @@ class TestDiscreteQHermite2Mathematical:
         q = 0.5
         layer = DiscreteQHermite2(degree=5, units=1, q=q, q_trainable=False)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.3, 0.6, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         x_np = x.numpy()
         for n in range(1, 5):
             h_n = basis[..., n].numpy()
             h_nm1 = basis[..., n-1].numpy()
             h_np1 = basis[..., n+1].numpy()
-            
+
             # h̃_{n+1} = x * h̃_n - q^{n-1}(1 - q^n) * h̃_{n-1}
             coeff = (q ** (n-1)) * (1 - q**n)
             expected = x_np * h_n - coeff * h_nm1
@@ -275,13 +275,13 @@ class TestDiscreteQHermite2Mathematical:
         """Test h̃_n(-x; q) = (-1)^n h̃_n(x; q)."""
         layer = DiscreteQHermite2(degree=4, units=1, q=0.5)
         layer.build((None, 2))
-        
+
         x = tf.constant([[0.3, 0.7]], dtype=tf.float32)
         neg_x = tf.constant([[-0.3, -0.7]], dtype=tf.float32)
-        
+
         basis_pos = layer.pseudo_vandermonde(x)
         basis_neg = layer.pseudo_vandermonde(neg_x)
-        
+
         for n in range(5):
             sign = (-1) ** n
             np.testing.assert_allclose(
@@ -298,7 +298,7 @@ class TestDiscreteQHermite2Serialization:
         """Test configuration roundtrip."""
         layer = DiscreteQHermite2(degree=4, units=8, q=0.7)
         config = layer.get_config()
-        
+
         assert config["degree"] == 4
         assert config["units"] == 8
         assert config["q"] == 0.7
@@ -310,15 +310,15 @@ class TestDiscreteQHermite2Serialization:
             tf.keras.layers.Input(shape=(5,)),
             layer,
         ])
-        
+
         x = tf.random.uniform((2, 5), dtype=tf.float32)
         original_output = model(x)
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             model.save(Path(tmpdir) / "model.keras")
             loaded = tf.keras.models.load_model(Path(tmpdir) / "model.keras")
             loaded_output = loaded(x)
-        
+
         np.testing.assert_allclose(
             original_output.numpy(), loaded_output.numpy(), rtol=1e-5
         )
@@ -353,7 +353,7 @@ class TestContinuousQHermiteBasic:
         layer = ContinuousQHermite(degree=3, units=4, q_trainable=True)
         x = tf.random.uniform((2, 3), dtype=tf.float32)
         _ = layer(x)
-        
+
         trainable_names = [v.name for v in layer.trainable_variables]
         assert any("q_logits" in name for name in trainable_names)
 
@@ -365,20 +365,20 @@ class TestContinuousQHermiteMathematical:
         """Test H_0(x) = 1 for all x."""
         layer = ContinuousQHermite(degree=0, units=1)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.1, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         np.testing.assert_allclose(basis[..., 0].numpy(), 1.0, rtol=1e-5)
 
     def test_H1_equals_2x(self):
         """Test H_1(x) = 2x."""
         layer = ContinuousQHermite(degree=1, units=1)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.1, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         expected = 2.0 * x.numpy()
         np.testing.assert_allclose(basis[..., 1].numpy(), expected, rtol=1e-5)
 
@@ -387,16 +387,16 @@ class TestContinuousQHermiteMathematical:
         q = 0.5
         layer = ContinuousQHermite(degree=5, units=1, q=q, q_trainable=False)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.3, 0.6, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         x_np = x.numpy()
         for n in range(1, 5):
             H_n = basis[..., n].numpy()
             H_nm1 = basis[..., n-1].numpy()
             H_np1 = basis[..., n+1].numpy()
-            
+
             # H_{n+1} = 2x * H_n - (1 - q^n) * H_{n-1}
             expected = 2.0 * x_np * H_n - (1 - q**n) * H_nm1
             np.testing.assert_allclose(H_np1, expected, rtol=1e-4, atol=1e-6)
@@ -405,13 +405,13 @@ class TestContinuousQHermiteMathematical:
         """Test H_n(-x; q) = (-1)^n H_n(x; q)."""
         layer = ContinuousQHermite(degree=4, units=1, q=0.5)
         layer.build((None, 2))
-        
+
         x = tf.constant([[0.3, 0.7]], dtype=tf.float32)
         neg_x = tf.constant([[-0.3, -0.7]], dtype=tf.float32)
-        
+
         basis_pos = layer.pseudo_vandermonde(x)
         basis_neg = layer.pseudo_vandermonde(neg_x)
-        
+
         for n in range(5):
             sign = (-1) ** n
             np.testing.assert_allclose(
@@ -428,7 +428,7 @@ class TestContinuousQHermiteSerialization:
         """Test configuration roundtrip."""
         layer = ContinuousQHermite(degree=4, units=8, q=0.7)
         config = layer.get_config()
-        
+
         assert config["degree"] == 4
         assert config["units"] == 8
         assert config["q"] == 0.7
@@ -440,15 +440,15 @@ class TestContinuousQHermiteSerialization:
             tf.keras.layers.Input(shape=(5,)),
             layer,
         ])
-        
+
         x = tf.random.uniform((2, 5), dtype=tf.float32)
         original_output = model(x)
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             model.save(Path(tmpdir) / "model.keras")
             loaded = tf.keras.models.load_model(Path(tmpdir) / "model.keras")
             loaded_output = loaded(x)
-        
+
         np.testing.assert_allclose(
             original_output.numpy(), loaded_output.numpy(), rtol=1e-5
         )
@@ -493,12 +493,12 @@ class TestContinuousQJacobiBasic:
     def test_trainable_parameters(self):
         """Test that alpha and beta can be trained."""
         layer = ContinuousQJacobi(
-            degree=3, units=4, 
+            degree=3, units=4,
             alpha_trainable=True, beta_trainable=True
         )
         x = tf.random.uniform((2, 3), dtype=tf.float32)
         _ = layer(x)
-        
+
         trainable_names = [v.name for v in layer.trainable_variables]
         assert any("alpha_logits" in name for name in trainable_names)
         assert any("beta_logits" in name for name in trainable_names)
@@ -511,21 +511,21 @@ class TestContinuousQJacobiMathematical:
         """Test P_0(x) = 1 for all x."""
         layer = ContinuousQJacobi(degree=0, units=1, alpha=0.5, beta=0.5)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.1, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         np.testing.assert_allclose(basis[..., 0].numpy(), 1.0, rtol=1e-5)
 
     def test_numerical_stability(self):
         """Test numerical stability across input range."""
         layer = ContinuousQJacobi(degree=6, units=1, alpha=1.0, beta=0.5, q=0.7)
         layer.build((None, 5))
-        
+
         # Test across the valid range [-1, 1]
         x = tf.constant([[-0.9, -0.5, 0.0, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         assert np.all(np.isfinite(basis.numpy()))
 
     def test_gradient_flow(self):
@@ -536,11 +536,11 @@ class TestContinuousQJacobiMathematical:
             alpha_trainable=True, beta_trainable=True, q_trainable=True
         )
         x = tf.random.uniform((2, 3), dtype=tf.float32)
-        
+
         with tf.GradientTape() as tape:
             y = layer(x)
             loss = tf.reduce_mean(y ** 2)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
         assert all(g is not None for g in grads)
 
@@ -555,7 +555,7 @@ class TestContinuousQJacobiSerialization:
             alpha_trainable=True, beta_trainable=False
         )
         config = layer.get_config()
-        
+
         assert config["degree"] == 4
         assert config["units"] == 8
         assert config["alpha"] == 0.5
@@ -568,7 +568,7 @@ class TestContinuousQJacobiSerialization:
         """Test layer recreation from config."""
         layer = ContinuousQJacobi(degree=4, units=8, alpha=0.5, beta=0.3)
         config = layer.get_config()
-        
+
         new_layer = ContinuousQJacobi.from_config(config)
         assert new_layer.degree == layer.degree
         assert new_layer.units == layer.units
@@ -582,15 +582,15 @@ class TestContinuousQJacobiSerialization:
             tf.keras.layers.Input(shape=(5,)),
             layer,
         ])
-        
+
         x = tf.random.uniform((2, 5), dtype=tf.float32)
         original_output = model(x)
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             model.save(Path(tmpdir) / "model.keras")
             loaded = tf.keras.models.load_model(Path(tmpdir) / "model.keras")
             loaded_output = loaded(x)
-        
+
         np.testing.assert_allclose(
             original_output.numpy(), loaded_output.numpy(), rtol=1e-5
         )
@@ -628,7 +628,7 @@ class TestContinuousQUltrasphericalBasic:
             x = tf.random.uniform((2, 3), dtype=tf.float32)
             y = layer(x)
             assert y.shape == (2, 4)
-        
+
         # Invalid values
         with pytest.raises(ValueError):
             ContinuousQUltraspherical(degree=3, units=4, beta=1.0)
@@ -642,7 +642,7 @@ class TestContinuousQUltrasphericalBasic:
         )
         x = tf.random.uniform((2, 3), dtype=tf.float32)
         _ = layer(x)
-        
+
         trainable_names = [v.name for v in layer.trainable_variables]
         assert any("beta_logits" in name for name in trainable_names)
 
@@ -654,10 +654,10 @@ class TestContinuousQUltrasphericalMathematical:
         """Test C_0(x) = 1 for all x."""
         layer = ContinuousQUltraspherical(degree=0, units=1, beta=0.5)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.1, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         np.testing.assert_allclose(basis[..., 0].numpy(), 1.0, rtol=1e-5)
 
     def test_C1_formula(self):
@@ -666,10 +666,10 @@ class TestContinuousQUltrasphericalMathematical:
         q = 0.5
         layer = ContinuousQUltraspherical(degree=1, units=1, beta=beta, q=q)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.1, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         expected = 2.0 * x.numpy() * (1 - beta) / (1 - q)
         np.testing.assert_allclose(basis[..., 1].numpy(), expected, rtol=1e-4)
 
@@ -677,13 +677,13 @@ class TestContinuousQUltrasphericalMathematical:
         """Test C_n(-x; β | q) = (-1)^n C_n(x; β | q)."""
         layer = ContinuousQUltraspherical(degree=4, units=1, beta=0.3, q=0.5)
         layer.build((None, 2))
-        
+
         x = tf.constant([[0.3, 0.7]], dtype=tf.float32)
         neg_x = tf.constant([[-0.3, -0.7]], dtype=tf.float32)
-        
+
         basis_pos = layer.pseudo_vandermonde(x)
         basis_neg = layer.pseudo_vandermonde(neg_x)
-        
+
         for n in range(5):
             sign = (-1) ** n
             np.testing.assert_allclose(
@@ -696,10 +696,10 @@ class TestContinuousQUltrasphericalMathematical:
         """Test numerical stability across input range."""
         layer = ContinuousQUltraspherical(degree=6, units=1, beta=0.5, q=0.7)
         layer.build((None, 5))
-        
+
         x = tf.constant([[-0.9, -0.5, 0.0, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         assert np.all(np.isfinite(basis.numpy()))
 
 
@@ -712,7 +712,7 @@ class TestContinuousQUltrasphericalSerialization:
             degree=4, units=8, beta=0.3, q=0.7, beta_trainable=True
         )
         config = layer.get_config()
-        
+
         assert config["degree"] == 4
         assert config["units"] == 8
         assert config["beta"] == 0.3
@@ -723,7 +723,7 @@ class TestContinuousQUltrasphericalSerialization:
         """Test layer recreation from config."""
         layer = ContinuousQUltraspherical(degree=4, units=8, beta=0.3)
         config = layer.get_config()
-        
+
         new_layer = ContinuousQUltraspherical.from_config(config)
         assert new_layer.degree == layer.degree
         assert new_layer.units == layer.units
@@ -736,15 +736,15 @@ class TestContinuousQUltrasphericalSerialization:
             tf.keras.layers.Input(shape=(5,)),
             layer,
         ])
-        
+
         x = tf.random.uniform((2, 5), dtype=tf.float32)
         original_output = model(x)
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             model.save(Path(tmpdir) / "model.keras")
             loaded = tf.keras.models.load_model(Path(tmpdir) / "model.keras")
             loaded_output = loaded(x)
-        
+
         np.testing.assert_allclose(
             original_output.numpy(), loaded_output.numpy(), rtol=1e-5
         )
@@ -763,10 +763,10 @@ class TestQHermiteFamilyRelations:
         for layer_cls in [DiscreteQHermite1, DiscreteQHermite2, ContinuousQHermite]:
             layer = layer_cls(degree=0, units=1, q=0.5)
             layer.build((None, 3))
-            
+
             x = tf.constant([[0.1, 0.5, 0.9]], dtype=tf.float32)
             basis = layer.pseudo_vandermonde(x)
-            
+
             np.testing.assert_allclose(
                 basis[..., 0].numpy(), 1.0, rtol=1e-5,
                 err_msg=f"P_0 ≠ 1 for {layer_cls.__name__}"
@@ -781,15 +781,15 @@ class TestQHermiteFamilyRelations:
             (ContinuousQJacobi, {"degree": 3, "units": 4, "alpha": 0.5, "beta": 0.5}),
             (ContinuousQUltraspherical, {"degree": 3, "units": 4, "beta": 0.5}),
         ]
-        
+
         for layer_cls, kwargs in layer_configs:
             layer = layer_cls(**kwargs, q_trainable=True)
             x = tf.random.uniform((2, 3), dtype=tf.float32)
-            
+
             with tf.GradientTape() as tape:
                 y = layer(x)
                 loss = tf.reduce_mean(y ** 2)
-            
+
             grads = tape.gradient(loss, layer.trainable_variables)
             assert all(g is not None for g in grads), \
                 f"Missing gradients for {layer_cls.__name__}"
@@ -898,13 +898,13 @@ class TestEdgeCases:
         for layer_cls in [DiscreteQHermite1, DiscreteQHermite2, ContinuousQHermite]:
             layer = layer_cls(degree=4, units=1)
             layer.build((None, 1))
-            
+
             x = tf.constant([[0.0]], dtype=tf.float32)
             basis = layer.pseudo_vandermonde(x)
-            
+
             # P_0(0) = 1 for all
             assert np.isclose(basis[0, 0, 0].numpy(), 1.0, rtol=1e-5)
-            
+
             # Odd-degree polynomials should be 0 at x=0 (due to symmetry)
             for n in range(1, 5, 2):
                 assert np.isclose(basis[0, 0, n].numpy(), 0.0, atol=1e-5), \

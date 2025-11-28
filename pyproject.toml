@@ -219,6 +219,17 @@ lines-after-imports = 2
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["ARG"]
 "__init__.py" = ["F401"]
+# TF while_loop condition functions require unused args
+"src/arnold/layers/core/common/evaluation.py" = ["ARG001"]
+"src/arnold/layers/core/common/numerics.py" = ["ARG001"]
+"src/arnold/utils/optimized_ops.py" = ["ARG001"]
+# Standard mathematical notation for degree l in spherical harmonics
+"src/arnold/layers/core/geometric/spherical_harmonics.py" = ["E741"]
+"src/arnold/layers/core/geometric/hyperspherical_harmonics.py" = ["E741"]
+# Keras layer API requires training argument
+"src/arnold/layers/core/special/base.py" = ["ARG002"]
+# SymPy builder has degree in signature for consistency
+"src/arnold/layers/symbolic/sympy_backend.py" = ["ARG002"]
 
 # ────────────────────────────────────────────────────────────────────────────────
 # Pytest

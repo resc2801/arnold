@@ -19,8 +19,6 @@ Test Coverage:
 - Numerical stability
 - Edge cases (degree 0, 1, boundary inputs)
 """
-import tempfile
-from pathlib import Path
 
 import numpy as np
 import pytest

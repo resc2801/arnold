@@ -235,13 +235,3 @@ to
 A common choice is :math:`r_1 = r_2 = r_3 = \min(m,n,k)` which can be effective when the difference in dimension sizes is large.
 
 
-
-
-Radial basis KAN Layers
-****************************************
-
-
-
-
-Wavelet KAN Layers
-****************************************

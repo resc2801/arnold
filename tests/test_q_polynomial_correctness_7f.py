@@ -66,7 +66,7 @@ class TestQCharlierBasic:
         layer = QCharlier(degree=3, units=4, a=1.0, a_trainable=True)
         x = tf.random.uniform((2, 3), dtype=tf.float32)
         _ = layer(x)
-        
+
         trainable_names = [v.name for v in layer.trainable_variables]
         assert any("a_logits" in name for name in trainable_names)
 
@@ -74,11 +74,11 @@ class TestQCharlierBasic:
         """Test that q stays in (0, 1)."""
         layer = QCharlier(degree=3, units=4, q=0.9, q_trainable=True)
         x = tf.random.uniform((2, 3), dtype=tf.float32)
-        
+
         with tf.GradientTape() as tape:
             y = layer(x)
             loss = tf.reduce_mean(y)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
         assert all(g is not None for g in grads if g is not None)
 
@@ -90,10 +90,10 @@ class TestQCharlierMathematical:
         """Test C_0(x) = 1 for all x."""
         layer = QCharlier(degree=0, units=1, a=1.0)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.1, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         # C_0 should be 1
         np.testing.assert_allclose(basis[..., 0].numpy(), 1.0, rtol=1e-5)
 
@@ -145,7 +145,7 @@ class TestQRacahBasic:
         )
         x = tf.random.uniform((2, 3), dtype=tf.float32)
         _ = layer(x)
-        
+
         trainable_names = [v.name for v in layer.trainable_variables]
         assert any("alpha_logits" in name for name in trainable_names)
         assert any("beta_logits" in name for name in trainable_names)
@@ -160,10 +160,10 @@ class TestQRacahMathematical:
         """Test R_0(x) = 1 for all x."""
         layer = QRacah(degree=0, units=1, N=10)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.1, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         np.testing.assert_allclose(basis[..., 0].numpy(), 1.0, rtol=1e-5)
 
     def test_duality_property(self):
@@ -213,7 +213,7 @@ class TestDualQHahnBasic:
         )
         x = tf.random.uniform((2, 3), dtype=tf.float32)
         _ = layer(x)
-        
+
         trainable_names = [v.name for v in layer.trainable_variables]
         assert any("gamma_logits" in name for name in trainable_names)
         assert any("delta_logits" in name for name in trainable_names)
@@ -226,10 +226,10 @@ class TestDualQHahnMathematical:
         """Test R_0(x) = 1 for all x."""
         layer = DualQHahn(degree=0, units=1, N=10)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.1, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         np.testing.assert_allclose(basis[..., 0].numpy(), 1.0, rtol=1e-5)
 
     def test_limit_case_from_qracah(self):
@@ -275,7 +275,7 @@ class TestDualQKrawtchoukBasic:
         layer = DualQKrawtchouk(degree=3, units=4, N=10, c=1.0, c_trainable=True)
         x = tf.random.uniform((2, 3), dtype=tf.float32)
         _ = layer(x)
-        
+
         trainable_names = [v.name for v in layer.trainable_variables]
         assert any("c_logits" in name for name in trainable_names)
 
@@ -287,10 +287,10 @@ class TestDualQKrawtchoukMathematical:
         """Test K_0(x) = 1 for all x."""
         layer = DualQKrawtchouk(degree=0, units=1, N=10, c=1.0)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.1, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         np.testing.assert_allclose(basis[..., 0].numpy(), 1.0, rtol=1e-5)
 
 
@@ -328,7 +328,7 @@ class TestAffineQKrawtchoukBasic:
         layer = AffineQKrawtchouk(degree=3, units=4, N=10, p=0.5, p_trainable=True)
         x = tf.random.uniform((2, 3), dtype=tf.float32)
         _ = layer(x)
-        
+
         trainable_names = [v.name for v in layer.trainable_variables]
         assert any("p_logits" in name for name in trainable_names)
 
@@ -340,10 +340,10 @@ class TestAffineQKrawtchoukMathematical:
         """Test K_0(x) = 1 for all x."""
         layer = AffineQKrawtchouk(degree=0, units=1, N=10, p=0.5)
         layer.build((None, 3))
-        
+
         x = tf.constant([[0.1, 0.5, 0.9]], dtype=tf.float32)
         basis = layer.pseudo_vandermonde(x)
-        
+
         np.testing.assert_allclose(basis[..., 0].numpy(), 1.0, rtol=1e-5)
 
 
@@ -366,11 +366,11 @@ class TestGradientFlow:
         """Test that gradients are finite for all layers."""
         layer = layer_cls(degree=3, units=4, q=0.5, q_trainable=True, **kwargs)
         x = tf.random.uniform((4, 3), dtype=tf.float32)
-        
+
         with tf.GradientTape() as tape:
             y = layer(x)
             loss = tf.reduce_mean(y ** 2)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
         for grad, var in zip(grads, layer.trainable_variables):
             if grad is not None:
@@ -387,18 +387,18 @@ class TestGradientFlow:
         """Test gradient flows through q parameter."""
         layer = layer_cls(degree=3, units=4, q=0.5, q_trainable=True, **kwargs)
         x = tf.random.uniform((4, 3), dtype=tf.float32)
-        
+
         with tf.GradientTape() as tape:
             y = layer(x)
             loss = tf.reduce_mean(y)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
         q_grad = None
         for grad, var in zip(grads, layer.trainable_variables):
             if "q_logits" in var.name:
                 q_grad = grad
                 break
-        
+
         assert q_grad is not None
         assert tf.reduce_all(tf.math.is_finite(q_grad))
 
@@ -416,14 +416,14 @@ class TestXLACompatibility:
     def test_xla_compilation(self, layer_cls, kwargs):
         """Test layers can be traced with tf.function."""
         layer = layer_cls(degree=3, units=4, **kwargs)
-        
+
         @tf.function
         def forward(x):
             return layer(x)
-        
+
         x = tf.random.uniform((4, 3), dtype=tf.float32)
         y = forward(x)
-        
+
         assert y.shape == (4, 4)
         assert tf.reduce_all(tf.math.is_finite(y))
 
@@ -442,11 +442,11 @@ class TestSerialization:
         """Test get_config returns all parameters."""
         layer = layer_cls(degree=4, units=8, q=0.6, **kwargs)
         config = layer.get_config()
-        
+
         assert config["degree"] == 4
         assert config["units"] == 8
         assert config["q"] == 0.6
-        
+
         for key in kwargs:
             assert key in config
 
@@ -461,9 +461,9 @@ class TestSerialization:
         """Test from_config recreates layer correctly."""
         layer = layer_cls(degree=4, units=8, **kwargs)
         config = layer.get_config()
-        
+
         restored = layer_cls.from_config(config)
-        
+
         assert restored.degree == layer.degree
         assert restored.units == layer.units
         assert restored.q_init == layer.q_init
@@ -478,20 +478,20 @@ class TestSerialization:
     def test_saved_model_roundtrip(self, layer_cls, kwargs):
         """Test SavedModel export and load."""
         layer = layer_cls(degree=3, units=4, **kwargs)
-        
+
         model = tf.keras.Sequential([
             tf.keras.layers.InputLayer(shape=(5,)),
             layer,
         ])
-        
+
         x = tf.random.uniform((2, 5), dtype=tf.float32)
         y_orig = model(x)
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             save_path = Path(tmpdir) / "model.keras"
             model.save(save_path)
             loaded = tf.keras.models.load_model(save_path)
-        
+
         y_loaded = loaded(x)
         np.testing.assert_allclose(y_orig.numpy(), y_loaded.numpy(), rtol=1e-5)
 
@@ -511,7 +511,7 @@ class TestHighDegreeStability:
         layer = layer_cls(degree=10, units=4, **kwargs)
         x = tf.random.uniform((4, 3), minval=-1.0, maxval=1.0, dtype=tf.float32)
         y = layer(x)
-        
+
         assert tf.reduce_all(tf.math.is_finite(y))
 
     @pytest.mark.parametrize("layer_cls,kwargs", [
@@ -525,7 +525,7 @@ class TestHighDegreeStability:
         layer = layer_cls(degree=15, units=4, **kwargs)
         x = tf.random.uniform((4, 3), minval=-0.5, maxval=0.5, dtype=tf.float32)
         y = layer(x)
-        
+
         assert tf.reduce_all(tf.math.is_finite(y))
 
 
@@ -540,27 +540,27 @@ class TestIntegration:
             DualQHahn(degree=3, units=8, N=10),
             AffineQKrawtchouk(degree=3, units=4, N=10),
         ])
-        
+
         x = tf.random.uniform((8, 4), dtype=tf.float32)
         y = model(x)
-        
+
         assert y.shape == (8, 4)
         assert tf.reduce_all(tf.math.is_finite(y))
 
     def test_mixed_polynomial_model(self):
         """Test model mixing Sprint 7E and 7F layers."""
-        from arnold.layers.core import QHahn, BigQJacobi
-        
+        from arnold.layers.core import QHahn
+
         model = tf.keras.Sequential([
             tf.keras.layers.InputLayer(shape=(4,)),
             QHahn(degree=3, units=8, N=10),
             QRacah(degree=3, units=8, N=10),
             DualQKrawtchouk(degree=3, units=4, N=10, c=1.0),
         ])
-        
+
         x = tf.random.uniform((8, 4), dtype=tf.float32)
         y = model(x)
-        
+
         assert y.shape == (8, 4)
         assert tf.reduce_all(tf.math.is_finite(y))
 
@@ -572,13 +572,13 @@ class TestIntegration:
             layer,
         ])
         model.compile(optimizer=tf.keras.optimizers.Adam(0.01), loss="mse")
-        
+
         # Simple target function
         x = tf.random.uniform((32, 2), dtype=tf.float32)
         y_target = tf.reduce_sum(x, axis=-1, keepdims=True)
-        
+
         history = model.fit(x, y_target, epochs=5, verbose=0)
-        
+
         # Loss should decrease
         assert history.history["loss"][-1] < history.history["loss"][0]
 
@@ -598,7 +598,7 @@ class TestEdgeCases:
         layer = layer_cls(degree=3, units=4, **kwargs)
         x = tf.zeros((2, 3), dtype=tf.float32)
         y = layer(x)
-        
+
         assert tf.reduce_all(tf.math.is_finite(y))
 
     @pytest.mark.parametrize("layer_cls,kwargs", [
@@ -613,7 +613,7 @@ class TestEdgeCases:
         layer = layer_cls(degree=3, units=4, **kwargs)
         x = tf.constant([[1e-8, 1e-10, 1e-12]], dtype=tf.float32)
         y = layer(x)
-        
+
         assert tf.reduce_all(tf.math.is_finite(y))
 
     @pytest.mark.parametrize("layer_cls,kwargs", [
@@ -626,7 +626,7 @@ class TestEdgeCases:
         layer = layer_cls(degree=1, units=4, **kwargs)
         x = tf.random.uniform((4, 3), dtype=tf.float32)
         y = layer(x)
-        
+
         assert y.shape == (4, 4)
         assert tf.reduce_all(tf.math.is_finite(y))
 
@@ -646,7 +646,7 @@ class TestDtypePreservation:
         layer = layer_cls(degree=3, units=4, **kwargs)
         x = tf.random.uniform((4, 3), dtype=tf.float32)
         y = layer(x)
-        
+
         assert y.dtype == tf.float32
 
     @pytest.mark.parametrize("layer_cls,kwargs", [
@@ -661,7 +661,7 @@ class TestDtypePreservation:
         layer = layer_cls(degree=3, units=4, dtype="float64", **kwargs)
         x = tf.random.uniform((4, 3), dtype=tf.float64)
         y = layer(x)
-        
+
         # Output dtype may depend on compute_dtype
         assert tf.reduce_all(tf.math.is_finite(y))
 
@@ -675,7 +675,7 @@ class TestQParameterBehavior:
         layer = QCharlier(degree=4, units=4, a=1.0, q=q_value)
         x = tf.random.uniform((4, 3), dtype=tf.float32)
         y = layer(x)
-        
+
         assert tf.reduce_all(tf.math.is_finite(y))
 
     def test_q_near_zero_stability(self):
@@ -683,7 +683,7 @@ class TestQParameterBehavior:
         layer = DualQHahn(degree=3, units=4, N=10, q=0.01)
         x = tf.random.uniform((4, 3), minval=-0.5, maxval=0.5, dtype=tf.float32)
         y = layer(x)
-        
+
         assert tf.reduce_all(tf.math.is_finite(y))
 
     def test_q_near_one_stability(self):
@@ -691,5 +691,5 @@ class TestQParameterBehavior:
         layer = AffineQKrawtchouk(degree=3, units=4, N=10, p=0.5, q=0.99)
         x = tf.random.uniform((4, 3), minval=-0.5, maxval=0.5, dtype=tf.float32)
         y = layer(x)
-        
+
         assert tf.reduce_all(tf.math.is_finite(y))

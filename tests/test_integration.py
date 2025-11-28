@@ -11,8 +11,8 @@ import numpy as np
 import pytest
 import tensorflow as tf
 
-from arnold.layers.core.polynomial.orthogonal import Legendre, Chebyshev1st
-from arnold.layers.core.radial_basis_functions import GaussianRBF
+from arnold.layers.core.polynomial.orthogonal import Chebyshev1st, Legendre
+from arnold.layers.core.rbf import GaussianRBF
 
 
 # ============================================================================
@@ -24,7 +24,7 @@ from arnold.layers.core.radial_basis_functions import GaussianRBF
 def synthetic_mnist_data():
     """
     Create synthetic MNIST-like data for fast integration testing.
-    
+
     Real MNIST: 28x28 = 784 features, 10 classes, 60k training samples
     Synthetic: 64 features, 5 classes, 500 training samples (for speed)
     """
@@ -286,7 +286,7 @@ class TestDifferentKANTypes:
         data = synthetic_mnist_data
         # RBF expects inputs in [0, 1], so we rescale
         x_train = (data["x_train"] + 1) / 2
-        x_test = (data["x_test"] + 1) / 2
+        (data["x_test"] + 1) / 2
 
         model = tf.keras.Sequential(
             [
@@ -327,7 +327,7 @@ class TestModelPersistence:
     def test_save_load_weights(self, synthetic_mnist_data, tmp_path):
         """Model weights can be saved and loaded."""
         import warnings
-        
+
         data = synthetic_mnist_data
         model = tf.keras.Sequential(
             [
@@ -420,7 +420,7 @@ class TestSavedModelRoundtrip:
 
         # Reload from SavedModel
         loaded = tf.saved_model.load(str(savedmodel_path))
-        
+
         # Get predictions from loaded model
         infer = loaded.signatures["serving_default"]
         result = infer(tf.constant(data["x_test"]))
@@ -522,7 +522,7 @@ class TestSavedModelRoundtrip:
             ]
         )
         model.compile(optimizer="adam", loss="sparse_categorical_crossentropy")
-        
+
         # Build model
         _ = model(data["x_train"][:1])
 
@@ -532,7 +532,7 @@ class TestSavedModelRoundtrip:
             return model(x, training=False)
 
         concrete_fn = serve.get_concrete_function()
-        
+
         # Save with concrete function
         savedmodel_path = tmp_path / "saved_model_concrete"
         tf.saved_model.save(model, str(savedmodel_path), signatures={"serving_default": concrete_fn})
@@ -542,5 +542,5 @@ class TestSavedModelRoundtrip:
         pred_original = model.predict(data["x_test"], verbose=0)
         pred_loaded = loaded.signatures["serving_default"](tf.constant(data["x_test"]))
         output_key = list(pred_loaded.keys())[0]
-        
+
         np.testing.assert_allclose(pred_original, pred_loaded[output_key].numpy(), rtol=1e-5)

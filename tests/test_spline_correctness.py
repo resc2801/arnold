@@ -53,14 +53,14 @@ class TestSplineBasicFunctionality:
         """Test forward pass produces correct output shape."""
         layer = spline_class(units=8, num_knots=6)
         output = layer(sample_input)
-        
+
         assert output.shape == (8, 8)
 
     def test_output_dtype_matches_input(self, spline_class, sample_input):
         """Test output dtype matches input dtype."""
         layer = spline_class(units=8)
         output = layer(sample_input)
-        
+
         assert output.dtype == sample_input.dtype
 
     def test_float64_support(self, spline_class):
@@ -68,7 +68,7 @@ class TestSplineBasicFunctionality:
         layer = spline_class(units=8)
         x = tf.random.uniform((4, 3), dtype=tf.float64)
         output = layer(x)
-        
+
         # Output should be finite and correct shape
         # Note: Due to mixed-precision, output may be float32 even with float64 input
         assert output.shape == (4, 8)
@@ -77,7 +77,7 @@ class TestSplineBasicFunctionality:
     def test_variable_batch_size(self, spline_class):
         """Test layer handles variable batch sizes."""
         layer = spline_class(units=8, num_knots=6)
-        
+
         for batch_size in [1, 4, 16, 64]:
             x = tf.random.uniform((batch_size, 4))
             output = layer(x)
@@ -102,7 +102,7 @@ class TestSplineBasicFunctionality:
         layer = spline_class(units=8, num_knots=6, knot_range=(0.0, 2.0))
         x = tf.random.uniform((4, 3), minval=0.0, maxval=2.0)
         output = layer(x)
-        
+
         assert output.shape == (4, 8)
 
 
@@ -119,7 +119,7 @@ class TestBSpline:
         """Test all supported B-spline orders."""
         layer = BSpline(units=8, order=order, num_knots=8)
         output = layer(sample_input)
-        
+
         assert output.shape == (8, 8)
         assert not tf.reduce_any(tf.math.is_nan(output))
 
@@ -127,7 +127,7 @@ class TestBSpline:
         """Test invalid order raises ValueError."""
         with pytest.raises(ValueError, match="order must be 2-6"):
             BSpline(units=8, order=1)
-        
+
         with pytest.raises(ValueError, match="order must be 2-6"):
             BSpline(units=8, order=7)
 
@@ -135,14 +135,14 @@ class TestBSpline:
         """Test B-spline partition of unity property (basis sums to 1)."""
         layer = BSpline(units=8, order=4, num_knots=8)
         x = tf.random.uniform((100, 4), minval=-0.8, maxval=0.8)
-        
+
         # Build the layer first
         _ = layer(x)
-        
+
         # Get basis values directly
         basis = layer.spline_basis(x)
         basis_sum = tf.reduce_sum(basis, axis=-1)
-        
+
         # Sum should be close to 1 in the interior (may have edge effects)
         # Use a more relaxed tolerance due to numerical implementation
         mean_sum = tf.reduce_mean(basis_sum)
@@ -152,21 +152,21 @@ class TestBSpline:
         """Test B-spline basis is non-negative."""
         layer = BSpline(units=8, order=4, num_knots=8)
         x = tf.random.uniform((100, 4), minval=-1.0, maxval=1.0)
-        
+
         _ = layer(x)
         basis = layer.spline_basis(x)
-        
+
         assert tf.reduce_all(basis >= -1e-6), "B-spline basis should be non-negative"
 
     def test_local_support(self):
         """Test B-spline local support property."""
         layer = BSpline(units=8, order=4, num_knots=16)
-        
+
         # Input at different locations
         x = tf.constant([[0.0, 0.0, 0.0, 0.0]], dtype=tf.float32)
         _ = layer(x)
         basis = layer.spline_basis(x)
-        
+
         # At any point, only a few basis functions should be active
         active_count = tf.reduce_sum(tf.cast(basis > 0.01, tf.int32), axis=-1)
         # For order p, at most p+1 basis functions are active at any point
@@ -185,18 +185,18 @@ class TestCatmullRom:
         """Test basic forward pass."""
         layer = CatmullRom(units=8, num_knots=8)
         output = layer(sample_input)
-        
+
         assert output.shape == (8, 8)
         assert not tf.reduce_any(tf.math.is_nan(output))
 
     def test_interpolation_property(self):
         """Test Catmull-Rom has interpolation behavior."""
         layer = CatmullRom(units=8, num_knots=6)
-        
+
         # Input at knot positions
         x = tf.constant([[-1.0], [-0.6], [-0.2], [0.2], [0.6], [1.0]])
         output = layer(x)
-        
+
         # Should produce finite output at knot positions
         assert not tf.reduce_any(tf.math.is_nan(output))
         assert not tf.reduce_any(tf.math.is_inf(output))
@@ -215,7 +215,7 @@ class TestCardinal:
         """Test various tension values."""
         layer = Cardinal(units=8, num_knots=8, tension=tension)
         output = layer(sample_input)
-        
+
         assert output.shape == (8, 8)
         assert not tf.reduce_any(tf.math.is_nan(output))
 
@@ -223,7 +223,7 @@ class TestCardinal:
         """Test tension can be trained."""
         layer = Cardinal(units=8, tension=0.5, tension_trainable=True)
         _ = layer(sample_input)
-        
+
         # Check tension is a trainable variable
         trainable_names = [v.name for v in layer.trainable_variables]
         assert any("tension" in name for name in trainable_names)
@@ -232,7 +232,7 @@ class TestCardinal:
         """Test tension can be fixed (non-trainable)."""
         layer = Cardinal(units=8, tension=0.5, tension_trainable=False)
         _ = layer(sample_input)
-        
+
         # Check tension is NOT in trainable variables
         trainable_names = [v.name for v in layer.trainable_variables]
         assert not any("tension" in name for name in trainable_names)
@@ -241,28 +241,28 @@ class TestCardinal:
         """Test invalid tension raises ValueError."""
         with pytest.raises(ValueError, match="tension must be in"):
             Cardinal(units=8, tension=-0.1)
-        
+
         with pytest.raises(ValueError, match="tension must be in"):
             Cardinal(units=8, tension=1.5)
 
     def test_tension_0_5_matches_catmull_rom(self, sample_input):
         """Test tension=0.5 produces similar output to CatmullRom."""
         tf.random.set_seed(42)
-        
+
         layer_cardinal = Cardinal(units=8, num_knots=8, tension=0.5, tension_trainable=False)
         layer_catmull = CatmullRom(units=8, num_knots=8)
-        
+
         # Force same coefficient initialization
         _ = layer_cardinal(sample_input)
         _ = layer_catmull(sample_input)
-        
+
         # Copy coefficients
         layer_catmull._spline_coeffs.assign(layer_cardinal._spline_coeffs)
         layer_catmull._knots.assign(layer_cardinal._knots)
-        
+
         output_cardinal = layer_cardinal(sample_input)
         output_catmull = layer_catmull(sample_input)
-        
+
         # Should produce similar (not identical due to implementation) results
         # This is a weak test since implementations differ slightly
         assert output_cardinal.shape == output_catmull.shape
@@ -279,25 +279,25 @@ class TestGradientFlow:
     def test_gradient_exists(self, spline_class, sample_input):
         """Test gradients can be computed."""
         layer = spline_class(units=8, num_knots=6)
-        
+
         with tf.GradientTape() as tape:
             output = layer(sample_input)
             loss = tf.reduce_mean(output)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
-        
+
         assert all(g is not None for g in grads), "All gradients should exist"
 
     def test_gradients_not_nan(self, spline_class, sample_input):
         """Test gradients are finite (no NaN or Inf)."""
         layer = spline_class(units=8, num_knots=6)
-        
+
         with tf.GradientTape() as tape:
             output = layer(sample_input)
             loss = tf.reduce_mean(tf.square(output))
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
-        
+
         for g in grads:
             assert not tf.reduce_any(tf.math.is_nan(g)), "Gradients should not be NaN"
             assert not tf.reduce_any(tf.math.is_inf(g)), "Gradients should not be Inf"
@@ -305,31 +305,31 @@ class TestGradientFlow:
     def test_gradient_wrt_input(self, spline_class, sample_input):
         """Test gradient with respect to input exists."""
         layer = spline_class(units=8, num_knots=6)
-        
+
         x = tf.Variable(sample_input)
         with tf.GradientTape() as tape:
             output = layer(x)
             loss = tf.reduce_mean(output)
-        
+
         grad = tape.gradient(loss, x)
-        
+
         assert grad is not None
         assert not tf.reduce_any(tf.math.is_nan(grad))
 
     def test_trainable_knots_gradient(self, spline_class, sample_input):
         """Test gradients flow to trainable knots."""
         layer = spline_class(units=8, num_knots=6, trainable_knots=True)
-        
+
         with tf.GradientTape() as tape:
             output = layer(sample_input)
             loss = tf.reduce_mean(tf.square(output))
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
-        
+
         # Find knots variable
         knot_vars = [v for v in layer.trainable_variables if "knots" in v.name]
         assert len(knot_vars) > 0, "Knots should be in trainable variables"
-        
+
         # Check gradient exists (may be None for some spline implementations
         # where knots don't directly affect output - this is implementation-dependent)
         knot_grads = [g for v, g in zip(layer.trainable_variables, grads) if "knots" in v.name]
@@ -348,20 +348,20 @@ class TestXLACompatibility:
     def test_xla_forward_pass(self, spline_class, sample_input):
         """Test forward pass compiles with XLA."""
         layer = spline_class(units=8, num_knots=6)
-        
+
         @tf.function(jit_compile=True)
         def forward(x):
             return layer(x)
-        
+
         output = forward(sample_input)
-        
+
         assert output.shape == (8, 8)
         assert not tf.reduce_any(tf.math.is_nan(output))
 
     def test_xla_gradient(self, spline_class, sample_input):
         """Test gradient computation compiles with XLA."""
         layer = spline_class(units=8, num_knots=6)
-        
+
         @tf.function(jit_compile=True)
         def train_step(x):
             with tf.GradientTape() as tape:
@@ -369,9 +369,9 @@ class TestXLACompatibility:
                 loss = tf.reduce_mean(tf.square(output))
             grads = tape.gradient(loss, layer.trainable_variables)
             return loss, grads
-        
+
         loss, grads = train_step(sample_input)
-        
+
         assert not tf.math.is_nan(loss)
         assert all(g is not None for g in grads)
 
@@ -388,7 +388,7 @@ class TestSerialization:
         """Test get_config returns all parameters."""
         layer = spline_class(units=8, num_knots=10, knot_range=(-2.0, 2.0), trainable_knots=True)
         config = layer.get_config()
-        
+
         assert config["units"] == 8
         assert config["num_knots"] == 10
         assert config["knot_range"] == (-2.0, 2.0)
@@ -398,10 +398,10 @@ class TestSerialization:
         """Test layer can be recreated from config."""
         layer = spline_class(units=8, num_knots=6)
         _ = layer(sample_input)
-        
+
         config = layer.get_config()
         new_layer = spline_class.from_config(config)
-        
+
         output = new_layer(sample_input)
         assert output.shape == (8, 8)
 
@@ -411,26 +411,26 @@ class TestSerialization:
             tf.keras.layers.InputLayer(shape=(4,)),
             spline_class(units=8, num_knots=6),
         ])
-        
+
         output_before = model(sample_input)
-        
+
         # Save and load
         save_path = tmp_path / "model.keras"
         model.save(save_path)
         loaded_model = tf.keras.models.load_model(save_path)
-        
+
         output_after = loaded_model(sample_input)
-        
+
         np.testing.assert_allclose(output_before.numpy(), output_after.numpy(), rtol=1e-5)
 
     def test_bspline_order_in_config(self, sample_input):
         """Test B-spline order is preserved in config."""
         layer = BSpline(units=8, order=5, num_knots=8)
         _ = layer(sample_input)
-        
+
         config = layer.get_config()
         assert config["order"] == 5
-        
+
         new_layer = BSpline.from_config(config)
         assert new_layer.order == 5
 
@@ -438,11 +438,11 @@ class TestSerialization:
         """Test Cardinal tension is preserved in config."""
         layer = Cardinal(units=8, tension=0.75, tension_trainable=False)
         _ = layer(sample_input)
-        
+
         config = layer.get_config()
         assert config["tension"] == 0.75
         assert config["tension_trainable"] is False
-        
+
         new_layer = Cardinal.from_config(config)
         assert new_layer.tension_init == 0.75
 
@@ -462,7 +462,7 @@ class TestIntegration:
             spline_class(units=16, num_knots=6),
             tf.keras.layers.Dense(8),
         ])
-        
+
         output = model(sample_input)
         assert output.shape == (8, 8)
 
@@ -472,7 +472,7 @@ class TestIntegration:
         x = spline_class(units=16, num_knots=6)(inputs)
         outputs = tf.keras.layers.Dense(8)(x)
         model = tf.keras.Model(inputs=inputs, outputs=outputs)
-        
+
         output = model(sample_input)
         assert output.shape == (8, 8)
 
@@ -482,12 +482,12 @@ class TestIntegration:
             tf.keras.layers.InputLayer(shape=(4,)),
             spline_class(units=8, num_knots=6),
         ])
-        
+
         model.compile(optimizer="adam", loss="mse")
-        
+
         y = tf.random.uniform((8, 8))
         history = model.fit(sample_input, y, epochs=1, verbose=0)
-        
+
         assert len(history.history["loss"]) == 1
 
     def test_with_regularization(self, spline_class, sample_input):
@@ -497,11 +497,11 @@ class TestIntegration:
             num_knots=6,
             kernel_regularizer=tf.keras.regularizers.L2(0.01),
         )
-        
+
         with tf.GradientTape() as tape:
             output = layer(sample_input)
             loss = tf.reduce_mean(output) + sum(layer.losses)
-        
+
         grads = tape.gradient(loss, layer.trainable_variables)
         assert all(g is not None for g in grads)
 
@@ -509,7 +509,7 @@ class TestIntegration:
         """Test layer with activation function."""
         layer = spline_class(units=8, num_knots=6, activation="relu")
         output = layer(sample_input)
-        
+
         # ReLU means no negative outputs
         assert tf.reduce_all(output >= 0)
 
@@ -517,10 +517,10 @@ class TestIntegration:
         """Test layer with bias."""
         layer_with_bias = spline_class(units=8, num_knots=6, use_bias=True)
         layer_no_bias = spline_class(units=8, num_knots=6, use_bias=False)
-        
+
         _ = layer_with_bias(sample_input)
         _ = layer_no_bias(sample_input)
-        
+
         # Check bias exists in one and not the other
         assert layer_with_bias.bias is not None
         assert layer_no_bias.bias is None
@@ -539,7 +539,7 @@ class TestEdgeCases:
         layer = spline_class(units=8, num_knots=2)
         x = tf.random.uniform((4, 3))
         output = layer(x)
-        
+
         assert output.shape == (4, 8)
 
     def test_invalid_num_knots(self, spline_class):
@@ -550,20 +550,20 @@ class TestEdgeCases:
     def test_input_at_boundary(self, spline_class):
         """Test input exactly at knot range boundaries."""
         layer = spline_class(units=8, num_knots=6, knot_range=(-1.0, 1.0))
-        
+
         x = tf.constant([[-1.0, 1.0, 0.0, 0.0]])
         output = layer(x)
-        
+
         assert not tf.reduce_any(tf.math.is_nan(output))
         assert not tf.reduce_any(tf.math.is_inf(output))
 
     def test_input_outside_range(self, spline_class):
         """Test input outside knot range (should be clipped)."""
         layer = spline_class(units=8, num_knots=6, knot_range=(-1.0, 1.0))
-        
+
         x = tf.constant([[-2.0, 2.0, 0.0, 0.0]])
         output = layer(x)
-        
+
         assert not tf.reduce_any(tf.math.is_nan(output))
         assert not tf.reduce_any(tf.math.is_inf(output))
 
@@ -572,7 +572,7 @@ class TestEdgeCases:
         layer = spline_class(units=8, num_knots=6)
         x = tf.random.uniform((4, 1))
         output = layer(x)
-        
+
         assert output.shape == (4, 8)
 
     def test_many_input_dimensions(self, spline_class):
@@ -580,7 +580,7 @@ class TestEdgeCases:
         layer = spline_class(units=8, num_knots=6)
         x = tf.random.uniform((4, 64))
         output = layer(x)
-        
+
         assert output.shape == (4, 8)
 
 
@@ -596,7 +596,7 @@ class TestPerformance:
         """Test with large batch size."""
         layer = spline_class(units=32, num_knots=16)
         output = layer(large_batch_input)
-        
+
         assert output.shape == (256, 32)
         assert not tf.reduce_any(tf.math.is_nan(output))
 
@@ -604,7 +604,7 @@ class TestPerformance:
         """Test with many knots."""
         layer = spline_class(units=8, num_knots=64)
         output = layer(sample_input)
-        
+
         assert output.shape == (8, 8)
         assert not tf.reduce_any(tf.math.is_nan(output))
 
@@ -614,12 +614,12 @@ class TestPerformance:
             tf.keras.layers.InputLayer(shape=(4,)),
             spline_class(units=8, num_knots=8, trainable_knots=True),
         ])
-        
+
         model.compile(optimizer="adam", loss="mse")
-        
+
         y = tf.random.uniform((8, 8))
         history = model.fit(sample_input, y, epochs=3, verbose=0)
-        
+
         # Loss should decrease
         assert len(history.history["loss"]) == 3
 

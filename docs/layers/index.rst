@@ -18,13 +18,17 @@ usage examples.
    radial_basis_kan_layers
    wavelet_kan_layers
    spline_kan_layers
+   spectral_kan_layers
+   geometric_kan_layers
+   special_kan_layers
+   symbolic_tools
 
 ----
 
 Layer Overview
 --------------
 
-ARNOLD provides **50+ KAN layer implementations** organized into four families:
+ARNOLD provides **80+ KAN layer implementations** organized into multiple families:
 
 **Polynomial KAN Layers** (:doc:`polynomial_kan_layers`)
 
@@ -62,6 +66,37 @@ Smooth piecewise-polynomial basis functions:
 - B-Spline (Cox-de Boor)
 - Catmull-Rom (interpolating)
 - Cardinal (adjustable tension)
+
+**Spectral KAN Layers** (:doc:`spectral_kan_layers`)
+
+Trigonometric and random Fourier basis functions:
+
+- FourierKAN (sine/cosine series)
+- RandomFourierFeatures (kernel approximation)
+
+**Geometric KAN Layers** (:doc:`geometric_kan_layers`)
+
+Basis functions for spherical and geometric domains:
+
+- Zernike (unit disk, optics)
+- SphericalHarmonics (S²)
+- HypersphericalHarmonics (Sⁿ⁻¹)
+
+**Special Function KAN Layers** (:doc:`special_kan_layers`)
+
+Classical special functions as basis:
+
+- Airy (quantum mechanics, optics)
+- Bessel (cylindrical symmetry)
+- And more (Mathieu, Whittaker, etc.)
+
+**Symbolic Tools** (:doc:`symbolic_tools`)
+
+Convert trained KANs to mathematical expressions:
+
+- kan_to_polynomial() — Extract symbolic formulas
+- kan_to_latex() — Export for publications
+- Simplification utilities
 
 ----
 
