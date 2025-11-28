@@ -1,0 +1,66 @@
+ARNOLD Academic License
+
+Copyright (c) 2025 René Schubotz. All rights reserved.
+
+This software and associated documentation files (the "Software") are provided
+for academic and non-commercial research purposes only.
+
+PERMITTED USES:
+
+1. Academic Research: You may use, copy, and modify the Software for academic
+   research, teaching, and educational purposes at accredited academic
+   institutions.
+
+2. Non-Commercial Use: You may use the Software for personal, non-commercial
+   projects that do not generate revenue or commercial advantage.
+
+3. Publications: You may publish research results obtained using the Software,
+   provided that you cite the Software appropriately in any resulting
+   publications, presentations, or reports:
+
+   Schubotz, R. (2025). ARNOLD: Kolmogorov-Arnold Network Layers for TensorFlow.
+   https://github.com/resc2801/arnold
+
+4. Derivative Works: You may create derivative works for non-commercial
+   purposes, provided that such works are also subject to the terms of this
+   license and include proper attribution.
+
+PROHIBITED USES:
+
+1. Commercial Use: You may NOT use the Software, in whole or in part, for any
+   commercial purpose without obtaining a separate commercial license from the
+   copyright holder. Commercial purposes include, but are not limited to:
+   - Use in commercial products or services
+   - Use in consulting or contracted research for commercial entities
+   - Use to generate revenue or commercial advantage
+   - Integration into proprietary software
+
+2. Redistribution for Profit: You may NOT sell, sublicense, or otherwise
+   redistribute the Software or derivative works for profit.
+
+3. Commercial Training: You may NOT use the Software to train models for
+   commercial deployment without a commercial license.
+
+COMMERCIAL LICENSING:
+
+For commercial use, licensing inquiries, or to obtain a commercial license,
+please contact: rene.schubotz@gmail.com
+
+ATTRIBUTION REQUIREMENTS:
+
+Any use of this Software must include:
+1. This license file in its entirety
+2. The copyright notice in all copies or substantial portions of the Software
+3. Proper citation in any publications or presentations
+
+DISCLAIMER:
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+This license does not grant permission to use the trade names, trademarks,
+service marks, or product names of the copyright holder.

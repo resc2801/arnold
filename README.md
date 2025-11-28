@@ -1,5 +1,10 @@
 # ![alt text](arnold.png) $\mathtt{ARNOLD}$ 
 
+[![PyPI version](https://badge.fury.io/py/arnold-kan.svg)](https://badge.fury.io/py/arnold-kan)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![TensorFlow 2.16+](https://img.shields.io/badge/tensorflow-2.16+-orange.svg)](https://www.tensorflow.org/)
+[![License: Academic/Non-Commercial](https://img.shields.io/badge/License-Academic%2FNon--Commercial-red.svg)](LICENSE)
+[![Documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg)](https://arnold-kan.readthedocs.io/)
 
 $\mathtt{ARNOLD}$ offers `tf.keras` implementations of [Kolmogorov-Arnold Networks (KAN) layers](https://arxiv.org/pdf/2404.19756?trk=public_post_main-feed-card-text) using various basis functions.
 
@@ -14,26 +19,56 @@ The Kolmogorov-Arnold representation theorem states that any multivariate contin
 Install $\mathtt{ARNOLD}$ via pip
 
 ```shell
-python3 pip -m install arnold
+pip install arnold-kan
 ```
 
 ## Usage 
-Simply use $\mathtt{ARNOLD}$'s KAN layers as a drop-in-replacement for `tf.keras.layers.Dense` and mix with any standard layers.
+Simply use $\mathtt{ARNOLD}$'s KAN layers as a drop-in-replacement for `tf.keras.layers.Dense` (use `units` for output size) and mix with any standard layers.
 
 ```python
-fancy_kan =tfk.Sequential([
+import tensorflow as tf
+from arnold.layers import Chebyshev1st, Legendre, Bump
+
+tfk = tf.keras
+tfkl = tfk.layers
+
+fancy_kan = tfk.Sequential(
+    [
         tfkl.Reshape(target_shape=(2, )),
         tfkl.Rescaling(scale=1./127.5, offset=-1),
-        Chebyshev1st(input_dim=2, output_dim=8, degree=2),
+        Chebyshev1st(degree=2, units=8, input_clip=(-1, 1)),
         tfkl.LayerNormalization(),
-        Legendre(input_dim=8, output_dim=6, degree=3),
+        Legendre(degree=3, units=6, input_clip=(-1, 1)),
         tfkl.LayerNormalization(),
-        Bump(input_dim=6, output_dim=1),
+        Bump(units=1, input_clip=(-2, 2)),
         tfkl.Activation(tfk.activations.sigmoid)
     ],
-    name="fancy_kan" 
+    name="fancy_kan"
 )
+
+# Minimal end-to-end example
+x = tf.random.uniform((32, 2), minval=-1.0, maxval=1.0)
+model = tfk.Sequential([Chebyshev1st(degree=3, units=4, input_clip=(-1, 1)), tfkl.Dense(1)])
+model.compile(optimizer="adam", loss="mse")
+model.fit(x, tf.random.uniform((32, 1)), epochs=2, verbose=0)
+
+# Inference
+preds = model(tf.random.uniform((4, 2), minval=-1.0, maxval=1.0))
+print(preds.shape)  # (4, 1)
 ```
+
+Notes:
+- `units` replaces legacy `output_dim`; weights are created in `build()` so shapes are inferred.
+- Use `input_clip` to keep inputs in the canonical domain (e.g., `(-1, 1)` for most orthogonal polynomials).
+
+### Basis domain tips
+- Orthogonal polynomials (Legendre, Chebyshev, Gegenbauer, Jacobi): keep inputs in ``[-1, 1]`` (use `input_clip=(-1, 1)` or preprocessing).
+- Laguerre: defined on ``[0, ∞)``; ensure inputs are non-negative or clip.
+- Hermite/Bessel/Laurent: on ``ℝ``; consider clipping or scaling for large magnitudes; Laurent avoids poles via internal clamp.
+- RBFs: control radii with ``grid_min/grid_max``; shape params are positive via softplus.
+- Wavelets: scales are positive via softplus; use ``input_clip`` to bound inputs if needed.
+- Performance: high-degree polynomial bases use scan/Clenshaw recurrences to reduce ops and memory vs. materializing the full basis; set a sensible ``degree`` to balance capacity and speed.
+- Benchmarking: run ``make bench`` to compare pseudo vs. scan/Clenshaw for common bases.
 
 ## Examples
 
@@ -161,3 +196,7 @@ Wavelets in Kolmogorov-Arnold Networks (KANs) offer a sophisticated approach to 
 | [Ricker (Mexican Hat)](src/arnold/layers/wavelet/ricker.py)       | ${\psi (t)={\frac {2}{{\sqrt {3\sigma }}\pi ^{1/4}}}\left(1-\left({\frac {t}{\sigma }}\right)^{2}\right)e^{-{\frac {t^{2}}{2\sigma ^{2}}}}}$ | $\sigma$ | $\mathbb{R}$ | - | 
 | [Shannon](src/arnold/layers/wavelet/shannon.py)                   | $\psi^{(Sha)}(t)=\mathop{\mathrm{sinc}} \left({\frac {t}{2}}\right)\cdot \cos \left({\frac {3\pi t}{2}}\right)$               | -        | $\mathbb{R}$ | - | 
 
+Developer notes
+---------------
+- Numerical constants (``PARAM_EPS``, dtype-aware eps) live in ``arnold.utils.constants`` to keep domain clamps consistent.
+- Use ``arnold.utils.compilation.kan_function`` to wrap basis evaluators with the standard ``tf.function`` settings; disable ``jit_compile`` there if a kernel is not XLA-friendly.

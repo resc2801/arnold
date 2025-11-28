@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "ARNOLD: KAN Layers for Keras"
+abstract: >-
+  ARNOLD is a comprehensive library of Kolmogorov-Arnold Network (KAN) layers
+  for Keras. It provides polynomial, radial basis function, and wavelet-based
+  basis implementations with a focus on numerical stability, XLA compilation,
+  and production-ready deployment.
+authors:
+  - family-names: "Schubotz"
+    given-names: "René"
+    orcid: "https://orcid.org/0000-0001-5938-7685"
+repository-code: "https://github.com/resc2801/arnold"
+url: "https://github.com/resc2801/arnold"
+license: MIT
+keywords:
+  - kolmogorov-arnold-networks
+  - kan
+  - keras
+  - tensorflow
+  - deep-learning
+  - neural-networks
+  - orthogonal-polynomials
+  - radial-basis-functions
+  - wavelets
