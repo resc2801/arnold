@@ -1,18 +1,307 @@
+# ════════════════════════════════════════════════════════════════════════════════
+#
+#     █████╗ ██████╗ ███╗   ██╗ ██████╗ ██╗     ██████╗
+#    ██╔══██╗██╔══██╗████╗  ██║██╔═══██╗██║     ██╔══██╗
+#    ███████║██████╔╝██╔██╗ ██║██║   ██║██║     ██║  ██║
+#    ██╔══██║██╔══██╗██║╚██╗██║██║   ██║██║     ██║  ██║
+#    ██║  ██║██║  ██║██║ ╚████║╚██████╔╝███████╗██████╔╝
+#    ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝╚═════╝
+#
+#    Kolmogorov-Arnold Networks for Keras
+#    https://github.com/resc2801/arnold
+#
+# ════════════════════════════════════════════════════════════════════════════════
+
+# ────────────────────────────────────────────────────────────────────────────────
+# Build System
+# ────────────────────────────────────────────────────────────────────────────────
+
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
+requires = ["setuptools>=68", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
+# ────────────────────────────────────────────────────────────────────────────────
+# Project Metadata
+# ────────────────────────────────────────────────────────────────────────────────
 
 [project]
-name = "Arnold"
+name = "arnold-kan"
+version = "0.1.0"
+description = "Production-ready Kolmogorov-Arnold Network (KAN) layers for Keras/TensorFlow with polynomial, RBF, and wavelet bases."
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10,<3.13"
+
 authors = [
     {name = "René Schubotz", email = "r.schubotz@googlemail.com"},
 ]
-description = "Keras implementations of Kolmogorov-Arnold Networks (KAN) layers using various basis functions."
-readme = "README.md"
-requires-python = ">=3.11"
-dependencies = [
-    "tensorflow",
-    "tensorflow-graphics"
+maintainers = [
+    {name = "René Schubotz", email = "r.schubotz@googlemail.com"},
 ]
-dynamic = ["version"]
+
+keywords = [
+    "keras",
+    "tensorflow",
+    "kan",
+    "kolmogorov-arnold-networks",
+    "neural-networks",
+    "deep-learning",
+    "machine-learning",
+    "orthogonal-polynomials",
+    "radial-basis-functions",
+    "wavelets",
+    "function-approximation",
+]
+
+classifiers = [
+    # Development Status
+    "Development Status :: 4 - Beta",
+    
+    # Intended Audience
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    
+    # License
+    "License :: Other/Proprietary License",
+    
+    # Programming Language
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3 :: Only",
+    
+    # Topics
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    
+    # Typing
+    "Typing :: Typed",
+    
+    # OS
+    "Operating System :: OS Independent",
+    
+    # Environment
+    "Environment :: GPU :: NVIDIA CUDA",
+]
+
+# ────────────────────────────────────────────────────────────────────────────────
+# Runtime Dependencies
+# ────────────────────────────────────────────────────────────────────────────────
+
+dependencies = [
+    "tensorflow>=2.15.0,<3.0.0",
+    "numpy>=1.23.0",
+]
+
+# ────────────────────────────────────────────────────────────────────────────────
+# Project URLs
+# ────────────────────────────────────────────────────────────────────────────────
+
+[project.urls]
+Homepage = "https://github.com/resc2801/arnold"
+Documentation = "https://arnold-kan.readthedocs.io"
+Repository = "https://github.com/resc2801/arnold.git"
+Issues = "https://github.com/resc2801/arnold/issues"
+Changelog = "https://github.com/resc2801/arnold/blob/main/CHANGELOG.md"
+Discussions = "https://github.com/resc2801/arnold/discussions"
+
+# ────────────────────────────────────────────────────────────────────────────────
+# Optional Dependencies
+# ────────────────────────────────────────────────────────────────────────────────
+
+[project.optional-dependencies]
+
+# Development tools
+dev = [
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.0.0",
+]
+
+# Testing
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-xdist>=3.0.0",      # Parallel test execution
+    "scipy>=1.10.0",            # Reference implementations
+    "hypothesis>=6.0.0",        # Property-based testing
+    "mpmath>=1.3.0",            # Arbitrary-precision arithmetic for hypergeometric oracles
+]
+
+# Benchmarking
+benchmark = [
+    "pytest-benchmark>=4.0.0",  # Performance regression testing
+]
+
+# Documentation
+docs = [
+    "sphinx>=7.0.0",
+    "sphinx-rtd-theme>=2.0.0",
+    "sphinx-autodoc-typehints>=1.25.0",
+    "myst-parser>=2.0.0",
+    "sphinx-copybutton>=0.5.0",
+    "sphinx-proof>=0.1.3",      # Theorems, proofs, lemmas
+    "nbsphinx>=0.9.0",          # Notebook support
+]
+
+# Build & Publish
+build = [
+    "build>=1.0.0",
+    "twine>=5.0.0",
+    "check-wheel-contents>=0.4.0",
+]
+
+# Examples & Notebooks
+examples = [
+    "jupyter>=1.0.0",
+    "matplotlib>=3.7.0",
+    "pandas>=2.0.0",
+    "tensorflow-datasets>=4.9.0",
+]
+
+# All optional dependencies
+all = [
+    "arnold-kan[dev,test,benchmark,docs,build,examples]",
+]
+
+# ────────────────────────────────────────────────────────────────────────────────
+# Package Discovery & Build Settings
+# ────────────────────────────────────────────────────────────────────────────────
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+zip-safe = false
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["arnold*"]
+
+[tool.setuptools.package-data]
+arnold = ["py.typed"]
+
+# ────────────────────────────────────────────────────────────────────────────────
+# Ruff - Linter & Formatter
+# ────────────────────────────────────────────────────────────────────────────────
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+src = ["src", "tests"]
+exclude = ["tests/*.ipynb"]
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "UP",     # pyupgrade
+    "ARG",    # flake8-unused-arguments
+    "SIM",    # flake8-simplify
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+    "B008",   # do not perform function calls in argument defaults
+    "B905",   # zip without explicit strict
+    "SIM108", # ternary operator
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["arnold"]
+force-single-line = false
+lines-after-imports = 2
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ARG"]
+"__init__.py" = ["F401"]
+
+# ────────────────────────────────────────────────────────────────────────────────
+# Pytest
+# ────────────────────────────────────────────────────────────────────────────────
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_functions = ["test_*"]
+python_classes = ["Test*"]
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+    "-ra",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "fast: marks tests as fast (default selection)",
+    "gpu: marks tests requiring GPU hardware",
+    "integration: marks integration tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+# ────────────────────────────────────────────────────────────────────────────────
+# Coverage
+# ────────────────────────────────────────────────────────────────────────────────
+[tool.coverage.run]
+source = ["src/arnold"]
+branch = true
+parallel = true
+omit = [
+    "*/__pycache__/*",
+    "*/tests/*",
+]
+
+[tool.coverage.paths]
+source = ["src/arnold"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+    "@abstractmethod",
+    "@abc.abstractmethod",
+]
+show_missing = true
+precision = 2
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+# ────────────────────────────────────────────────────────────────────────────────
+# MyPy - Type Checking
+# ────────────────────────────────────────────────────────────────────────────────
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+ignore_missing_imports = true
+strict_optional = true
+show_error_codes = true
+pretty = true
+
+[[tool.mypy.overrides]]
+module = "tensorflow.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "scipy.*"
+ignore_missing_imports = true
+
+# ────────────────────────────────────────────────────────────────────────────────
+# Check Wheel Contents (validates package before publishing)
+# ────────────────────────────────────────────────────────────────────────────────
+
+[tool.check-wheel-contents]
+toplevel = ["arnold"]
+package = ["arnold"]

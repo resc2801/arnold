@@ -1,0 +1,29 @@
+include LICENSE
+include README.md
+include CHANGELOG.md
+include pyproject.toml
+
+# Include type hints marker
+include src/arnold/py.typed
+
+# Include documentation
+recursive-include docs *.rst *.md *.py
+
+# Exclude development files
+exclude Makefile
+exclude .pypirc.template
+exclude build_env.sh
+exclude setup.py
+
+# Exclude test files from distribution
+recursive-exclude tests *
+recursive-exclude examples *
+
+# Exclude build artifacts
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude __pycache__
+global-exclude *.so
+global-exclude .DS_Store
+global-exclude .git*
+global-exclude .vscode
