@@ -93,6 +93,16 @@ from arnold.layers.core.splines import (
     CatmullRom,
     SplineBase,
 )
+from arnold.layers.core.spectral import (
+    CosineBasis,
+    DiracComb,
+    FourierKAN,
+    Lorentzian,
+    RandomFourierFeatures,
+    SincBasis,
+    SpectralBase,
+    WindowedSinc,
+)
 from arnold.layers.core.wavelets import (
     Bump,
     Coiflet,
@@ -127,6 +137,7 @@ __all__ = [
     "PolynomialBase",
     "RBFBase",
     "SplineBase",
+    "SpectralBase",
     "WaveletBase",
     "detect_hardware",
     "get_recommended_dtype",
@@ -134,6 +145,14 @@ __all__ = [
     "BSpline",
     "Cardinal",
     "CatmullRom",
+    # Spectral (stubs - Phase 9a)
+    "CosineBasis",
+    "DiracComb",
+    "FourierKAN",
+    "Lorentzian",
+    "RandomFourierFeatures",
+    "SincBasis",
+    "WindowedSinc",
     # Wavelets
     "Bump",
     "Coiflet",
