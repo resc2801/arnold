@@ -181,6 +181,16 @@ from .wavelets import (
     DerivativeOfGaussian,
 )
 
+# =============================================================================
+# Spectral Layers
+# =============================================================================
+
+from .spectral import (
+    SpectralBase,
+    FourierKAN,
+    RandomFourierFeatures,
+)
+
 
 # =============================================================================
 # Layer Registry
@@ -349,6 +359,15 @@ LAYER_REGISTRY: dict[str, type[KANBase]] = {
     "poisson_wavelet": Poisson,
     "dog": DerivativeOfGaussian,
     "derivative_of_gaussian": DerivativeOfGaussian,
+    # -------------------------------------------------------------------------
+    # Spectral
+    # -------------------------------------------------------------------------
+    "fourier": FourierKAN,
+    "fourier_kan": FourierKAN,
+    "trigonometric": FourierKAN,  # Mathematical alias
+    "rff": RandomFourierFeatures,
+    "random_fourier_features": RandomFourierFeatures,
+    "random_fourier": RandomFourierFeatures,
 }
 
 
@@ -394,6 +413,9 @@ LAYER_CATEGORIES: dict[str, list[str]] = {
     "wavelet": [
         "haar", "daubechies", "symlet", "coiflet", "ricker",
         "morlet", "shannon", "meyer", "bump", "poisson", "dog",
+    ],
+    "spectral": [
+        "fourier", "rff",
     ],
 }
 

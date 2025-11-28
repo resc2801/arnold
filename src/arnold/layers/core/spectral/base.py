@@ -96,13 +96,17 @@ class SpectralBase(KANBase):
         x = self._preprocess_inputs(inputs)
         original_dtype = x.dtype
         leading_shape = tf.shape(x)[:-1]
+        batch_size = tf.reduce_prod(leading_shape)
 
         compute_dtype = self.effective_compute_dtype
         if x.dtype != compute_dtype:
             x = tf.cast(x, compute_dtype)
 
+        # Flatten leading dimensions: (..., input_dim) -> (batch, input_dim)
+        x_flat = tf.reshape(x, [batch_size, self.input_dim])
+
         # Evaluate spectral basis: (batch, input_dim, num_basis)
-        basis = self.spectral_basis(x)
+        basis = self.spectral_basis(x_flat)
 
         # Contract: coeffs[o, i, k] * basis[b, i, k] -> output[b, o]
         y = tf.einsum(
